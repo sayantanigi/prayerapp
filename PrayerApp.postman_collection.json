@@ -1,0 +1,711 @@
+{
+	"info": {
+		"_postman_id": "7eada713-62f7-499f-9f76-2180b0b7298e",
+		"name": "PrayerApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28322663",
+		"_collection_link": "https://winter-station-333675.postman.co/workspace/New-Team-Workspace~f2f7af83-fa66-437e-aae8-72df8fdd5d4f/collection/28322663-7eada713-62f7-499f-9f76-2180b0b7298e?action=share&source=collection_link&creator=28322663"
+	},
+	"item": [
+		{
+			"name": "User Registration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"organizer_name\": \"\",\r\n    \"first_name\": \"Sayantan\",\r\n    \"last_name\": \"bhakta\",\r\n    \"email\": \"sayantan@goigi.in\",\r\n    \"location\": \"Kolkata\",\r\n    \"longitude\": \"22.88\",\r\n    \"latitude\": \"11.22\",\r\n    \"password\": \"123456\",\r\n    \"user_type\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"sayantan@goigi.in\",\r\n    \"password\": \"123456\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile Update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\",\r\n    \"organizername\": \"Demo Organizer\",\r\n    \"firstname\": \"\",\r\n    \"lastname\": \"\",\r\n    \"short_bio\": \"In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.\",\r\n    \"mobile\": \"+919846686510\",\r\n    \"gender\": \"Male\",\r\n    \"address\": \"Kolkata, West Bengal, India\",\r\n    \"latitude\": \"22.572645\",\r\n    \"longitude\": \"88.363892\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/update_profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"update_profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Forget Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"sayantan@goigi.in\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/send_forget_password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"send_forget_password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Prayer By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "prayer_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Pictures/Saved Pictures/Akashardham-Temple-Delhi.jpg"
+						},
+						{
+							"key": "prayer_name",
+							"value": "Swaminarayan Akshardham",
+							"type": "text"
+						},
+						{
+							"key": "prayer_subheading",
+							"value": "'kshardham means the divine abode of God. It is hailed as an eternal place of devotion, purity and peace.",
+							"type": "text"
+						},
+						{
+							"key": "prayer_datetime",
+							"value": "2023-11-16T20:00",
+							"type": "text"
+						},
+						{
+							"key": "prayer_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design. \nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/add_prayer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"add_prayer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Prayer By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"prayer_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/edit_prayer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"edit_prayer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Prayer By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "prayer_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "prayer_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Pictures/Saved Pictures/Akashardham-Temple-Delhi.jpg"
+						},
+						{
+							"key": "prayer_name",
+							"value": "Swaminarayan Akshardham",
+							"type": "text"
+						},
+						{
+							"key": "prayer_subheading",
+							"value": "Akshardham means the divine abode of God. It is hailed as an eternal place of devotion, purity and peace.",
+							"type": "text"
+						},
+						{
+							"key": "prayer_datetime",
+							"value": "2023-11-16T20:50",
+							"type": "text"
+						},
+						{
+							"key": "prayer_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design. \nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/update_prayer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"update_prayer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prayer List By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/prayerListByEachOrganizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"prayerListByEachOrganizer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Each Prayer Details",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"prayer_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/prayer_details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"prayer_details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Podcast By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "cover_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/e7fb6f74a44aef2d94f3cb1b0465e10a.jpg"
+						},
+						{
+							"key": "podcast_file",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/Kalaastar Honey.mp3"
+						},
+						{
+							"key": "podcast_name",
+							"value": "Kaalastar Music",
+							"type": "text"
+						},
+						{
+							"key": "podcast_singer_name",
+							"value": "Yo Yo Honey Sing",
+							"type": "text"
+						},
+						{
+							"key": "podcast_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.\n\nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.\n\nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/add_podcast",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"add_podcast"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Podcast By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"podcast_id\": \"3\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/edit_podcast",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"edit_podcast"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Podcast By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "podcast_id",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "cover_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/e7fb6f74a44aef2d94f3cb1b0465e10a.jpg"
+						},
+						{
+							"key": "podcast_file",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/Kalaastar Honey.mp3"
+						},
+						{
+							"key": "podcast_name",
+							"value": "Kaalastar Music",
+							"type": "text"
+						},
+						{
+							"key": "podcast_singer_name",
+							"value": "Yo Yo Honey Sing",
+							"type": "text"
+						},
+						{
+							"key": "podcast_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design. \nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/update_podcast",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"update_podcast"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Podcast List By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/podcastListByEachOrganizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"podcastListByEachOrganizer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Each Podcast Details",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"podcast_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/podcast_details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"podcast_details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Video By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "cover_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Pictures/Capture.JPG"
+						},
+						{
+							"key": "video_file",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/This small Modification can make your Car Stand out!! THAR MAFIA EDITION  🔥🔥.mp4"
+						},
+						{
+							"key": "video_name",
+							"value": "Kaalastar Music",
+							"type": "text"
+						},
+						{
+							"key": "video_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.\n\nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.\n\nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/add_video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"add_video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Video By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"video_id\": \"2\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/edit_video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"edit_video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Video By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "video_id",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "cover_image",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Pictures/1813_Profile3 - Copy - Copy.jpg"
+						},
+						{
+							"key": "video_file",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Downloads/This small Modification can make your Car Stand out!! THAR MAFIA EDITION.mp4"
+						},
+						{
+							"key": "video_name",
+							"value": "Kaalastar Music 1",
+							"type": "text"
+						},
+						{
+							"key": "video_description",
+							"value": "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design. \nIn publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. It is also used to temporarily replace text in a process called greeking, which allows designers to consider the form of a webpage or publication, without the meaning of the text influencing the design.",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/update_video",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"update_video"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Video List By Organizer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/videoListByEachOrganizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"videoListByEachOrganizer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Each Video Details",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"video_id\": \"2\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/video_details",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"video_details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Joined an Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\",\r\n    \"event_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/userJoinedEvent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"userJoinedEvent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Liked an Event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\",\r\n    \"event_id\": \"1\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost/prayerapp/api/userlikedEvent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"userlikedEvent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Home List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/prayerapp/api/homeList",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"prayerapp",
+						"api",
+						"homeList"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
