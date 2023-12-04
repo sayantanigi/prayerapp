@@ -80,6 +80,7 @@ $route['api/userJoinedEvent'] = "api/User_dashboard/userJoinedEvent";
 $route['api/userlikedEvent'] = "api/User_dashboard/userlikedEvent";
 $route['api/ListofupcomingPrayers'] = "api/User_dashboard/ListofupcomingPrayers";
 $route['api/ListofPrayers'] = "api/User_dashboard/ListofPrayers";
+$route['api/ListofnewPrayers'] = "api/User_dashboard/ListofnewPrayers";
 $route['api/ListofPodcast'] = "api/User_dashboard/ListofPodcast";
 
 $route['api/add_podcast'] = "api/User_dashboard/add_podcast";

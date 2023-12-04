@@ -337,7 +337,7 @@ class User_dashboard extends CI_Controller {
 
 	public function ListofnewPrayers() {
 		try {
-			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'status = 1 and is_delete = 1');
+			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'status = "1" and is_delete = "1" order by `all_prayers`.`id` DESC');
 			if(!empty($prayer_list)) {
 				$prayerList = array();
 				foreach ($prayer_list as $key => $value) {
