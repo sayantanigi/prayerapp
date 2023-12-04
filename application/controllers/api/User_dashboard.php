@@ -70,8 +70,8 @@ class User_dashboard extends CI_Controller {
 		            $_POST['prayer_image']= rand(0000,9999)."_".$_FILES['prayer_image']['name'];
 		            $config2['image_library'] = 'gd2';
 		            $config2['source_image'] =  $_FILES['prayer_image']['tmp_name'];
-		            $config2['new_image'] =   getcwd().'/uploads/event/'.$_POST['prayer_image'];
-		            $config2['upload_path'] =  getcwd().'/uploads/event/';
+		            $config2['new_image'] =   getcwd().'/uploads/prayer/'.$_POST['prayer_image'];
+		            $config2['upload_path'] =  getcwd().'/uploads/prayer/';
 		            $config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
 		            $config2['maintain_ratio'] = FALSE;
 		            $this->image_lib->initialize($config2);
@@ -91,6 +91,7 @@ class User_dashboard extends CI_Controller {
 						'prayer_subheading' => $this->input->post('prayer_subheading'),
 						'prayer_description' => $this->input->post('prayer_description'),
 						'prayer_datetime' => $this->input->post('prayer_datetime'),
+						'prayer_location' => $this->input->post('prayer_location'),
 						'created_date' => date("Y-m-d H:i:s"),
 					);
 					$this->Crud_model->SaveData('all_prayers', $data);
@@ -116,10 +117,11 @@ class User_dashboard extends CI_Controller {
 					$prayer_datetime = date('Y-m-d h:i A', strtotime($value['prayer_datetime']));
 					$prayer_datetime = date_create($prayer_datetime);
 					$prayerList[$key]['id'] = $value['id'];
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/event/'.$value['prayer_image'];
+					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value['prayer_image'];
 					$prayerList[$key]['prayer_name'] = $value['prayer_name'];
 					$prayerList[$key]['prayer_subheading'] = $value['prayer_subheading'];
 					$prayerList[$key]['prayer_description'] = $value['prayer_description'];
+					$prayerList[$key]['prayer_location'] = $value['prayer_location'];
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
@@ -138,8 +140,8 @@ class User_dashboard extends CI_Controller {
 	            $_POST['prayer_image']= rand(0000,9999)."_".$_FILES['prayer_image']['name'];
 	            $config2['image_library'] = 'gd2';
 	            $config2['source_image'] =  $_FILES['prayer_image']['tmp_name'];
-	            $config2['new_image'] =   getcwd().'/uploads/event/'.$_POST['prayer_image'];
-	            $config2['upload_path'] =  getcwd().'/uploads/event/';
+	            $config2['new_image'] =   getcwd().'/uploads/prayer/'.$_POST['prayer_image'];
+	            $config2['upload_path'] =  getcwd().'/uploads/prayer/';
 	            $config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
 	            $config2['maintain_ratio'] = FALSE;
 				$this->image_lib->initialize($config2);
@@ -147,7 +149,7 @@ class User_dashboard extends CI_Controller {
 	                $response = array('status'=> 'error', 'result'=> "Something went wrong while uploding image. Please try again later!");
 	            } else {
 	                $image  = $_POST['prayer_image'];
-	                @unlink('uploads/event/'.$_POST['old_image']);
+	                @unlink('uploads/prayer/'.$_POST['old_image']);
 	            }
 	        } else {
 	            $image  = @$_POST['old_image'];
@@ -159,6 +161,7 @@ class User_dashboard extends CI_Controller {
 	                'prayer_name' => $this->input->post('prayer_name'),
 	                'prayer_subheading' => $this->input->post('prayer_subheading'),
 					'prayer_description' => $this->input->post('prayer_description'),
+					'prayer_location' => $this->input->post('prayer_location'),
 					'prayer_datetime' => $this->input->post('prayer_datetime'),
 	                'updated_date'=> date('Y-m-d H:i:s'),
 
@@ -186,6 +189,7 @@ class User_dashboard extends CI_Controller {
 					$prayer_datetime = date_create($prayer_datetime);
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
+					$prayerList[$key]['prayer_location'] = $value->prayer_location;
 					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
 					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
 					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
@@ -218,10 +222,14 @@ class User_dashboard extends CI_Controller {
 					$prayerDetails[$key]['prayer_name'] = $value->prayer_name;
 					$prayerDetails[$key]['prayer_subheading'] = $value->prayer_subheading;
 					$prayerDetails[$key]['prayer_description'] = $value->prayer_description;
+					$prayerDetails[$key]['prayer_location'] = $value->prayer_location;
 					$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
 					$prayerDetails[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerDetails[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerDetails[$key]['likedUser'] = $likedUser[0]['total'];
+					$prayerDetails[$key]['jointheprayer'] = $joinedUser[0]['total']." Join ".$likedUser[0]['total']." Interest ";
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerDetails);
 			} else {
@@ -266,6 +274,96 @@ class User_dashboard extends CI_Controller {
     	}
     	echo json_encode($response);
     }
+
+	public function ListofupcomingPrayers() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$selectedDate = $formdata['selected_date'];
+			$datetime1 = new DateTime();
+			if(!empty($selectedDate)) {
+				$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.prayer_datetime LIKE '%".$selectedDate."%' AND all_prayers.status = '1' AND all_prayers.is_delete = '1'")->result_array();
+			} else {
+				$todaysDate = date('Y-m-d');
+				$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.prayer_datetime LIKE '%".$todaysDate."%' AND all_prayers.status = '1' AND all_prayers.is_delete = '1'")->result_array();
+			}
+			if(!empty($upcoming_events)) {
+				foreach ($upcoming_events as $keyue => $uevalue) {
+					$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					$uevalue['prayer_datetime'] = date('d F Y H:i', strtotime($uevalue['prayer_datetime']));
+					$uevalue['countdown'] = $datetime1->diff(new DateTime(date('Y-m-d h:i a', strtotime($uevalue['prayer_datetime']))))->format('%a days, %h:%i Hour');
+					$returnue[$keyue] = $uevalue;
+				}
+			} else {
+				$returnue = "";
+			}
+			$data['upcoming_events'] = $returnue;
+			$response = array('status'=> 'success','result'=> $data);
+		} catch(\Exception $e) {
+			$response = array('status' => 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function ListofPrayers() {
+		try {
+			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'status = 1 and is_delete = 1');
+			if(!empty($prayer_list)) {
+				$prayerList = array();
+				foreach ($prayer_list as $key => $value) {
+					$prayer_datetime = date('Y-m-d h:i A', strtotime($value->prayer_datetime));
+					$prayer_datetime = date_create($prayer_datetime);
+					$prayerList[$key]['id'] = $value->id;
+					$prayerList[$key]['prayer_name'] = $value->prayer_name;
+					$prayerList[$key]['prayer_location'] = $value->prayer_location;
+					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
+					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
+					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
+					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+				}
+				$response = array('status'=> 'success', 'result'=> $prayerList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch(\Exception $e) {
+			$responce = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function ListofnewPrayers() {
+		try {
+			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'status = 1 and is_delete = 1');
+			if(!empty($prayer_list)) {
+				$prayerList = array();
+				foreach ($prayer_list as $key => $value) {
+					$prayer_datetime = date('Y-m-d h:i A', strtotime($value->prayer_datetime));
+					$prayer_datetime = date_create($prayer_datetime);
+					$prayerList[$key]['id'] = $value->id;
+					$prayerList[$key]['prayer_name'] = $value->prayer_name;
+					$prayerList[$key]['prayer_location'] = $value->prayer_location;
+					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
+					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
+					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
+					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+				}
+				$response = array('status'=> 'success', 'result'=> $prayerList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch(\Exception $e) {
+			$responce = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
     //Prayer API End
 
     //Podcast API Start
@@ -438,6 +536,30 @@ class User_dashboard extends CI_Controller {
     	}
     	echo json_encode($response);
     }
+
+	public function ListofPodcast() {
+		try {
+			$podcast_list = $this->Crud_model->GetData('all_podcasts', '', 'status = 1 and is_delete = 1');
+			if(!empty($podcast_list)) {
+				$podcastList = array();
+				foreach ($podcast_list as $key => $value) {
+					$podcastList[$key]['id'] = $value->id;
+					$podcastList[$key]['podcast_name'] = $value->podcast_name;
+					$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image'.$value->podcast_cover_image;
+					$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file'.$value->podcast_file;
+					$podcastList[$key]['podcast_singer_name'] = $value->podcast_singer_name;
+					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					//$podcastList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+				}
+				$response = array('status'=> 'success', 'result'=> $podcastList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$responce = array('status'=> 'error', 'result' => $th->getMessage());
+		}
+		echo json_encode($response);
+	}
 
     public function podcast_details() {
     	try {

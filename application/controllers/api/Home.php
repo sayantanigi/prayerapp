@@ -15,11 +15,13 @@ class Home extends MY_Controller {
 	public function home_list() {
 		try {
 			$todaysDate = date('Y-m-d');
-			$upcoming_events = $this->db->query("SELECT all_events.id, users.companyname, all_events.event_title, all_events.event_desc, all_events.event_image, all_events.event_location, all_events.event_datetime, all_events.event_duration FROM all_events JOIN users ON all_events.user_id = users.userId WHERE all_events.status = '1' AND all_events.is_delete = '1' AND all_events.event_datetime > '".$todaysDate."'")->result_array();
+			$datetime1 = new DateTime();
+			$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.status = '1' AND all_prayers.is_delete = '1' AND all_prayers.prayer_datetime > '".$todaysDate."'")->result_array();
 			if(!empty($upcoming_events)) {
 				foreach ($upcoming_events as $keyue => $uevalue) {
-					$uevalue['event_image'] = base_url().'uploads/event/'.$uevalue['event_image'];
-					$uevalue['event_datetime'] = date('Y-m-d h:i a', strtotime($uevalue['event_datetime']));;
+					$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					$uevalue['prayer_datetime'] = date('d F Y H:i', strtotime($uevalue['prayer_datetime']));
+					$uevalue['countdown'] = $datetime1->diff(new DateTime(date('Y-m-d h:i a', strtotime($uevalue['prayer_datetime']))))->format('%a days, %h:%i Hour');
 					$returnue[$keyue] = $uevalue;
 				}
 			} else {
@@ -27,10 +29,12 @@ class Home extends MY_Controller {
 			}
 			$data['upcoming_events'] = $returnue;
 
-			$prayer_wall = $this->db->query("SELECT id, user_id, event_title, event_desc, event_image, event_location, event_datetime FROM all_events WHERE status = '1' AND is_delete = '1'")->result_array();
+			//$prayer_wall = $this->db->query("SELECT id, user_id, prayer_name, prayer_description, prayer_location, prayer_image, prayer_subheading, prayer_datetime FROM all_prayers WHERE status = '1' AND is_delete = '1'")->result_array();
+			$prayer_wall = $this->db->query("SELECT all_prayers.id, all_prayers.user_id, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_location, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, count(user_joined_event.id) as count FROM techgigiapp_prayerapp.all_prayers JOIN techgigiapp_prayerapp.user_joined_event ON all_prayers.id = user_joined_event.event_id WHERE status = '1' AND is_delete = '1' group by user_joined_event.event_id")->result_array();
 			if(!empty($prayer_wall)) {
 				foreach ($prayer_wall as $keypw => $pwvalue) {
-					$pwvalue['event_image'] = base_url().'uploads/event/'.$pwvalue['event_image'];
+					$pwvalue['prayer_image'] = base_url().'uploads/prayer/'.$pwvalue['prayer_image'];
+					$pwvalue['prayer_datetime'] = date('d F Y H:i', strtotime($pwvalue['prayer_datetime']));
 					$returnpw[$keypw] = $pwvalue;
 				}
 			} else {
@@ -38,10 +42,10 @@ class Home extends MY_Controller {
 			}
 			$data['prayer_wall'] = $returnpw;
 
-			$latest_podcast = $this->db->query("SELECT all_podcasts.id, all_podcasts.user_id, category.category_name, all_podcasts.podcast_name, all_podcasts.podcast_description, all_podcasts.cover_image FROM all_podcasts JOIN category ON all_podcasts.podcast_cat_id = category.id WHERE all_podcasts.status = '1' AND all_podcasts.is_delete = '1'")->result_array();
+			$latest_podcast = $this->db->query("SELECT all_podcasts.id, all_podcasts.user_id, category.category_name, all_podcasts.podcast_name, all_podcasts.podcast_description, all_podcasts.podcast_cover_image FROM all_podcasts JOIN category ON all_podcasts.podcast_cat_id = category.id WHERE all_podcasts.status = '1' AND all_podcasts.is_delete = '1'")->result_array();
 			if(!empty($latest_podcast)) {
 				foreach ($latest_podcast as $keylp => $lpvalue) {
-					$lpvalue['cover_image'] = base_url().'uploads/podcast/'.$lpvalue['cover_image'];
+					$lpvalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$lpvalue['podcast_cover_image'];
 					$returnlp[$keylp] = $lpvalue;
 				}
 			} else {
@@ -49,10 +53,13 @@ class Home extends MY_Controller {
 			}
 			$data['latest_podcast'] = $returnlp;
 
-			$latest_videos = $this->db->query("SELECT all_videos.id, users.companyname, category.category_name, all_videos.videos_name, all_videos.videos_description, all_videos.videos_file, all_videos.videos_link, all_videos.view_count FROM all_videos JOIN category ON all_videos.videos_cat_id = category.id JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			//$latest_videos = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, category.category_name, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_description, all_videos.videos_file, all_videos.videos_link, all_videos.view_count FROM all_videos JOIN category ON all_videos.videos_cat_id = category.id JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			$latest_videos = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_description, all_videos.videos_file, all_videos.videos_link, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
 			if(!empty($latest_videos)) {
 				foreach ($latest_videos as $keylv => $lvvalue) {
-					$lvvalue['videos_file'] = base_url().'uploads/videos/'.$lvvalue['videos_file'];
+					$lvvalue['profilePic'] = base_url().'uploads/users/'.$lvvalue['profilePic'];
+					$lvvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$lvvalue['video_cover_image'];
+					$lvvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$lvvalue['videos_file'];
 					$returnlv[$keylv] = $lvvalue;
 				}
 			} else {
@@ -138,7 +145,7 @@ class Home extends MY_Controller {
 			foreach ($getdata as $key => $row) {
 				$countJob = $this->Crud_model->GetData('postjob','',"user_id='".$row['userId']."'");
 				$getVendorList['vendor_lists'][$key]['userId'] = $row['userId'];
-				$getVendorList['vendor_lists'][$key]['companyname'] = $row['companyname'];
+				$getVendorList['vendor_lists'][$key]['organizername'] = $row['organizername'];
 				$getVendorList['vendor_lists'][$key]['email'] = $row['email'];
 				$getVendorList['vendor_lists'][$key]['mobile'] = $row['mobile'];
 				$getVendorList['vendor_lists'][$key]['dob'] = $row['dob'];

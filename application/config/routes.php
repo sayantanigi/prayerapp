@@ -78,6 +78,9 @@ $route['api/prayerListByEachOrganizer'] = "api/User_dashboard/prayerListByEachOr
 $route['api/prayer_details'] = "api/User_dashboard/prayer_details";
 $route['api/userJoinedEvent'] = "api/User_dashboard/userJoinedEvent";
 $route['api/userlikedEvent'] = "api/User_dashboard/userlikedEvent";
+$route['api/ListofupcomingPrayers'] = "api/User_dashboard/ListofupcomingPrayers";
+$route['api/ListofPrayers'] = "api/User_dashboard/ListofPrayers";
+$route['api/ListofPodcast'] = "api/User_dashboard/ListofPodcast";
 
 $route['api/add_podcast'] = "api/User_dashboard/add_podcast";
 $route['api/edit_podcast'] = "api/User_dashboard/edit_podcast";
@@ -91,54 +94,4 @@ $route['api/update_video'] = "api/User_dashboard/update_video";
 $route['api/videoListByEachOrganizer'] = "api/User_dashboard/videoListByEachOrganizer";
 $route['api/video_details'] = "api/User_dashboard/video_details";
 
-
-
-
-
-$route['api/home_list'] = 'api/Home/home_list';
-$route['api/vendor_lists'] = "api/Home/vendor_lists";
-$route['api/vendor_detail'] = "api/Home/vendor_details";
-$route['api/product_details'] = "api/Home/product_details";
-$route['api/freelancer_lists'] = "api/Home/freelancer_lists";
-$route['api/freelancer_detail'] = "api/Home/freelancer_details";
-$route['api/post_details'] = 'api/Home/post_details';
-$route['api/vendor_pricing'] = 'api/Home/vendor_pricing';
-$route['api/freelancer_pricing'] = 'api/Home/freelancer_pricing';
-$route['api/about'] = 'api/Home/about';
-$route['api/contact'] = 'api/Home/contact';
-$route['api/save_contact'] = 'api/Home/save_contact';
-$route['api/privacy'] = 'api/Home/privacy';
-$route['api/term_and_conditions'] = 'api/Home/term_and_conditions';
-$route['api/careertips_details'] = 'api/Home/careertips_details';
-$route['api/search_job'] = 'api/Home/search_job';
-$route['api/user_subscription_details'] = "api/User_dashboard/subscription_details";
-$route['api/user_subscription'] = "api/User_dashboard/userSubscription";
-$route['api/getUserSubscriptionDetails'] = "api/User_dashboard/getUserSubscriptionDetails";
-$route['api/user_profile'] = "api/User_dashboard/profile_settings";
-$route['api/update_profile'] = "api/User_dashboard/update_profile";
-$route['api/education_list'] = "api/User_dashboard/education_list";
-$route['api/save_education'] = "api/User_dashboard/save_education";
-$route['api/get_educationDetails'] = "api/User_dashboard/get_educationDetails";
-$route['api/update_education'] = "api/User_dashboard/update_education";
-$route['api/delete_education'] = "api/User_dashboard/delete_education";
-$route['api/workexperience_list'] = "api/User_dashboard/workexperience_list";
-$route['api/save_workexperience'] = "api/User_dashboard/save_workexperience";
-$route['api/get_workexperience'] = "api/User_dashboard/get_workexperience";
-$route['api/update_workexperience'] = "api/User_dashboard/update_workexperience";
-$route['api/delete_workexperience'] = "api/User_dashboard/delete_workexperience";
-$route['api/myjob'] = "api/User_dashboard/myjob";
-$route['api/save_postjob'] = "api/User_dashboard/save_postjob";
-$route['api/edit_post_job'] = "api/User_dashboard/edit_post_job";
-$route['api/update_post_job'] = "api/User_dashboard/update_post_job";
-$route['api/save_postbid'] = "api/User_dashboard/save_postbid";
-$route['api/jobbid'] = "api/User_dashboard/jobbid";
-$route['api/delete_job'] = "api/User_dashboard/delete_job";
-$route['api/products'] = "api/User_dashboard/products";
-$route['api/delete_product'] = "api/User_dashboard/delete_product";
-$route['api/delete_product_image'] = "api/User_dashboard/delete_product_image";
-$route['api/save_employer_rating'] = "api/User_dashboard/save_employer_rating";
-$route['api/chatUser_list'] = "api/User_dashboard/chatUser_list";
-$route['api/showmessage_count'] = "api/User_dashboard/showmessage_count";
-$route['api/showmessageCountEach'] = "api/User_dashboard/showmessageCountEach";
-$route['api/showmessage_list'] = "api/User_dashboard/showmessage_list";
 //$route['api/home_list'] = 'api/Home/home_list';

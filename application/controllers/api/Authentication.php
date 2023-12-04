@@ -115,23 +115,54 @@ class Authentication extends CI_Controller {
             $email = $formdata["email"];
     		$password = $formdata["password"];
 			$check_user = $this->db->query("SELECT * FROM users WHERE email = '".$email."' AND password = '".md5($password)."' AND status = '1'")->result_array();
-			if($check_user['0']['userType'] == '1') {
-				$check_user = $this->db->query("SELECT userId, CONCAT(firstname,' ', lastname) as name, short_bio, mobile, gender, email, address, userType FROM users WHERE userId = '".$check_user['0']['userId'] ."' AND status = '1'")->result_array();
-			} else {
-				$check_user = $this->db->query("SELECT userId, companyname as name, short_bio, mobile, gender, email, address, userType FROM users WHERE userId = '".$check_user['0']['userId'] ."' AND status = '1'")->result_array();
-			}
 			if(!empty($check_user)) {
-                $msg = 'Logged in successfully';
-				$get_setting=$this->Crud_model->get_single('setting');
-				//echo "<pre>"; print_r($get_setting); die;
-				if($get_setting->required_subscription == '1') {
-					if($check_user['0']['userType'] == '1') {
-						$check_sub = $this->Crud_model->GetData('employer_subscription', '', "employer_id='".$check_user['0']['userId']."' AND status IN (1,2)");
-						if(empty($check_sub)) {
-							$response = array('status'=> 'success','result'=> $check_user);
-							$response = array_merge($response, array("subscription"=> "0"));
+				if($check_user['0']['userType'] == '1') {
+					$check_user = $this->db->query("SELECT userId, CONCAT(firstname,' ', lastname) as name, short_bio, mobile, gender, email, address, userType FROM users WHERE userId = '".$check_user['0']['userId'] ."' AND status = '1'")->result_array();
+				} else {
+					$check_user = $this->db->query("SELECT userId, organizername as name, short_bio, mobile, gender, email, address, userType FROM users WHERE userId = '".$check_user['0']['userId'] ."' AND status = '1'")->result_array();
+				}
+				if(!empty($check_user)) {
+					$msg = 'Logged in successfully';
+					$get_setting=$this->Crud_model->get_single('setting');
+					//echo "<pre>"; print_r($get_setting); die;
+					if($get_setting->required_subscription == '1') {
+						if($check_user['0']['userType'] == '1') {
+							$check_sub = $this->Crud_model->GetData('employer_subscription', '', "employer_id='".$check_user['0']['userId']."' AND status IN (1,2)");
+							if(empty($check_sub)) {
+								$response = array('status'=> 'success','result'=> $check_user);
+								$response = array_merge($response, array("subscription"=> "0"));
+							} else {
+								$profile_check = $this->db->query("SELECT `firstname`, `lastname`, `email`, `gender`, `address`, `zip`, `short_bio` FROM `users` WHERE userId = '".@$check_user['0']['userId']."'")->result_array();
+								if(empty($profile_check[0]['firstname']) || empty($profile_check[0]['lastname']) || empty($profile_check[0]['email']) || empty($profile_check[0]['gender']) || empty($profile_check[0]['address']) || empty($profile_check[0]['zip']) || empty($profile_check[0]['short_bio'])) {
+									$response = array('status'=> 'success','result'=> $check_user);
+									$response = array_merge($response, array("profile"=> "0"));
+								} else {
+									$response = array('status'=> 'success','result'=> $check_user);
+									$response = array_merge($response, array("profile"=> "1"));
+								}
+							}
+						} else if ($check_user['0']['userType'] == '2') {
+							$check_sub = $this->Crud_model->GetData('employer_subscription', '', "employer_id='".$check_user['0']['userId']."' AND status IN (1,2)");
+							if(empty($check_sub)) {
+								$response = array('status'=> 'success','result'=> $check_user);
+								$response = array_merge($response, array("subscription"=> "0"));
+							} else {
+								$profile_check = $this->db->query("SELECT `profilePic`, `organizername`, `email`, `mobile`,`address`, `foundedyear`, `teamsize`, `short_bio` FROM `users` WHERE userId = '".@$check_user['0']['userId']."'")->result_array();
+								if(empty($profile_check[0]['organizername']) || empty($profile_check[0]['email']) || empty($profile_check[0]['address']) || empty($profile_check[0]['teamsize'])  || empty($profile_check[0]['short_bio'])) {
+									$response = array('status'=> 'success','result'=> $check_user);
+									$response = array_merge($response, array("profile"=> "0"));
+								} else {
+									$response = array('status'=> 'success','result'=> $check_user);
+									$response = array_merge($response, array("profile"=> "1"));
+								}
+							}
 						} else {
-							$profile_check = $this->db->query("SELECT `firstname`, `lastname`, `email`, `gender`, `address`, `zip`, `short_bio` FROM `users` WHERE userId = '".@$check_user['0']['userId']."'")->result_array();
+							$response = array('status'=> 'success','result'=> $check_user);
+							$response = array_merge($response, array("profile"=> "1"));
+						}
+					}  else {
+						if($check_user['0']['userType'] == '1') {
+							$profile_check = $this->db->query("SELECT `firstname`, `lastname`, `email`, `gender`, `address`, `zip`, `short_bio` FROM `users` WHERE userId = '".@$_SESSION['afrebay']['userId']."'")->result_array();
 							if(empty($profile_check[0]['firstname']) || empty($profile_check[0]['lastname']) || empty($profile_check[0]['email']) || empty($profile_check[0]['gender']) || empty($profile_check[0]['address']) || empty($profile_check[0]['zip']) || empty($profile_check[0]['short_bio'])) {
 								$response = array('status'=> 'success','result'=> $check_user);
 								$response = array_merge($response, array("profile"=> "0"));
@@ -139,54 +170,28 @@ class Authentication extends CI_Controller {
 								$response = array('status'=> 'success','result'=> $check_user);
 								$response = array_merge($response, array("profile"=> "1"));
 							}
-						}
-					} else if ($check_user['0']['userType'] == '2') {
-						$check_sub = $this->Crud_model->GetData('employer_subscription', '', "employer_id='".$check_user['0']['userId']."' AND status IN (1,2)");
-						if(empty($check_sub)) {
-							$response = array('status'=> 'success','result'=> $check_user);
-							$response = array_merge($response, array("subscription"=> "0"));
-						} else {
-							$profile_check = $this->db->query("SELECT `profilePic`, `companyname`, `email`, `mobile`,`address`, `foundedyear`, `teamsize`, `short_bio` FROM `users` WHERE userId = '".@$check_user['0']['userId']."'")->result_array();
-							if(empty($profile_check[0]['companyname']) || empty($profile_check[0]['email']) || empty($profile_check[0]['address']) || empty($profile_check[0]['teamsize'])  || empty($profile_check[0]['short_bio'])) {
+						} else if ($check_user['0']['userType'] == '2') {
+							$profile_check = $this->db->query("SELECT `profilePic`, `organizername`, `email`, `mobile`,`address`, `foundedyear`, `teamsize`, `short_bio` FROM `users` WHERE userId = '".@$_SESSION['afrebay']['userId']."'")->result_array();
+							if(empty($profile_check[0]['organizername']) || empty($profile_check[0]['email']) || empty($profile_check[0]['address']) || empty($profile_check[0]['teamsize'])  || empty($profile_check[0]['short_bio'])) {
 								$response = array('status'=> 'success','result'=> $check_user);
 								$response = array_merge($response, array("profile"=> "0"));
 							} else {
 								$response = array('status'=> 'success','result'=> $check_user);
-								$response = array_merge($response, array("profile"=> "1"));
+								$response = array_merge($response, array("profile"=> "0"));
 							}
-						}
-					} else {
-						$response = array('status'=> 'success','result'=> $check_user);
-						$response = array_merge($response, array("profile"=> "1"));
-					}
-				}  else {
-					if($check_user['0']['userType'] == '1') {
-						$profile_check = $this->db->query("SELECT `firstname`, `lastname`, `email`, `gender`, `address`, `zip`, `short_bio` FROM `users` WHERE userId = '".@$_SESSION['afrebay']['userId']."'")->result_array();
-						if(empty($profile_check[0]['firstname']) || empty($profile_check[0]['lastname']) || empty($profile_check[0]['email']) || empty($profile_check[0]['gender']) || empty($profile_check[0]['address']) || empty($profile_check[0]['zip']) || empty($profile_check[0]['short_bio'])) {
-							$response = array('status'=> 'success','result'=> $check_user);
-							$response = array_merge($response, array("profile"=> "0"));
 						} else {
 							$response = array('status'=> 'success','result'=> $check_user);
 							$response = array_merge($response, array("profile"=> "1"));
 						}
-					} else if ($check_user['0']['userType'] == '2') {
-						$profile_check = $this->db->query("SELECT `profilePic`, `companyname`, `email`, `mobile`,`address`, `foundedyear`, `teamsize`, `short_bio` FROM `users` WHERE userId = '".@$_SESSION['afrebay']['userId']."'")->result_array();
-						if(empty($profile_check[0]['companyname']) || empty($profile_check[0]['email']) || empty($profile_check[0]['address']) || empty($profile_check[0]['teamsize'])  || empty($profile_check[0]['short_bio'])) {
-							$response = array('status'=> 'success','result'=> $check_user);
-							$response = array_merge($response, array("profile"=> "0"));
-						} else {
-							$response = array('status'=> 'success','result'=> $check_user);
-							$response = array_merge($response, array("profile"=> "0"));
-						}
-					} else {
-						$response = array('status'=> 'success','result'=> $check_user);
-						$response = array_merge($response, array("profile"=> "1"));
 					}
+				} else {
+					$msg = 'Invalid Email Address or Password';
+					$response = array('status'=> 'error','result'=> $msg);
 				}
-            } else {
-                $msg = 'Invalid Email Address or Password';
-                $response = array('status'=> 'error','result'=> $msg);
-            }
+			} else {
+				$msg = 'Invalid Email Address or Password';
+				$response = array('status'=> 'error','result'=> $msg);
+			}
         } catch (\Exception $e) {
             $response = array('status'=> 'error', 'result'=> $e->getMessage());
         }
