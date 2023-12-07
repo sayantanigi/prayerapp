@@ -972,7 +972,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
 		} catch (\Exception $th) {
-			$response = array('status'=> 'error', 'result' => $e->getMessage());
+			$response = array('status'=> 'error', 'result' => $th->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -996,8 +996,8 @@ class User_dashboard extends CI_Controller {
 			);
 			$this->Crud_model->SaveData('user_joined_event', $data);
 			$response = array('status'=> 'success', 'result'=> "You joined the prayer successfully");
-		} catch (\Throwable $th) {
-			$response = array('status'=> 'error', 'result' => $e->getMessage());
+		} catch (\Exception $th) {
+			$response = array('status'=> 'error', 'result' => $th->getMessage());
 		}
 		echo json_encode($response);
 	}
