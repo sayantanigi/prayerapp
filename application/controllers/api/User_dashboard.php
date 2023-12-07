@@ -202,7 +202,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
@@ -236,7 +236,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
@@ -285,7 +285,7 @@ class User_dashboard extends CI_Controller {
 				$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.prayer_datetime LIKE '%".$selectedDate."%' AND all_prayers.status = '1' AND all_prayers.is_delete = '1'")->result_array();
 			} else {
 				$todaysDate = date('Y-m-d');
-				$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.prayer_datetime LIKE '%".$todaysDate."%' AND all_prayers.status = '1' AND all_prayers.is_delete = '1'")->result_array();
+				$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.prayer_datetime > '".$todaysDate."' AND all_prayers.status = '1' AND all_prayers.is_delete = '1'")->result_array();
 			}
 			if(!empty($upcoming_events)) {
 				foreach ($upcoming_events as $keyue => $uevalue) {
@@ -324,13 +324,18 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
 					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					foreach ($joineduserId as $key1 => $val) {
+						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
 			} else {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
 		} catch(\Exception $e) {
-			$responce = array('status'=> 'error', 'result' => $e->getMessage());
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -354,13 +359,54 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
 					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					foreach ($joineduserId as $key1 => $val) {
+						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
 			} else {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
 		} catch(\Exception $e) {
-			$responce = array('status'=> 'error', 'result' => $e->getMessage());
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function ListofupcomingPrayer() {
+		try {
+			$todaysDate = date('Y-m-d');
+			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'all_prayers.prayer_datetime > "'.$todaysDate.'" AND status = "1" and is_delete = "1"');
+			if(!empty($prayer_list)) {
+				$prayerList = array();
+				foreach ($prayer_list as $key => $value) {
+					$prayer_datetime = date('Y-m-d h:i A', strtotime($value->prayer_datetime));
+					$prayer_datetime = date_create($prayer_datetime);
+					$prayerList[$key]['id'] = $value->id;
+					$prayerList[$key]['prayer_name'] = $value->prayer_name;
+					$prayerList[$key]['prayer_location'] = $value->prayer_location;
+					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
+					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
+					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
+					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					foreach ($joineduserId as $key1 => $val) {
+						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $prayerList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch(\Exception $e) {
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -532,7 +578,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
@@ -556,7 +602,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
 		} catch (\Throwable $th) {
-			$responce = array('status'=> 'error', 'result' => $th->getMessage());
+			$response = array('status'=> 'error', 'result' => $th->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -583,12 +629,11 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
     //Podcast API End
-
 
     //Video API Start
     public function add_video() {
@@ -751,7 +796,7 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=> 'error', 'result'=> 'No data found');
 			}
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
@@ -775,14 +820,185 @@ class User_dashboard extends CI_Controller {
 					$videoDetails[$key]['videos_description'] = $value->videos_description;
 					$videoDetails[$key]['view_count'] = $value->view_count;
 				}
-				$response = array('status'=> 'success', 'result'=> $videoDetails);
+				$return[$key] = $videoDetails;
 			} else {
-				$response = array('status'=> 'error', 'result'=> 'No data found');
+				$return = 'No data found';
 			}
+			$data['video_details'] = $return;
+
+			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			if(!empty($videoscollection)) {
+				foreach ($videoscollection as $keyvn => $vnvalue) {
+					$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					$returnvn[$keyvn] = $vnvalue;
+				}
+			} else {
+				$returnvn = "";
+			}
+			$data['video_collection'] = $returnvn;
+			$response = array('status'=> 'success', 'result'=> $data);
     	} catch(\Exception $e) {
-    		$responce = array('status'=> 'error', 'result' => $e->getMessage());
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
     	}
     	echo json_encode($response);
     }
+
+	public function allVideoList() {
+		try {
+			//$formdata = json_decode(file_get_contents('php://input'), true);
+			$bannersectionVideos = $this->db->query("SELECT id, created_date, video_cover_image, videos_file, videos_name, view_count FROM all_videos order by id desc limit 1")->result_array();
+			$bannersectionVideos[0]['videos_file'] = base_url().'uploads/videos/videos_file/'.$bannersectionVideos[0]['videos_file'];
+			$bannersectionVideos[0]['created_date'] = date('Y', strtotime($bannersectionVideos[0]['created_date']));
+			$data['bannerSection'] = $bannersectionVideos;
+			
+			$gettopweekVideos = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name FROM all_videos")->result_array();
+			if(!empty($gettopweekVideos)) {
+				foreach ($gettopweekVideos as $keyvi => $vivalue) {
+					$vivalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vivalue['videos_file'];
+					$returnvi[$keyvi] = $vivalue;
+				}
+			} else {
+				$returnvi = "";
+			}
+			$data['get_top_week_videos'] = $returnvi;
+
+			$favVideosChnnl = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name FROM all_videos")->result_array();
+			if(!empty($favVideosChnnl)) {
+				foreach ($gettopweekVideos as $keyvc => $vcvalue) {
+					$vcvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vcvalue['videos_file'];
+					$returnvc[$keyvc] = $vcvalue;
+				}
+			} else {
+				$returnvc = "";
+			}
+			$data['favorite_video_channel'] = $returnvc;
+
+			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			if(!empty($videoscollection)) {
+				foreach ($videoscollection as $keyvn => $vnvalue) {
+					$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					$returnvn[$keyvn] = $vnvalue;
+				}
+			} else {
+				$returnvn = "";
+			}
+			$data['video_collection'] = $returnvn;
+			$response = array('status'=> 'success', 'result'=> $data);
+		} catch(\Exception $e) {
+			$response = array('status' => 'error', 'result' =>$e->getMessage());
+		}
+		echo json_encode($response);
+	}
     //Video API End
+
+	public function search_video() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$keyword = $formdata['keyword'];
+			//print_r($formdata); die();
+			//echo "SELECT id, video_cover_image, videos_file, videos_name, view_count FROM all_videos WHERE videos_name LIKE '%".$keyword."%'";
+			$searchResult = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.videos_name LIKE '%".$keyword."%' AND all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			//print_r($searchResult);
+			if(!empty($searchResult)) {
+				foreach ($searchResult as $keysv => $value) {
+					$value['videos_file'] = base_url().'uploads/videos/videos_file/'.$value['videos_file'];
+					$returnsv[$keysv] = $value;
+				}
+				$data['search_results'] = $returnsv;
+				$response = array('status'=> 'success', 'result'=> $data);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No Data Found');
+			}
+		} catch (\Exception $th) {
+			$response = array('status' => 'error', 'result' => $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function search_prayer() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$keyword = $formdata['keyword'];
+			$prayer_list = $this->Crud_model->GetData('all_prayers', '', 'prayer_name LIKE "%'.$keyword.'%" AND status = 1 and is_delete = 1');
+			if(!empty($prayer_list)) {
+				$prayerList = array();
+				foreach ($prayer_list as $key => $value) {
+					$prayer_datetime = date('Y-m-d h:i A', strtotime($value->prayer_datetime));
+					$prayer_datetime = date_create($prayer_datetime);
+					$prayerList[$key]['id'] = $value->id;
+					$prayerList[$key]['prayer_name'] = $value->prayer_name;
+					$prayerList[$key]['prayer_location'] = $value->prayer_location;
+					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
+					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
+					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
+					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
+					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
+					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
+					foreach ($joineduserId as $key1 => $val) {
+						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $prayerList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch(\Exception $e) {
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function joinedPrayerDetails() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$prayer_id = $formdata['prayer_id'];
+			$prayer_details = $this->Crud_model->GetData('all_prayers', '', "id = '".$prayer_id."' AND status = 1 and is_delete = 1");
+			if(!empty($prayer_details)) {
+				$prayerDetails = array();
+				foreach ($prayer_details as $key => $value) {
+					$prayerDetails[$key]['id'] = $value->id;
+					$prayerDetails[$key]['prayer_name'] = $value->prayer_name;
+					$prayerDetails[$key]['prayer_location'] = $value->prayer_location;
+					$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+				}
+				$response = array('status'=> 'success', 'result'=> $prayerDetails);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Exception $th) {
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function userJoinedPrayer() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$event_id = $formdata['event_id'];
+			$fullname = $formdata['fullname'];
+			$phno = $formdata['phno'];
+			$gender = $formdata['gender'];
+			$nationality = $formdata['nationality'];
+			$data = array(
+				"user_id"=>$user_id,
+				"event_id"=>$event_id,
+				"fullname"=>$fullname,
+				"phno"=>$phno,
+				"gender"=>$gender,
+				"nationality"=>$nationality
+			);
+			$this->Crud_model->SaveData('user_joined_event', $data);
+			$response = array('status'=> 'success', 'result'=> "You joined the prayer successfully");
+		} catch (\Throwable $th) {
+			$response = array('status'=> 'error', 'result' => $e->getMessage());
+		}
+		echo json_encode($response);
+	}
 }

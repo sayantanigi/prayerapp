@@ -81,7 +81,13 @@ $route['api/userlikedEvent'] = "api/User_dashboard/userlikedEvent";
 $route['api/ListofupcomingPrayers'] = "api/User_dashboard/ListofupcomingPrayers";
 $route['api/ListofPrayers'] = "api/User_dashboard/ListofPrayers";
 $route['api/ListofnewPrayers'] = "api/User_dashboard/ListofnewPrayers";
+$route['api/ListofupcomingPrayer'] = "api/User_dashboard/ListofupcomingPrayer";
 $route['api/ListofPodcast'] = "api/User_dashboard/ListofPodcast";
+$route['api/allVideoList'] = "api/User_dashboard/allVideoList";
+$route['api/search_video'] = "api/User_dashboard/search_video";
+$route['api/search_prayer'] = "api/User_dashboard/search_prayer";
+$route['api/joinedPrayerDetails'] = "api/User_dashboard/joinedPrayerDetails";
+$route['api/userJoinedPrayer'] = "api/User_dashboard/userJoinedPrayer";
 
 $route['api/add_podcast'] = "api/User_dashboard/add_podcast";
 $route['api/edit_podcast'] = "api/User_dashboard/edit_podcast";
