@@ -17,7 +17,8 @@ class User_dashboard extends CI_Controller {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$userid = $formdata['user_id'];
-			$user_info = $this->Crud_model->get_single('users', "userId='".$userid."'");
+			//$user_info = $this->Crud_model->get_single('users', "userId='".$userid."'");
+			$user_info = $this->db->query("SELECT `userId`, `firstname`, `lastname`, `short_bio`, `mobile`, `gender`, `email`, `address`, `userType`, `latitude`, `longitude` FROM users WHERE `userId` = '".$userid."'")->result_array();
 			$data['userinfo'] = $user_info;
 			$response = array('status'=> 'success', 'result'=> $data);
 		} catch(\Exception $e) {
@@ -325,9 +326,16 @@ class User_dashboard extends CI_Controller {
 					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
 					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
-					foreach ($joineduserId as $key1 => $val) {
-						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					if(!empty($joineduserId)) {
+						foreach ($joineduserId as $key1 => $val) {
+							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+							$val['joinedUserImage'] = $getuserimage[0]['profilePic'];
+							$return[$key1] = $val;
+							$joineduser = $return;
+							$prayerList[$key]['joinedUserImage'] = $joineduser;
+						}
+					} else {
+						$prayerList[$key]['joinedUserImage'] = [];
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
@@ -360,9 +368,16 @@ class User_dashboard extends CI_Controller {
 					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
 					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
-					foreach ($joineduserId as $key1 => $val) {
-						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					if(!empty($joineduserId)) {
+						foreach ($joineduserId as $key1 => $val) {
+							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+							$val['joinedUserImage'] = $getuserimage[0]['profilePic'];
+							$return[$key1] = $val;
+							$joineduser = $return;
+							$prayerList[$key]['joinedUserImage'] = $joineduser;
+						}
+					} else {
+						$prayerList[$key]['joinedUserImage'] = [];
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
@@ -396,9 +411,16 @@ class User_dashboard extends CI_Controller {
 					$likedUser = $this->db->query("SELECT count(id) as total FROM user_liked_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['likedUser'] = $likedUser[0]['total'];
 					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
-					foreach ($joineduserId as $key1 => $val) {
-						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+					if(!empty($joineduserId)) {
+						foreach ($joineduserId as $key1 => $val) {
+							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
+							$val['joinedUserImage'] = $getuserimage[0]['profilePic'];
+							$return[$key1] = $val;
+							$joineduser = $return;
+							$prayerList[$key]['joinedUserImage'] = $joineduser;
+						}
+					} else {
+						$prayerList[$key]['joinedUserImage'] = [];
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
