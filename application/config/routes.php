@@ -65,6 +65,8 @@ $route['admin/email-template'] = 'admin/Email_template/index';
 $route['admin/chat_details/(:any)/(:any)'] = "admin/chat/adminShowMessage_list/$1/$2";
 $route['admin/deletepostdetail'] = "admin/Post_job/deletepostdetail";
 $route['admin/update-postjob/(:any)'] = "admin/Post_job/update_post_job/$1";
+$route['admin/product-category'] = 'admin/Product_category/index';
+$route['admin/all-product'] = 'admin/Product/index';
 //API URLS
 $route['api/registration'] = 'api/Authentication/registration';
 $route['api/email-verification/(:any)'] = "api/Authentication/emailVerification/$1";
