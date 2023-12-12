@@ -1063,10 +1063,10 @@ class User_dashboard extends CI_Controller {
 							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
 							$return[$key1] = $val;
 							$proimg = $return;
-							$proList[$key]['pro_image'] = $proimg;
+							$proList[$key]['imageList'] = $proimg;
 						}
 					} else {
-						$proList[$key]['pro_image'] = [];
+						$proList[$key]['imageList'] = [];
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $proList);
@@ -1100,10 +1100,10 @@ class User_dashboard extends CI_Controller {
 							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
 							$return[$key1] = $val;
 							$proimg = $return;
-							$proList[$key]['pro_image'] = $proimg;
+							$proList[$key]['imageList'] = $proimg;
 						}
 					} else {
-						$proList[$key]['pro_image'] = [];
+						$proList[$key]['imageList'] = [];
 					}
 					$proList[$key]['status'] = $value['status'];
 				}
@@ -1143,10 +1143,10 @@ class User_dashboard extends CI_Controller {
 							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
 							$return[$key1] = $val;
 							$proimg = $return;
-							$proList[$key]['pro_image'] = $proimg;
+							$proList[$key]['imageList'] = $proimg;
 						}
 					} else {
-						$proList[$key]['pro_image'] = [];
+						$proList[$key]['imageList'] = [];
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $proList);
