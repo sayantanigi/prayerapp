@@ -318,7 +318,7 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
 					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
-					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
+					$prayerList[$key]['prayer_description'] = $value->prayer_description;
 					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
@@ -329,7 +329,7 @@ class User_dashboard extends CI_Controller {
 					if(!empty($joineduserId)) {
 						foreach ($joineduserId as $key1 => $val) {
 							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-							$val['joinedUserImage'] = $getuserimage[0]['profilePic'];
+							$val['joinedUserImage'] = base_url().'uploads/users/'.$getuserimage[0]['profilePic'];
 							$return[$key1] = $val;
 							$joineduser = $return;
 							$prayerList[$key]['joinedUserImage'] = $joineduser;
@@ -1020,6 +1020,141 @@ class User_dashboard extends CI_Controller {
 			$response = array('status'=> 'success', 'result'=> "You joined the prayer successfully");
 		} catch (\Exception $th) {
 			$response = array('status'=> 'error', 'result' => $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function product_category() {
+		try {
+			$productCategory = $this->db->query("SELECT * FROM product_category WHERE status = 'Active' ORDER BY category_name ASC")->result_array();
+			if(!empty($productCategory)) {
+				$procatList = array();
+				foreach ($productCategory as $key => $value) {
+					$procatList[$key]['id'] = $value['id'];
+					$procatList[$key]['category_name'] = $value['category_name'];
+					$procatList[$key]['category_image'] =  base_url().'uploads/product_category/'.$value['category_image'];
+					$procatList[$key]['status'] = $value['status'];
+				}
+				$response = array('status'=> 'success', 'result'=> $procatList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+	public function product_list() {
+		try {
+			$productList = $this->db->query("SELECT * FROM product_list WHERE status = 'Active' ORDER BY id DESC")->result_array();
+			if(!empty($productList)) {
+				$proList = array();
+				foreach ($productList as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					$proList[$key]['mrp'] = $value['mrp'];
+					$proList[$key]['discount'] = $value['discount']."% off";
+					$proList[$key]['final_price'] = $value['final_price'];
+					$proList[$key]['status'] = $value['status'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['pro_image'] = $proimg;
+						}
+					} else {
+						$proList[$key]['pro_image'] = [];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function productDetails() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'),true);
+			$pro_id = $formdata['prod_id'];
+			$productdata = $this->db->query("SELECT * FROM product_list WHERE id = '".$pro_id."' AND status = 'Active' ORDER BY id DESC")->result_array();
+			//print_r($productdata); die;
+			if(!empty($productdata)) {
+				$proList = array();
+				foreach ($productdata as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					$get_cat = $this->db->query("SELECT * FROM product_category WHERE id = '".$value['pro_cat_id']."' AND status = 'Active' ORDER BY id DESC")->result_array();
+					$proList[$key]['pro_cat'] = $get_cat[0]['category_name'];
+					$proList[$key]['pro_desc'] = $value['pro_desc'];
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['pro_image'] = $proimg;
+						}
+					} else {
+						$proList[$key]['pro_image'] = [];
+					}
+					$proList[$key]['status'] = $value['status'];
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function productByCategory() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$catid = $formdata['cat_id'];
+			if($catid > 0){
+				$productList = $this->db->query("SELECT * FROM product_list WHERE pro_cat_id = '".$catid."' AND status = 'Active' ORDER BY id DESC")->result_array();
+			} else {
+				$productList = $this->db->query("SELECT * FROM product_list WHERE status = 'Active' ORDER BY id DESC")->result_array();
+			}
+			
+			if(!empty($productList)) {
+				$proList = array();
+				foreach ($productList as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					$proList[$key]['mrp'] = $value['mrp'];
+					$proList[$key]['discount'] = $value['discount']."% off";
+					$proList[$key]['final_price'] = $value['final_price'];
+					$proList[$key]['status'] = $value['status'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['pro_image'] = $proimg;
+						}
+					} else {
+						$proList[$key]['pro_image'] = [];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
 		}
 		echo json_encode($response);
 	}

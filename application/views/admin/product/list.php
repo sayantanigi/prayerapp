@@ -58,7 +58,6 @@
                                     <thead class="sticky ">
                                         <tr>
                                             <th>#</th>
-                                            <th>Product Image</th>
                                             <th>Product Name</th>
                                             <th>Product Description</th>
                                             <th>Category Name</th>
@@ -127,7 +126,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Product Image</label>
-                                <input class="form-control" type="file" name="pro_image" id="pro_image">
+                                <input class="form-control" type="file" name="pro_image[]" id="pro_image" multiple>
                             </div>
                             <div class="mt-4">
                                 <button class="btn btn-primary" type="button" onclick="return create_product();">Add Product</button>
@@ -137,12 +136,8 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-info" onclick="return getvalidation()">Submit</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div> -->
+        </div>
     </div>
-</div>
 </div>
 <!--  end add modal -->
 <!--  edit mmodal -->
@@ -156,24 +151,6 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        <!-- <form action="#" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label>Category Name <span style="color:red;">*</span> <span id="edit_category_err"></span></label>
-                                <input class="form-control" type="text" name="category_name" id="edit_category_name">
-                            </div>
-                            <div class="form-group">
-                                <label>Category Image</label>
-                                <input class="form-control" type="file" name="category_image" id="edit_category_image">
-                            </div>
-                            <div id="show_img"> </div>
-                            <input type="hidden" name="old_image" id="old_image">
-                            <input type="hidden" name="id" id="id">
-                            <div class="mt-4">
-                                <button class="btn btn-primary" type="button" onclick="return update_category();">Save Changes</button>
-                                <a href="#" class="btn btn-link" data-dismiss="modal">Cancel</a>
-                            </div>
-                        </form> -->
-
                         <form action="#" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label>Product Category<span style="color:red;">*</span> <span id="edit_category_id_err"></span></label>

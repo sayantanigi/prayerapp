@@ -61,13 +61,13 @@ class Product extends MY_Controller {
             } else {
                 $desc=$row->pro_desc;
             }
+			$get_cat = $this->db->query("SELECT * FROM product_category WHERE id = '".$row->pro_cat_id."'")->result_array();
 			$no++;
 			$nestedData = array();
 			$nestedData[] = $no;
-			$nestedData[] = $img;
-            $nestedData[] = ucwords($row->pro_name);
+			$nestedData[] = ucwords($row->pro_name);
             $nestedData[] = ucwords($desc);
-            $nestedData[] = ucwords($row->pro_cat_id);
+            $nestedData[] = ucwords($get_cat[0]['category_name']);
             $nestedData[] = $row->mrp;
             $nestedData[] = $row->discount."%";
             $nestedData[] = $row->final_price;
@@ -85,32 +85,11 @@ class Product extends MY_Controller {
 	}
 
 	public function create_action() {
-        //print_r($_POST); die();
+        //print_r($_FILES); die();
 		$get_data=$this->Crud_model->get_single('product_list',"pro_name='".$_POST['pro_name']."'");
-		if(isset($_FILES['pro_image']['name'])!='' ) {
-			$_POST['pro_image']= rand(0000,9999)."_".$_FILES['pro_image']['name'];
-			$config2['image_library'] = 'gd2';
-			$config2['source_image'] =  $_FILES['pro_image']['tmp_name'];
-			$config2['new_image'] =   getcwd().'/uploads/product/'.$_POST['pro_image'];
-			$config2['upload_path'] =  getcwd().'/uploads/product/';
-			$config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
-			$config2['maintain_ratio'] = FALSE;
-			$this->image_lib->initialize($config2);
-			if(!$this->image_lib->resize()) {
-				echo('<pre>');
-				echo ($this->image_lib->display_errors());
-				exit;
-			} else {
-				$image  = $_POST['pro_image'];
-			}
-		} else {
-			$image  = "";
-		}
-
 		if(empty($get_data)) {
 			$data=array(
                 'pro_cat_id'=>$_POST['pro_cat_id'],
-                'pro_image'=>$image,
 				'pro_name'=>$_POST['pro_name'],
                 'pro_desc'=>$_POST['pro_desc'],
                 'mrp'=>$_POST['pro_mrp'],
@@ -119,6 +98,29 @@ class Product extends MY_Controller {
 				'created_date'=>date('Y-m-d H:i:s'),
 			);
 			$this->db->insert('product_list',$data);
+			$insert_id = $this->db->insert_id();
+			if(!empty($insert_id)) {
+				if (!empty($_FILES['pro_image']['name'][0])) {
+					$cpt = count($_FILES['pro_image']['name']);
+					for($i=0; $i<$cpt; $i++) {
+						$src = $_FILES['pro_image']['tmp_name'][$i];
+						$avatar = rand(0000, 9999) . "_" . $_FILES['pro_image']['name'][$i];
+						$avatar1 = str_replace(array('(', ')', ' '), '', $avatar);
+						$dest = getcwd() . '/uploads/product/' . $avatar1;
+						if (move_uploaded_file($src, $dest)) {
+							$image  = $avatar1;
+							@unlink('uploads/product/' . $_POST['old_image']);
+						}
+						$data_image = array(
+							'prod_id' => $insert_id,
+							'pro_image' => $image,
+							'created_date' => date("Y-m-d H:i:s"),
+						);
+						$this->Crud_model->SaveData('product_image', $data_image);
+						$this->session->set_flashdata('message', 'Product Created Successfully !');
+					}
+				}
+			}
 			$this->session->set_flashdata('message', 'Product created successfully');
 			echo "1"; exit;
 		} else {
@@ -128,56 +130,48 @@ class Product extends MY_Controller {
 	}
 
 	public function get_value() {
-		$pro_data=$this->Crud_model->get_single('product_list',"id='".$_POST['id']."'");
-		if(!empty($pro_data->pro_image)) {
-			if(!file_exists("uploads/product/".$pro_data->pro_image)) {
-				$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
-			} else {
-				$img ='<img  class="rounded service-img mr-1" src="'.base_url('uploads/product/'.$pro_data->pro_image).'" >';
+		$pro_data = $this->db->query("SELECT * FROM product_list WHERE id= '".$_POST['id']."' AND status = 'Active'")->result_array();
+		$prodataimg = $this->db->query("SELECT * FROM product_image WHERE prod_id = '".@$pro_data[0]['id']."'")->result_array();
+		if(!empty($prodataimg)) {
+			$img = '';
+			$oldimage = '';
+			foreach ($prodataimg as $value) {
+				$img .='<img  class="rounded service-img mr-1" src="'.base_url('uploads/product/'.$value['pro_image']).'" >';
+				$oldimage .= $value['pro_image'].",";
 			}
 		} else {
 			$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
+			$oldimage = '';
 		}
+		// if(!empty($pro_data->pro_image)) {
+		// 	if(!file_exists("uploads/product/".$pro_data->pro_image)) {
+		// 		$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
+		// 	} else {
+		// 		$img ='<img  class="rounded service-img mr-1" src="'.base_url('uploads/product/'.$pro_data->pro_image).'" >';
+		// 	}
+		// } else {
+		// 	$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
+		// }
 		$data=array(
-			'id'=>$pro_data->id,
-            'pro_cat_id'=>$pro_data->pro_cat_id,
+			'id'=>$pro_data[0]['id'],
+            'pro_cat_id'=>$pro_data[0]['pro_cat_id'],
             'image'=>$img,
-            'pro_name'=>$pro_data->pro_name,
-            'pro_desc'=>$pro_data->pro_desc,
-            'mrp'=>$pro_data->mrp,
-            'discount'=>$pro_data->discount,
-            'final_price'=>$pro_data->final_price,
-            'old_image'=>$pro_data->pro_image
+            'pro_name'=>$pro_data[0]['pro_name'],
+            'pro_desc'=>$pro_data[0]['pro_desc'],
+            'mrp'=>$pro_data[0]['mrp'],
+            'discount'=>$pro_data[0]['discount'],
+            'final_price'=>$pro_data[0]['final_price'],
+			'old_image'=>rtrim($oldimage, ",")
 		);
 		echo json_encode($data);exit;
 	}
 
 	function update_action() {
-		if(isset($_FILES['pro_image']['name'])!='' ) {
-			$_POST['pro_image']= rand(0000,9999)."_".$_FILES['pro_image']['name'];
-			$config2['image_library'] = 'gd2';
-			$config2['source_image'] =  $_FILES['pro_image']['tmp_name'];
-			$config2['new_image'] =   getcwd().'/uploads/product/'.$_POST['pro_image'];
-			$config2['upload_path'] =  getcwd().'/uploads/product/';
-			$config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
-			$config2['maintain_ratio'] = FALSE;
-			$this->image_lib->initialize($config2);
-			if(!$this->image_lib->resize()) {
-				echo('<pre>');
-				echo ($this->image_lib->display_errors());
-				exit;
-			} else {
-				$image  = $_POST['pro_image'];
-				@unlink('uploads/product/'.$_POST['old_image']);
-			}
-		} else {
-			$image  = $_POST['old_image'];
-		}
 		$get_data=$this->Crud_model->get_single_record('product_list',"pro_name='".$_POST['pro_name']."' and id!='".$_POST['id']."'");
 		if(empty($get_data)) {
 			$data=array(
                 'pro_cat_id'=>$_POST['pro_cat_id'],
-                'pro_image'=>$image,
+                //'pro_image'=>$image,
                 'pro_name'=>$_POST['pro_name'],
                 'pro_desc'=>$_POST['pro_desc'],
                 'mrp'=>$_POST['pro_mrp'],
@@ -187,6 +181,25 @@ class Product extends MY_Controller {
                 'update_date'=>date('Y-m-d H:i:s')
             );
 			$this->Crud_model->SaveData('product_list',$data,"id='".$_POST['id']."'");
+			if (!empty($_FILES['pro_image']['name'][0])) {
+				$cpt = count($_FILES['pro_image']['name']);
+				for($i=0; $i<$cpt; $i++) {
+					$src = $_FILES['pro_image']['tmp_name'][$i];
+					$avatar = rand(0000, 9999) . "_" . $_FILES['pro_image']['name'][$i];
+					$avatar1 = str_replace(array('(', ')', ' '), '', $avatar);
+					$dest = getcwd() . '/uploads/product/' . $avatar1;
+					if (move_uploaded_file($src, $dest)) {
+						$image  = $avatar1;
+						@unlink('uploads/product/' . $_POST['old_image']);
+					}
+					$data_image = array(
+						'pro_image' => $image,
+						'created_date' => date("Y-m-d H:i:s"),
+					);
+					$this->Crud_model->SaveData('product_image', $data_image. "prod_id='".$_POST['id']."'");
+					$this->session->set_flashdata('message', 'Product Created Successfully !');
+				}
+			}
 			$this->session->set_flashdata('message', 'Product updated successfully');
 			echo 1; exit;
 		} else{
@@ -197,6 +210,7 @@ class Product extends MY_Controller {
 
 	public function delete() {
         if(isset($_POST['cid'])) {
+			$this->Crud_model->DeleteData('product_image',"prod_id='".$_POST['cid']."'");
             $this->Crud_model->DeleteData('product_list',"id='".$_POST['cid']."'");
         }
     }

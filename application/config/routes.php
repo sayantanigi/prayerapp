@@ -92,17 +92,18 @@ $route['api/search_video'] = "api/User_dashboard/search_video";
 $route['api/search_prayer'] = "api/User_dashboard/search_prayer";
 $route['api/joinedPrayerDetails'] = "api/User_dashboard/joinedPrayerDetails";
 $route['api/userJoinedPrayer'] = "api/User_dashboard/userJoinedPrayer";
-
 $route['api/add_podcast'] = "api/User_dashboard/add_podcast";
 $route['api/edit_podcast'] = "api/User_dashboard/edit_podcast";
 $route['api/update_podcast'] = "api/User_dashboard/update_podcast";
 $route['api/podcastListByEachOrganizer'] = "api/User_dashboard/podcastListByEachOrganizer";
 $route['api/podcast_details'] = "api/User_dashboard/podcast_details";
-
 $route['api/add_video'] = "api/User_dashboard/add_video";
 $route['api/edit_video'] = "api/User_dashboard/edit_video";
 $route['api/update_video'] = "api/User_dashboard/update_video";
 $route['api/videoListByEachOrganizer'] = "api/User_dashboard/videoListByEachOrganizer";
 $route['api/video_details'] = "api/User_dashboard/video_details";
-
+$route['api/product_category'] = "api/User_dashboard/product_category";
+$route['api/product_list'] = "api/User_dashboard/product_list";
+$route['api/productByCategory'] = "api/User_dashboard/productByCategory";
+$route['api/productDetails'] = "api/User_dashboard/productDetails";
 //$route['api/home_list'] = 'api/Home/home_list';

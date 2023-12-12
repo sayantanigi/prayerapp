@@ -43,8 +43,14 @@ function create_product() {
 	}
 
     var form_data= new FormData();
-	var pro_image=$('#pro_image')[0].files[0];
-	form_data.append('pro_image',pro_image);
+	var fileInput = $('#pro_image')[0];
+	if(fileInput.files.length > 0 ) {
+		$.each(fileInput.files, function(k,file){
+			form_data.append('pro_image[]', file);
+		});
+	}
+	//console.log(pro_image);
+	//form_data.append('pro_image',pro_image);
     form_data.append('pro_cat_id',category_id);
 	form_data.append('pro_name',pro_name);
     form_data.append('pro_desc',pro_desc);
@@ -146,8 +152,14 @@ function update_product() {
 	}
 
     var form_data= new FormData();
-	var pro_image=$('#edit_pro_image')[0].files[0];
-	form_data.append('pro_image',pro_image);
+	var fileInput = $('#edit_pro_image')[0];
+	if(fileInput.files.length > 0 ) {
+		$.each(fileInput.files, function(k,file){
+			form_data.append('edit_pro_image[]', file);
+		});
+	}
+	//var pro_image=$('#edit_pro_image')[0].files[0];
+	//form_data.append('pro_image',pro_image);
 	form_data.append('pro_cat_id',pro_cat_id);
     form_data.append('pro_name',pro_name);
     form_data.append('pro_desc',pro_desc);
