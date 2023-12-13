@@ -1319,4 +1319,82 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function userAddress_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata["user_id"];
+			$getuseraddress = $this->db->query("SELECT * FROM user_address WHERE user_id = '".$user_id."'")->result_array();
+			if(!empty($getuseraddress)) {
+				$addressList = array();
+				foreach ($getuseraddress as $key => $value) {
+					$addressList[$key]['id'] = $value['id'];
+					//$addressList[$key]['user_id'] = $value['user_id'];
+					$addressList[$key]['fullname'] = $value['fullname'];
+					$addressList[$key]['phno'] = $value['phno'];
+					$addressList[$key]['houseno'] = $value['houseno'];
+					$addressList[$key]['landmark'] = $value['landmark'];
+					$addressList[$key]['pincode'] = $value['pincode'];
+					$addressList[$key]['address_type'] = $value['address_type'];
+				}
+				$response = array('status'=> 'success', 'result'=> $addressList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function add_address() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$data = array(
+				'user_id' => $formdata['user_id'],
+				'fullname' => $formdata['fullname'],
+				'phno' => $formdata['phno'],
+				'houseno' => $formdata['houseno'],
+				'landmark' => $formdata['landmark'],
+				'pincode' => $formdata['pincode'],
+				'address_type' => $formdata['address_type'],
+			);
+			$this->Crud_model->SaveData('user_address', $data);
+			$response = array('status'=>'success', 'result'=>'Address Added Successfuly');
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function edit_address() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$id = $formdata["id"];
+			$editaddress = $this->db->query("SELECT * FROM user_address WHERE id = '".$id."'")->result_array();
+			$response = array('status'=>'error', 'result'=>$editaddress);
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function update_address() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$data = array(
+				'fullname' => $formdata['fullname'],
+				'phno' => $formdata['phno'],
+				'houseno' => $formdata['houseno'],
+				'landmark' => $formdata['landmark'],
+				'pincode' => $formdata['pincode'],
+				'address_type' => $formdata['address_type'],
+			);
+			$this->Crud_model->SaveData('user_address', $data, 'id = "'.$formdata['id'].'"');
+			$response = array('status'=>'success', 'result'=>'Address Updated Successfuly');
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
