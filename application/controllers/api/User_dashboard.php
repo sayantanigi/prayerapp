@@ -1044,6 +1044,43 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function featured_product_list() {
+		try {
+			$productList = $this->db->query("SELECT * FROM product_list WHERE status = 'Active' ORDER BY id DESC LIMIT 3")->result_array();
+			if(!empty($productList)) {
+				$proList = array();
+				foreach ($productList as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					$proList[$key]['pro_desc'] = strip_tags($value['pro_desc']);
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					//$proList[$key]['mrp'] = $value['mrp'];
+					//$proList[$key]['discount'] = $value['discount']."% off";
+					//$proList[$key]['final_price'] = $value['final_price'];
+					//$proList[$key]['status'] = $value['status'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['imageList'] = $proimg;
+						}
+					} else {
+						$proList[$key]['imageList'] = [];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
 	public function product_list() {
 		try {
 			$productList = $this->db->query("SELECT * FROM product_list WHERE status = 'Active' ORDER BY id DESC")->result_array();
@@ -1092,7 +1129,7 @@ class User_dashboard extends CI_Controller {
 					$proList[$key]['pro_name'] = $value['pro_name'];
 					$get_cat = $this->db->query("SELECT * FROM product_category WHERE id = '".$value['pro_cat_id']."' AND status = 'Active' ORDER BY id DESC")->result_array();
 					$proList[$key]['pro_cat'] = $get_cat[0]['category_name'];
-					$proList[$key]['pro_desc'] = $value['pro_desc'];
+					$proList[$key]['pro_desc'] = strip_tags($value['pro_desc']);
 					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
@@ -1155,6 +1192,130 @@ class User_dashboard extends CI_Controller {
 			}
 		} catch (\Throwable $th) {
 			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function search_product() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$price_range = $formdata['price_range'];
+			$discount = $formdata['discount'];
+			if(!empty($price_range)) {
+				if($price_range == '1') {
+					$cond = "final_price <= 50";
+				} else if($price_range == '2') {
+					$cond = "final_price between 50 AND 100";
+				} else if($price_range == '3') {
+					$cond = "final_price between 100 AND 150";
+				} else if($price_range == '4') {
+					$cond = "final_price between 150 AND 200";
+				} else if($price_range == '5') {
+					$cond = "final_price between 200 AND 250";
+				} else {
+					$cond = "final_price < 250";
+				}
+			} else {
+				$cond = "final_price < 0";
+			}
+			if (!empty($discount)) {
+				if($discount == '1') {
+					$cond1 = "AND discount between 10 AND 20";
+				} else if($discount == '2') {
+					$cond1 = "AND discount between 20 AND 30";
+				} else if($discount == '3') {
+					$cond1 = "AND discount between 30 AND 40";
+				} else if($discount == '4') {
+					$cond1 = "AND discount between 40 AND 50";
+				} else {
+					$cond1 = "AND discount < 50";
+				}
+			} else {
+				$cond1 = "";
+			}
+			$searchproductList = $this->db->query("SELECT * FROM product_list WHERE $cond $cond1")->result_array();
+			if(!empty($searchproductList)) {
+				$proList = array();
+				foreach ($searchproductList as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					$proList[$key]['mrp'] = $value['mrp'];
+					$proList[$key]['discount'] = $value['discount']."% off";
+					$proList[$key]['final_price'] = $value['final_price'];
+					$proList[$key]['status'] = $value['status'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['imageList'] = $proimg;
+						}
+					} else {
+						$proList[$key]['imageList'] = [];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status' => 'error', 'result'=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function filter_search() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$filterid = $formdata['short_by'];
+			if(!empty($filterid)) {
+				if($filterid == '1') {
+					$cond = 'ORDER BY id ASC';
+				} else if ($filterid == '2') {
+					$cond = 'ORDER BY id DESC';
+				} else if ($filterid == '3') {
+					$cond = 'ORDER BY CAST(final_price AS DECIMAL(10,2)) ASC';
+				} else if ($filterid == '4') {
+					$cond = 'ORDER BY CAST(final_price AS DECIMAL(10,2)) DESC';
+				} else if ($filterid == '5') {
+					$cond = 'ORDER BY id DESC';
+				} else {
+					$cond = '';
+				}
+			} else {
+				$cond = '';
+			}
+			$filtered_data = $this->db->query("SELECT * FROM product_list WHERE status='Active' $cond")->result_array();
+			if(!empty($filtered_data)) {
+				$proList = array();
+				foreach ($filtered_data as $key => $value) {
+					$proList[$key]['id'] = $value['id'];
+					$proList[$key]['pro_name'] = $value['pro_name'];
+					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+					$proList[$key]['mrp'] = $value['mrp'];
+					$proList[$key]['discount'] = $value['discount']."% off";
+					$proList[$key]['final_price'] = $value['final_price'];
+					$proList[$key]['status'] = $value['status'];
+					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+					if(!empty($pro_Img)) {
+						foreach ($pro_Img as $key1 => $val) {
+							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							$return[$key1] = $val;
+							$proimg = $return;
+							$proList[$key]['imageList'] = $proimg;
+						}
+					} else {
+						$proList[$key]['imageList'] = [];
+					}
+				}
+				$response = array('status'=> 'success', 'result'=> $proList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=> 'error', 'result'=> $th->getMessage());
 		}
 		echo json_encode($response);
 	}

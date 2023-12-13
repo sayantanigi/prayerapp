@@ -106,4 +106,7 @@ $route['api/product_category'] = "api/User_dashboard/product_category";
 $route['api/product_list'] = "api/User_dashboard/product_list";
 $route['api/productByCategory'] = "api/User_dashboard/productByCategory";
 $route['api/productDetails'] = "api/User_dashboard/productDetails";
+$route['api/featured_product_list'] = "api/User_dashboard/featured_product_list";
+$route['api/search_product'] = "api/User_dashboard/search_product";
+$route['api/filter_search'] = "api/User_dashboard/filter_search";
 //$route['api/home_list'] = 'api/Home/home_list';
