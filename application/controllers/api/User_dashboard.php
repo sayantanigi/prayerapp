@@ -1397,4 +1397,97 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function add_to_cart() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$checkCartData = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'")->result_array();
+			if(!empty($checkCartData)) {
+				$data = array(
+					'quantity' => $checkCartData[0]['quantity']+1
+				);
+				$this->Crud_model->SaveData('add_to_cart', $data, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
+				$checkuCartData = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'")->result_array();
+				$data1 = array(
+					'mrp' => $checkuCartData[0]['quantity']*$checkuCartData[0]['mrp'],
+					'discount' => $checkuCartData[0]['quantity']*$checkuCartData[0]['discount'],
+					'final_price' => $checkuCartData[0]['quantity']*$checkuCartData[0]['final_price'],
+				);
+				$this->Crud_model->SaveData('add_to_cart', $data1, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
+				$response = array('status'=>'success', 'result'=>'Cart updated');
+			} else {
+				$productDetails = $this->db->query("SELECT * FROM product_list WHERE id = '".$formdata['product_id']."' AND status = 'Active'")->result_array();
+				$data = array(
+					'user_id' => $formdata['user_id'],
+					'product_id' => $formdata['product_id'],
+					'quantity' => $formdata['quantity'],
+					'mrp' => $productDetails[0]['mrp'],
+					'discount' => $productDetails[0]['mrp']-$productDetails[0]['final_price'],
+					'final_price' => $productDetails[0]['final_price'],
+					'created_date' => date("Y-m-d H:i:s")
+				);
+				$this->Crud_model->SaveData('add_to_cart', $data);
+				$response = array('status'=>'success', 'result'=>'Added to cart');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function total_cart() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$totalCart = $this->db->query("SELECT COUNT(id) AS count FROM add_to_cart WHERE user_id = '".$user_id."'")->result_array();
+			$response = array('status'=>'success', 'result'=>$totalCart);
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function cart_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$getProductDetails = $this->db->query("SELECT product_list.id, product_image.pro_image, product_list.pro_name, product_category.category_name, add_to_cart.mrp, add_to_cart.quantity, add_to_cart.final_price FROM product_list JOIN product_category ON product_list.pro_cat_id = product_category.id JOIN product_image ON product_image.prod_id = product_list.id JOIN add_to_cart ON add_to_cart.product_id = product_list.id WHERE add_to_cart.user_id = '".$user_id."' GROUP BY product_list.id")->result_array();
+			if(!empty($getProductDetails)) {
+				$getList['cartList'] = array();
+				$saved['total_saved'] = array();
+				$saved['total_amount'] = array();
+				foreach ($getProductDetails as $key => $value) {
+					$getList['cartList'][$key]['id'] = $value['id'];
+					$getList['cartList'][$key]['pro_image'] = base_url().'uploads/product/'.$value['pro_image'];
+					$getList['cartList'][$key]['pro_name'] = $value['pro_name'];
+					$getList['cartList'][$key]['category_name'] = $value['category_name'];
+					$getList['cartList'][$key]['quantity'] = $value['quantity'];
+					$getList['cartList'][$key]['final_price'] = sprintf("%0.2f",$value['final_price']);
+					$saved['total_saved'][$key] = sprintf("%0.2f",($value['mrp']-$value['final_price']));
+					$saved['total_amount'][$key] = sprintf("%0.2f",$value['final_price']);
+				}
+				$ts = sizeof($saved['total_saved']);
+				$ta = sizeof($saved['total_amount']);
+				$total_saved = $this->sum($saved['total_saved'], $ts);
+				$total_amount = $this->sum($saved['total_amount'], $ta);
+				$total_saved = array('total_saved'=> sprintf("%0.2f",$total_saved));
+				$total_amount = array('total_amount'=> sprintf("%0.2f",$total_amount));
+				$res = array_merge($getList ,$total_saved, $total_amount);
+				$response = array('status'=> 'success', 'result'=> $res);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	function sum($arr, $n) {
+    	$sum = 0;
+		for ($i = 0; $i < $n; $i++) {
+			$sum += $arr[$i];
+		}
+		return $sum;
+	}
 }
