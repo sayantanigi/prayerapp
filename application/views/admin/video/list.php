@@ -67,7 +67,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Cover Image</th>
-                                        <th>Category</th>
+                                        <!-- <th>Category</th> -->
                                         <th>Videos Title</th>
                                         <th>Videos Description</th>
                                         <th>Created Date</th>

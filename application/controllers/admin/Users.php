@@ -86,7 +86,7 @@ class Users extends MY_Controller {
             if(!empty($row->firstname)){
                 $name = $row->firstname.' '.$row->lastname;
             } else {
-                $name = $row->companyname;
+                $name = $row->organizername;
             }
             $no++;
             $nestedData = array();

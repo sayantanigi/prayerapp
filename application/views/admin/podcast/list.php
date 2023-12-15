@@ -67,7 +67,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Cover Image</th>
-                                        <th>Category</th>
+                                        <!-- <th>Category</th> -->
                                         <th>Podcast Title</th>
                                         <th>Podcast Description</th>
                                         <th>Created Date</th>

@@ -62,12 +62,12 @@ class Manage_podcast extends CI_Controller {
                 $desc = $row->podcast_description;
             }
             $get_category = $this->Crud_model->get_single('category',"id='".$row->podcast_cat_id."'");
-            $cat_name = $get_category->category_name;
+            @$cat_name = $get_category->category_name;
             $no++;
             $nestedData = array();
             $nestedData[] = $no;
             $nestedData[] = $img;
-            $nestedData[] = $cat_name;
+            //$nestedData[] = $cat_name;
             $nestedData[] = $row->podcast_name;
             $nestedData[] = ucwords($desc);
             $nestedData[] = date('d-m-Y h:i:s A',strtotime($row->created_date));
@@ -145,7 +145,7 @@ class Manage_podcast extends CI_Controller {
                     'podcast_cat_id' =>$_POST['podcast_cat_id'],
                     'podcast_name'=> $_POST['podcast_name'],
                     'podcast_description'=> $_POST['podcast_description'],
-                    'cover_image'=> $cover_image,
+                    //'cover_image'=> $cover_image,
                     'podcast_file'=> $podcast_file,
                     'created_date'=> date('Y-m-d H:i:s')
                 );

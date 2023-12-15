@@ -21,9 +21,8 @@ class Prayersmodel extends CI_Model {
             //print_r($explode_string); die();
             foreach ($explode_string as $show_string) {  
                 $cond  = " ";
-                $cond.=" ( all_prayers.event_datetime = '".$show_string."' ";
+                $cond.=" ( all_prayers.prayer_datetime = '".$show_string."' ";
                 $cond.=" OR all_prayers.prayer_name LIKE '%".$show_string."%'";
-                $cond.=" OR all_prayers.prayer_subheading LIKE '%".$show_string."%'";
                 $cond.=" OR all_prayers.prayer_subheading LIKE '%".$show_string."%'";
                 $cond.=" OR all_prayers.prayer_datetime LIKE '%".$show_string."%'";
                 $cond.=" OR all_prayers.created_date LIKE '%".date('Y-m-d',strtotime($show_string))."%') ";

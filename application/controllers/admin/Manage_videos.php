@@ -62,12 +62,12 @@ class Manage_videos extends CI_Controller {
                 $desc = $row->videos_description;
             }
             $get_category = $this->Crud_model->get_single('category',"id='".$row->videos_cat_id."'");
-            $cat_name = $get_category->category_name;
+            @$cat_name = $get_category->category_name;
             $no++;
             $nestedData = array();
             $nestedData[] = $no;
             $nestedData[] = $img;
-            $nestedData[] = $cat_name;
+            //$nestedData[] = $cat_name;
             $nestedData[] = $row->videos_name;
             $nestedData[] = ucwords($desc);
             $nestedData[] = date('d-m-Y h:i:s A',strtotime($row->created_date));

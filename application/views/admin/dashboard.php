@@ -28,7 +28,7 @@
                 </a>
             </div>
             <div class="col-xl-6 col-sm-6 col-12">
-                <a href="<?= admin_url('category')?>">
+                <a href="<?= admin_url('manage_prayers')?>">
                     <div class="card">
                         <div class="card-body">
                             <div class="dash-widget-header">
@@ -45,7 +45,7 @@
                 </a>
             </div>
             <div class="col-xl-6 col-sm-6 col-12">
-                <a href="<?= admin_url('our-services')?>">
+                <a href="<?= admin_url('manage_podcast')?>">
                     <div class="card">
                         <div class="card-body">
                             <div class="dash-widget-header">
@@ -62,7 +62,7 @@
                 </a>
             </div>
             <div class="col-xl-6 col-sm-6 col-12">
-                <a href="<?= admin_url('payment')?>">
+                <a href="<?= admin_url('manage_videos')?>">
                     <div class="card">
                         <div class="card-body">
                             <div class="dash-widget-header">
