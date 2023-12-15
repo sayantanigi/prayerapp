@@ -33,6 +33,7 @@ class Manage_prayers extends CI_Controller {
         }
 
         $GetData = $this->Prayersmodel->get_datatables($cond);
+        //print_r($GetData);
         if(empty($_POST['start'])) {
             $no=0;
         } else {
@@ -115,6 +116,7 @@ class Manage_prayers extends CI_Controller {
                 'prayer_name'=>$_POST['prayer_name'],
                 'prayer_subheading'=>$_POST['prayer_subheading'],
                 'prayer_description'=>$_POST['prayer_description'],
+                'prayer_location'=>$_POST['prayer_location'],
                 'prayer_datetime'=>$_POST['prayer_datetime'],
                 'created_date'=>date('Y-m-d H:i:s'),
             );
@@ -144,6 +146,7 @@ class Manage_prayers extends CI_Controller {
             'prayer_name'=>$prayer_data->prayer_name,
             'prayer_subheading'=> $prayer_data->prayer_subheading,
             'prayer_description'=> $prayer_data->prayer_description,
+            'prayer_location'=> $prayer_data->prayer_location,
             'prayer_datetime'=> $prayer_data->prayer_datetime,
             'image'=>$img,
             'old_image'=>$prayer_data->prayer_image,
@@ -179,6 +182,7 @@ class Manage_prayers extends CI_Controller {
                 'prayer_name'=>$_POST['prayer_name'],
                 'prayer_subheading'=>$_POST['prayer_subheading'],
                 'prayer_description'=>$_POST['prayer_description'],
+                'prayer_location'=>$_POST['prayer_location'],
                 'prayer_datetime'=>$_POST['prayer_datetime'],
                 'created_date'=>date('Y-m-d H:i:s'),
             );

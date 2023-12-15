@@ -14,12 +14,9 @@
 				<li <?php if ($seg2 =='dashboard') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('dashboard')?>"><i class="fas fa-columns"></i> <span>Dashboard</span></a>
 				</li>
-				<li <?php if ($seg2 =='category') {?>class="active"<?php }?>>
+				<!-- <li <?php if ($seg2 =='category') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('category')?>"><i class="fas fa-circle"></i> <span>Category Management</span></a>
-				</li>
-				<li <?php if ($seg2 =='manage_cms') {?>class="active"<?php }?>>
-					<a href="<?= admin_url('manage_cms')?>"><i class="fas fa-circle"></i> <span>Content Management</span></a>
-				</li>
+				</li> -->
 				<li <?php if ($seg2 =='manage_events') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_prayers')?>"><i class="fa fa-calendar"></i> <span>All Prayers Management</span></a>
 				</li>
@@ -29,9 +26,12 @@
 				<li <?php if ($seg2 =='manage_videos') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_videos')?>"><i class="fa fa-video"></i> <span>All Videos Management</span></a>
 				</li>
+				<li <?php if ($seg2 =='manage_cms') {?>class="active"<?php }?>>
+					<a href="<?= admin_url('manage_cms')?>"><i class="fas fa-circle"></i> <span>Content Management</span></a>
+				</li>
 				<li <?php if ($seg2 =='product-category') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('product-category')?>"><i class="fa fa-list"></i>
-						<span>Product List</span>
+						<span>Product Category</span>
 					</a>
 				</li>
 				<li <?php if ($seg2 =='all-product') {?>class="active"<?php }?>>

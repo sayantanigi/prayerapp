@@ -16,7 +16,7 @@
 	            		<?php } else { ?>
 	    				<form class="forms-sample" action="<?php echo admin_url('Manage_podcast/create_action'); ?>" method="post" enctype="multipart/form-data">
 	            		<?php } ?>
-	            			<div class="form-group">
+	            			<!-- <div class="form-group">
 								<label>Category</label>
 								<select class="form-control" name="podcast_cat_id" id="podcast_cat_id" required>
 									<option value="">Select Category</option>
@@ -25,17 +25,21 @@
                                     <option value="<?= $item->id?>" <?php if($item->id == @$podcast_cat_id) {echo "selected";}?>><?= ucfirst($item->category_name)?></option>
                                     <?php } } ?>
 								</select>
-							</div>
+							</div> -->
 							<div class="form-group">
-								<label>Podcast Name</label>
+								<label>Podcast Name <span style="color:red;">*</span></label>
 								<input class="form-control" type="text" placeholder="Example: Podcast Name" name="podcast_name" value="<?= @$podcast_name;?>" required>
 							</div>
 							<div class="form-group">
-								<label>Podcast Description</label>
+								<label>Podcast Description <span style="color:red;">*</span></label>
 								<textarea class="form-control" name="podcast_description" id="podcast_description"><?= @$podcast_description ?></textarea>
 							</div>
 							<div class="form-group">
-								<label>Cover Image</label>
+								<label>Singer <span style="color:red;">*</span></label>
+								<input class="form-control" type="text" placeholder="Example: Singer Name" name="podcast_singer_name" value="<?= @$podcast_singer_name;?>" required>
+							</div>
+							<div class="form-group">
+								<label>Cover Image <span style="color:red;">*</span></label>
 								<input type="file" name="cover_image" id="cover_image" class="form-control">
 								<input type="hidden" name="old_image" value="<?= @$podcast_cover_image?>">
 							</div>
@@ -50,7 +54,7 @@
 							</div>
 							<?php } } ?>
 							<div class="form-group">
-								<label>Podcast File</label>
+								<label>Podcast File <span style="color:red;">*</span></label>
 								<input type="file" name="podcast_file" id="podcast_file" class="form-control">
 								<input type="hidden" name="old_file" value="<?= @$podcast_file?>">
 							</div>

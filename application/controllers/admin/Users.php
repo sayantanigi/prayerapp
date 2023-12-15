@@ -36,21 +36,21 @@ class Users extends MY_Controller {
         $data = array();
         foreach ($GetData as $row)
         {
-            if($row->userType == 1) {
-                $btn = ''.anchor(base_url('worker-detail/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-eye mr-1"></i></span>');
-            } else {
-                $btn = ''.anchor(base_url('employerdetail/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-eye mr-1"></i></span>');
-            }
-            $btn .= ' | '.anchor(base_url('profile/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-edit mr-1"></i></span>','target=_blank');
-            $btn .= ' |  '.'<span data-placement="right" class="btn btn-sm btn-danger mr-2"  onclick="Delete(this,'.$row->userId.')" style="margin-left: 8px;"><i class="fa fa-trash mr-1"></i></span>';
-            if($row->userType == 1) {
-                if(!empty($row->resume)) {
-                    $btn .= ' |  '.'<a href="'.base_url('uploads/users/resume/'.$row->resume).'" download="'.$row->firstname.'_'.$row->lastname.'_resume" title="Download Resume"><span data-placement="right" class="btn btn-sm bg-success-light mr-2" style="margin-left: 8px;"><i class="fa fa-download" style="font-size:15px"></i></span></a>';
-                } else {
-                    $btn .= ' |  '.'<a href="javascript:void(0)"><span data-placement="right" class="btn btn-sm bg-success-light mr-2" style="margin-left: 8px;"><i class="fa fa-download" style="font-size:15px"></i></span></a>';
-                }
+            // if($row->userType == 1) {
+            //     $btn = ''.anchor(base_url('worker-detail/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-eye mr-1"></i></span>');
+            // } else {
+            //     $btn = ''.anchor(base_url('employerdetail/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-eye mr-1"></i></span>');
+            // }
+            // $btn .= ' | '.anchor(base_url('profile/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-edit mr-1"></i></span>','target=_blank');
+            $btn = '<span data-placement="right" class="btn btn-sm btn-danger mr-2"  onclick="Delete(this,'.$row->userId.')" style="margin-left: 8px;"><i class="fa fa-trash mr-1"></i></span>';
+            // if($row->userType == 1) {
+            //     if(!empty($row->resume)) {
+            //         $btn .= ' |  '.'<a href="'.base_url('uploads/users/resume/'.$row->resume).'" download="'.$row->firstname.'_'.$row->lastname.'_resume" title="Download Resume"><span data-placement="right" class="btn btn-sm bg-success-light mr-2" style="margin-left: 8px;"><i class="fa fa-download" style="font-size:15px"></i></span></a>';
+            //     } else {
+            //         $btn .= ' |  '.'<a href="javascript:void(0)"><span data-placement="right" class="btn btn-sm bg-success-light mr-2" style="margin-left: 8px;"><i class="fa fa-download" style="font-size:15px"></i></span></a>';
+            //     }
                 
-            }
+            // }
 
             if($row->userType==1) {
                 $type='User';

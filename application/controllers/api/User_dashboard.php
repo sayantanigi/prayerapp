@@ -1451,7 +1451,7 @@ class User_dashboard extends CI_Controller {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
-			$getProductDetails = $this->db->query("SELECT product_list.id, product_image.pro_image, product_list.pro_name, product_category.category_name, add_to_cart.mrp, add_to_cart.quantity, add_to_cart.final_price FROM product_list JOIN product_category ON product_list.pro_cat_id = product_category.id JOIN product_image ON product_image.prod_id = product_list.id JOIN add_to_cart ON add_to_cart.product_id = product_list.id WHERE add_to_cart.user_id = '".$user_id."' GROUP BY product_list.id")->result_array();
+			$getProductDetails = $this->db->query("SELECT product_list.id, product_image.pro_image, product_list.pro_name, product_category.category_name, add_to_cart.mrp, add_to_cart.quantity, add_to_cart.final_price, add_to_cart.discount FROM product_list JOIN product_category ON product_list.pro_cat_id = product_category.id JOIN product_image ON product_image.prod_id = product_list.id JOIN add_to_cart ON add_to_cart.product_id = product_list.id WHERE add_to_cart.user_id = '".$user_id."' GROUP BY product_list.id")->result_array();
 			if(!empty($getProductDetails)) {
 				$getList['cartList'] = array();
 				$saved['total_saved'] = array();

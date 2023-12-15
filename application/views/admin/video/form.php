@@ -16,7 +16,7 @@
 	            		<?php } else { ?>
 	    				<form class="forms-sample" action="<?php echo admin_url('Manage_videos/create_action'); ?>" method="post" enctype="multipart/form-data">
 	            		<?php } ?>
-	            			<div class="form-group">
+	            			<!-- <div class="form-group">
 								<label>Category</label>
 								<select class="form-control" name="videos_cat_id" id="videos_cat_id" required>
 									<option value="">Select Category</option>
@@ -25,7 +25,7 @@
                                     <option value="<?= $item->id?>" <?php if($item->id == @$videos_cat_id) {echo "selected";}?>><?= ucfirst($item->category_name)?></option>
                                     <?php } } ?>
 								</select>
-							</div>
+							</div> -->
 							<div class="form-group">
 								<label>Video Name</label>
 								<input class="form-control" type="text" placeholder="Example: Video Name" name="videos_name" value="<?= @$videos_name;?>" required>
@@ -34,14 +34,14 @@
 								<label>Video Description</label>
 								<textarea class="form-control" name="videos_description" id="videos_description"><?= @$videos_description ?></textarea>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label>Video Type</label>
 								<select class="form-control" name="videos_type" id="videos_type" required>
 									<option value="">Choose an option</option>
 									<option value="1" <?php if(@$videos_type == 1) { echo "selected";}?>>Video File</option>
 									<option value="2" <?php if(@$videos_type == 2) { echo "selected";}?>>Video Link</option>
 								</select>
-							</div>
+							</div> -->
 							<?php if($button=='Update') { 
 								if(!empty($videos_file)) { ?>
 							<div class="form-group">
@@ -54,6 +54,20 @@
 								<img src="<?php echo base_url()?>/uploads/no_image.png" style="width: 150px;">
 							</div>
 							<?php } } ?>
+
+							<?php if($button=='Update') { 
+								if(!empty($video_cover_image)) { ?>
+							<div class="form-group">
+								<video width="320" height="240" controls>
+									<source src="<?php echo base_url()?>/uploads/videos/cover_image/<?= $video_cover_image?>">
+								</video>
+							</div>
+							<?php } else { ?>
+							<div class="form-group">
+								<img src="<?php echo base_url()?>/uploads/no_image.png" style="width: 150px;">
+							</div>
+							<?php } } ?>
+
 							<div class="form-group videoFile">
 								<label>Video File</label>
 								<input type="file" name="videos_file" id="videos_file" class="form-control">

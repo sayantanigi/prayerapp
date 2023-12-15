@@ -19,19 +19,6 @@
             <div class="card-body pb-0">
                 <form id="categorySearch" action="#" method="post">
                     <div class="row filter-row">
-                        <!-- <div class="col-sm-6 col-md-4">
-                            <div class="form-group">
-                                <label></label>
-                                <select class="form-control select filter_search_data6" name="">
-                                    <option value="">Select Category</option>
-                                    <?php
-                                    if(!empty($get_category)){
-                                    foreach($get_category as $item){ ?>
-                                        <option value="<?= $item->id?>"><?= ucfirst($item->category_name)?></option>
-                                    <?php } } ?>
-                                </select>
-                            </div>
-                        </div> -->
                         <div class="col-sm-6 col-md-4">
                             <div class="form-group">
                                 <label>Prayer Date</label>
@@ -109,7 +96,11 @@
                             <div class="form-group">
                                 <label>Prayer Description <span style="color:red;">*</span> <span id="prayer_description_err"></span></label>
                                 <textarea class="form-control" name="prayer_description" id="prayer_description"></textarea>
-                            </div>                            
+                            </div>  
+                            <div class="form-group">
+                                <label>Prayer Location <span style="color:red;">*</span> <span id="prayer_location_err"></span></label>
+                                <input class="form-control" type="text" name="prayer_location" id="prayer_location">
+                            </div>                          
                             <div class="form-group">
                                 <label>Prayer Date and Time <span style="color:red;">*</span> <span id="prayer_datetime_err"></span></label>
                                 <input class="form-control" type="datetime-local" name="prayer_datetime" id="prayer_datetime">
@@ -144,7 +135,7 @@
                     <div class="card-body">
                         <form action="#" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label>Prayer Title <span style="color:red;">*</span> <span id="edit_prayer_name_err"></span></label>
+                                <label>Prayer Title <span style="color:red;">*</span> <span style="color:red;">*</span> <span id="edit_prayer_name_err"></span></label>
                                 <input class="form-control" type="text" name="prayer_name" id="edit_prayer_name">
                             </div>
                             <div class="form-group">
@@ -154,6 +145,10 @@
                             <div class="form-group">
                                 <label>Prayer Description <span style="color:red;">*</span> <span id="edit_prayer_description_err"></span></label>
                                 <input class="form-control" type="text" name="prayer_description" id="edit_prayer_description">
+                            </div>
+                            <div class="form-group">
+                                <label>Prayer Location <span style="color:red;">*</span> <span id="edit_prayer_location_err"></span></label>
+                                <input class="form-control" type="text" name="prayer_location" id="edit_prayer_location">
                             </div>
                             <div class="form-group">
                                 <label>Prayer Date and Time <span style="color:red;">*</span> <span id="edit_prayer_datetime_err"></span></label>

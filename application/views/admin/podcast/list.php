@@ -19,7 +19,7 @@
             <div class="card-body pb-0">
                 <form id="categorySearch" action="#" method="post">
                     <div class="row filter-row">
-                        <div class="col-sm-6 col-md-5">
+                        <!-- <div class="col-sm-6 col-md-5">
                             <div class="form-group">
                                 <label></label>
                                 <select class="form-control select filter_search_data6" name="">
@@ -32,7 +32,7 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-6 col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <div class="form-group">
                                 <label>Event Date</label>
                                 <div class="cal-icon2">

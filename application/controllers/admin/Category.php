@@ -134,7 +134,7 @@ class Category extends MY_Controller {
 		echo json_encode($data);exit;
 	}
 
-	function update_action() {
+	public function update_action() {
 		if(isset($_FILES['category_image']['name'])!='' ) {
 			$_POST['category_image']= rand(0000,9999)."_".$_FILES['category_image']['name'];
 			$config2['image_library'] = 'gd2';
@@ -173,7 +173,7 @@ class Category extends MY_Controller {
 	}
 
 	public function delete() {
-        if(isset($_POST['cid'])) {
+        /*if(isset($_POST['cid'])) {
 			$check_catData = $this->db->query("SELECT * FROM postjob where category_id = '".$_POST['cid']."'")->num_rows();
 			if($check_catData > 0) {
 				$this->session->set_flashdata('message', 'Job post is there related to this category. Please delete the job first to delete this category');
@@ -183,6 +183,9 @@ class Category extends MY_Controller {
 				$this->session->set_flashdata('message', 'Category deleted successfully');
 				echo 0; exit;
 			}
-        }
+        }*/
+		$this->Crud_model->DeleteData('category',"id='".$_POST['cid']."'");
+		$this->session->set_flashdata('message', 'Category deleted successfully');
+		echo 0; exit;
     }
 }
