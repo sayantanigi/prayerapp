@@ -1408,10 +1408,11 @@ class User_dashboard extends CI_Controller {
 				);
 				$this->Crud_model->SaveData('add_to_cart', $data, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
 				$checkuCartData = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'")->result_array();
+				$checkpData = $this->db->query("SELECT * FROM product_list WHERE id = '".$formdata['product_id']."' AND status = 'Active'")->result_array();
 				$data1 = array(
-					'mrp' => $checkuCartData[0]['quantity']*$checkuCartData[0]['mrp'],
-					'discount' => $checkuCartData[0]['quantity']*$checkuCartData[0]['discount'],
-					'final_price' => $checkuCartData[0]['quantity']*$checkuCartData[0]['final_price'],
+					'mrp' => $checkuCartData[0]['quantity']*$checkpData[0]['mrp'],
+					'discount' => $checkuCartData[0]['quantity']*($checkpData[0]['mrp'] - $checkpData[0]['final_price']),
+					'final_price' => $checkuCartData[0]['quantity']*$checkpData[0]['final_price'],
 				);
 				$this->Crud_model->SaveData('add_to_cart', $data1, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
 				$response = array('status'=>'success', 'result'=>'Cart updated');
@@ -1489,5 +1490,28 @@ class User_dashboard extends CI_Controller {
 			$sum += $arr[$i];
 		}
 		return $sum;
+	}
+
+	public function update_cart_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$checkCartData = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'")->result_array();
+			$data = array(
+				'quantity' => $checkCartData[0]['quantity']+$formdata['quantity']
+			);
+			$this->Crud_model->SaveData('add_to_cart', $data, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
+			$checkuCartData = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'")->result_array();
+			$checkpData = $this->db->query("SELECT * FROM product_list WHERE id = '".$formdata['product_id']."' AND status = 'Active'")->result_array();
+			$data1 = array(
+				'mrp' => $checkuCartData[0]['quantity']*$checkpData[0]['mrp'],
+				'discount' => $checkuCartData[0]['quantity']*($checkpData[0]['mrp'] - $checkpData[0]['final_price']),
+				'final_price' => $checkuCartData[0]['quantity']*$checkpData[0]['final_price'],
+			);
+			$this->Crud_model->SaveData('add_to_cart', $data1, "product_id = '".$formdata['product_id']."' AND user_id = '".$formdata['user_id']."'");
+			$response = array('status'=>'success', 'result'=>'Cart updated');
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
 	}
 }

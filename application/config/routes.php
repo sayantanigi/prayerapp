@@ -116,4 +116,4 @@ $route['api/update_address'] = "api/User_dashboard/update_address";
 $route['api/add_to_cart'] = "api/User_dashboard/add_to_cart";
 $route['api/total_cart'] = "api/User_dashboard/total_cart";
 $route['api/cart_list'] = "api/User_dashboard/cart_list";
-//$route['api/home_list'] = 'api/Home/home_list';
+$route['api/update_cart_list'] = 'api/User_dashboard/update_cart_list';
