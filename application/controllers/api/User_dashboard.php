@@ -1514,4 +1514,23 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function remove_cart_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$product_id = $formdata['product_id'];
+			$checkCartDate = $this->db->query("SELECT * FROM add_to_cart WHERE product_id = '".$product_id."' AND user_id = '".$user_id."'")->result_array();
+			//print_r($checkCartDate); die;
+			if(!empty($checkCartDate)) {
+				$this->db->query("DELETE FROM add_to_cart WHERE product_id = '".$product_id."' AND user_id = '".$user_id."'");
+				$response = array('status'=>'success', 'result'=>'Removed');
+			} else {
+				$response = array('status'=>'error', 'result'=>'No Data Found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
