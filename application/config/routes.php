@@ -118,3 +118,6 @@ $route['api/total_cart'] = "api/User_dashboard/total_cart";
 $route['api/cart_list'] = "api/User_dashboard/cart_list";
 $route['api/update_cart_list'] = 'api/User_dashboard/update_cart_list';
 $route['api/remove_cart_list'] = 'api/User_dashboard/remove_cart_list';
+$route['api/add_card'] = 'api/User_dashboard/add_card';
+$route['api/get_card'] = 'api/User_dashboard/get_card';
+$route['api/proceed_to_pay'] = 'api/User_dashboard/proceed_to_pay';

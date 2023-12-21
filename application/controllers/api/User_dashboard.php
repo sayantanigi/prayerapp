@@ -1533,4 +1533,96 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function add_card() {
+		try {
+			$formdata = json_decode(file_get_contents("php://input"), true);
+			$user_id = $formdata['user_id'];
+			$card_number = $formdata['card_number'];
+			$date = $formdata['date'];
+			$cvv = $formdata['cvv'];
+			$data = array(
+				"user_id" => $user_id,
+				"card_no" => base64_encode($card_number),
+				"expiry_date" => base64_encode($date),
+				"cvv" => base64_encode($cvv),
+				'created_date' => date("Y-m-d H:i:s")
+			);
+			//print_r($data); die;
+			$this->Crud_model->SaveData('user_add_card', $data);
+			$response = array('status'=>'success', 'result'=>'Card Added');
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function get_card() {
+		try {
+			$formdata = json_decode(file_get_contents("php://input"), true);
+			$user_id = $formdata['user_id'];
+			$getCardList = $this->db->query("SELECT * FROM user_add_card WHERE user_id = '".$user_id."'")->result_array();
+			if(!empty($getCardList)) {
+				$getcardList = array();
+				foreach ($getCardList as $key => $value) {
+					$getcardList[$key]['id'] = $value['id'];
+					$getcardList[$key]['user_id'] = $value['user_id'];
+					$getcardList[$key]['card_no'] = base64_decode($value['card_no']);
+					$getcardList[$key]['expiry_date'] = base64_decode($value['expiry_date']);
+					$getcardList[$key]['cvv'] = base64_decode($value['cvv']);
+					$getcardList[$key]['created_date'] = $value['created_date'];
+				}
+			} else {
+				$getcardList = false;
+			}
+			$response = array('status'=>'success', 'result'=> $getcardList);
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function proceed_to_pay() {
+		try {
+			$formdata = json_decode(file_get_contents("php://input"), true);
+			$user_id = $formdata['user_id'];
+			$delivery_add = $formdata['delivery_add'];
+			$getProductList = $this->db->query("SELECT * FROM add_to_cart WHERE user_id = '".$user_id."'")->result_array();
+			if(!empty($getProductList)) {
+				$getList['cartList'] = array();
+				$saved['total_amount'] = array();
+				foreach ($getProductList as $key => $value) {
+					$getList['cartList'][$key]['product_id'] = $value['product_id'];
+					$getList['cartList'][$key]['quantity'] = $value['quantity'];
+					$getList['cartList'][$key]['final_price'] = sprintf("%0.2f",$value['final_price']);
+					$saved['total_saved'][$key] = sprintf("%0.2f",($value['mrp']-$value['final_price']));
+					$saved['total_amount'][$key] = sprintf("%0.2f",$value['final_price']);
+				}
+				$ts = sizeof($saved['total_saved']);
+				$ta = sizeof($saved['total_amount']);
+				$total_amount = $this->sum($saved['total_amount'], $ta);
+				$total_amount = array('total_amount'=> sprintf("%0.2f",$total_amount));
+				$res = array_merge($getList , $total_amount);
+				$data = array(
+					"user_id" => $user_id,
+					"order_details" => json_encode($res),
+					"delivery_add" => $delivery_add,
+					"transaction_id" => "txn_".time(),
+					"order_type" => "online",
+					"payment_method" => "card",
+					"is_paid" => 1,
+					"order_status" => "payment success",
+					'created_date' => date("Y-m-d H:i:s")
+				);
+				$this->Crud_model->SaveData('proceed_to_pay', $data);
+				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$user_id."'");
+				$response = array('status'=>'success', 'result'=>'Payment Successful');
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
