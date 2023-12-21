@@ -15,7 +15,7 @@ function create_banner() {
 	form_data.append('page_name',page_name);
   	$.ajax({
         type:"post",
-        url:admin_url+"manage_home/Banner/create_action",
+        url:admin_url+"Banner/create_action",
         cache:false,
         contentType: false,
         processData:false,
@@ -36,7 +36,7 @@ function getValue(id) {
     $.ajax({
         type:'post',
         cache:false,
-        url:admin_url+'manage_home/Banner/get_value',
+        url:admin_url+'Banner/get_value',
         data:{
         	id:id,
         },
@@ -67,7 +67,7 @@ function update_banner() {
 	form_data.append('id',id);
   	$.ajax({
 		type:"post",
-		url:admin_url+"manage_home/Banner/update_action",
+		url:admin_url+"Banner/update_action",
 		cache:false,
 		contentType: false,
 		processData:false,
@@ -94,7 +94,7 @@ function sliderDelete(obj,cid) {
 				var datastring="cid="+cid;
 				$.ajax({
 					type:"POST",
-					url:admin_url+'manage_home/Banner/delete',
+					url:admin_url+'Banner/delete',
 					data:datastring,
 					cache:false,
 					success:function(returndata) {

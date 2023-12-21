@@ -1625,4 +1625,14 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	/*public function add_social_post() {
+		try {
+			$user_id = $this->input->post('user_id');
+			
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}*/
 }

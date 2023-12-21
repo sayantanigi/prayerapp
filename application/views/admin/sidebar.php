@@ -14,9 +14,9 @@
 				<li <?php if ($seg2 =='dashboard') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('dashboard')?>"><i class="fas fa-columns"></i> <span>Dashboard</span></a>
 				</li>
-				<!-- <li <?php if ($seg2 =='category') {?>class="active"<?php }?>>
-					<a href="<?= admin_url('category')?>"><i class="fas fa-circle"></i> <span>Category Management</span></a>
-				</li> -->
+				<li <?php if ($seg2 =='banner') {?>class="active"<?php }?>>
+					<a href="<?= admin_url('banner')?>"><i class="fas fa-image"></i> <span>Banners Management</span></a>
+				</li>
 				<li <?php if ($seg2 =='manage_events') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_prayers')?>"><i class="fa fa-calendar"></i> <span>All Prayers Management</span></a>
 				</li>

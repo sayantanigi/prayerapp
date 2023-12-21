@@ -60,13 +60,14 @@ $route['admin/manage_events'] = 'admin/manage_events/index';
 $route['admin/company-logo'] = 'admin/manage_home/Company_logo/index';
 $route['admin/career'] = 'admin/manage_home/Career_tips/index';
 $route['admin/our-services'] = 'admin/manage_home/Our_services/index';
-$route['admin/banner'] = 'admin/manage_home/Banner/index';
+$route['admin/banner'] = 'admin/Banner/index';
 $route['admin/email-template'] = 'admin/Email_template/index';
 $route['admin/chat_details/(:any)/(:any)'] = "admin/chat/adminShowMessage_list/$1/$2";
 $route['admin/deletepostdetail'] = "admin/Post_job/deletepostdetail";
 $route['admin/update-postjob/(:any)'] = "admin/Post_job/update_post_job/$1";
 $route['admin/product-category'] = 'admin/Product_category/index';
 $route['admin/all-product'] = 'admin/Product/index';
+
 //API URLS
 $route['api/registration'] = 'api/Authentication/registration';
 $route['api/email-verification/(:any)'] = "api/Authentication/emailVerification/$1";
@@ -75,6 +76,10 @@ $route['api/send_forget_password'] = 'api/Authentication/send_forget_password';
 $route['api/profile'] = 'api/User_dashboard/profile_settings';
 $route['api/update_profile'] = 'api/User_dashboard/update_profile';
 $route['api/homeList'] = "api/Home/home_list";
+$route['api/about_us'] = 'api/Home/about_us';
+$route['api/privacy_policy'] = 'api/Home/privacy_policy';
+$route['api/contact'] = 'api/Home/contact';
+$route['api/term_and_conditions'] = 'api/Home/term_and_conditions';
 $route['api/add_prayer'] = "api/User_dashboard/add_prayer";
 $route['api/edit_prayer'] = "api/User_dashboard/edit_prayer";
 $route['api/update_prayer'] = "api/User_dashboard/update_prayer";
