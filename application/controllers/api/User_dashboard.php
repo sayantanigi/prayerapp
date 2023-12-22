@@ -1626,13 +1626,270 @@ class User_dashboard extends CI_Controller {
 		echo json_encode($response);
 	}
 
-	/*public function add_social_post() {
+	public function add_social_post() {
 		try {
-			$user_id = $this->input->post('user_id');
-			
+			if(isset($_FILES['social_img']['name']) !='') {
+				$_POST['social_img']= rand(0000,9999)."_".$_FILES['social_img']['name'];
+				$config2['image_library'] = 'gd2';
+				$config2['source_image'] =  $_FILES['social_img']['tmp_name'];
+				$config2['new_image'] =   getcwd().'/uploads/social_img/'.$_POST['social_img'];
+				$config2['upload_path'] =  getcwd().'/uploads/social_img/';
+				$config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
+				$config2['maintain_ratio'] = FALSE;
+				$this->image_lib->initialize($config2);
+				if(!$this->image_lib->resize()) {
+					$response = array('status'=> 'error', 'result'=> "Something went wrong while uploding image. Please try again later!");
+				} else {
+					$image  = $_POST['social_img'];
+				}
+			} else {
+				$image  = "";
+			}
+			$data = array(
+				'user_id' => $this->input->post('user_id'),
+				'social_img'=>$image,
+				'created_date' => date("Y-m-d H:i:s"),
+			);
+			$this->Crud_model->SaveData('users_post', $data);
+			$response = array('status'=> 'success', 'result'=> "Post created successfully");
 		} catch (\Throwable $th) {
 			$response = array('status'=>'error', 'result'=>$th->getMessage());
 		}
 		echo json_encode($response);
-	}*/
+	}
+
+	public function social_user_list() {
+		try {
+			$getSocialPostUsers = $this->db->query("SELECT users.userId, users.organizername, users.firstname, users.lastname, users.userType, users.profilePic FROM users JOIN users_post ON users.userId = users_post.user_id GROUP BY users.userId")->result_array();
+			if(!empty($getSocialPostUsers)) {
+				$getUserDetails = array();
+				foreach ($getSocialPostUsers as $key => $value) {
+					$getUserDetails[$key]['userId'] = $value['userId'];
+					if($value['userType'] == 1) {
+						$getUserDetails[$key]['fullname'] = $value['firstname']." ".$value['lastname'];
+					} else {
+						$getUserDetails[$key]['fullname'] = $value['organizername'];
+					}
+					$getUserDetails[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+				}
+			} else {
+				$getUserDetails = "No Data Found";
+			}
+			$response = array('status'=> 'success', 'result'=> $getUserDetails);
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function user_post_like() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$post_id = $formdata["post_id"];
+			$data = array(
+				"user_id"=>$user_id,
+				"post_id"=>$post_id,
+				"created_date"=>date("Y-m-d h:i:sa")
+			);
+			$this->Crud_model->SaveData('user_post_like', $data);
+			$response = array("status"=> "success", "result"=> "Liked");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function user_post_dislike() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$post_id = $formdata["post_id"];
+			$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$user_id."' AND post_id = '".$post_id."'");
+			$response = array("status"=> "success", "result"=> "Disliked");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function add_post_comment() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata["user_id"];
+			$post_id = $formdata["post_id"];
+			$comment = $formdata["comment"];
+			$data = array(
+				"user_id"=>$user_id,
+				"post_id"=>$post_id,
+				"comment"=>$comment,
+				"created_date"=> date("Y-m-d H:i:s")
+			);
+			$this->Crud_model->SaveData('user_post_comment', $data);
+			$response = array("status"=> "success", "result"=> "Comment Added");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function user_post_details() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$getPostDetails = $this->db->query("SELECT users.userId AS user_id, users.organizername, users.firstname, users.lastname, users.userType, users.profilePic, users_post.id AS post_id, users_post.social_img, users_post.created_date FROM users JOIN users_post ON users.userId = users_post.user_id WHERE users.userId = '".$user_id."'")->result_array();
+			if(!empty($getPostDetails)) {
+				$postDetails = array();
+				foreach ($getPostDetails as $key => $value) {
+					$postDetails[$key]["user_id"] = $value["user_id"];
+					if($value["userType"] == 1) {
+						$postDetails[$key]["fullname"] = $value["firstname"]." ".$value["lastname"];
+					} else {
+						$postDetails[$key]["fullname"] = $value["organizername"];
+					}
+					$postDetails[$key]["profilePic"] = base_url().'uploads/users/'.$value["profilePic"];
+					$postDetails[$key]["post_id"] = $value["post_id"];
+					$postDetails[$key]["social_img"] = base_url().'uploads/social_img/'.$value["social_img"];
+					$countLike = $this->db->query("SELECT COUNT(id) AS total_like FROM user_post_like WHERE post_id = '".$value["post_id"]."'")->result_array();
+					$postDetails[$key]["count_like"] = $countLike[0]['total_like'];
+					$countComment = $this->db->query("SELECT COUNT(id) AS total_comment FROM user_post_comment WHERE post_id = '".$value["post_id"]."'")->result_array();
+					$postDetails[$key]["count_comment"] = $countComment[0]['total_comment'];
+					$postDetails[$key]["created_date"] = $value["created_date"];
+				}
+			} else {
+				$postDetails = "No data found";
+			}
+			$response = array("status"=> "success", "result"=> $postDetails);
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function get_post_comment() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$post_id = $formdata['post_id'];
+			$getComment = $this->db->query("SELECT * FROM user_post_comment WHERE post_id = '".$post_id."'")->result_array();
+			//print_r($getComment); die;
+			if(!empty($getComment)) {
+				$getcomment = array();
+				foreach ($getComment as $key => $value) {
+					$getcomment[$key]['id'] = $value['id'];
+					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->result_array();
+					if($getUser[0]['userType'] == 1){
+						$getcomment[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
+					} else {
+						$getcomment[$key]['fullname'] = $getUser[0]['organizername'];
+					} 
+					$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+					$getcomment[$key]['post_id'] = $value['post_id'];
+					$getcomment[$key]['comment'] = $value['comment'];
+					$getcomment[$key]['commented_on'] = date ('D, jS M Y h:i a', strtotime($value['created_date']));
+					$getCommentLike = $this->db->query("SELECT COUNT(id) AS comment_like FROM user_comment_like WHERE comment_id = '".$value['id']."'")->result_array();
+					$getcomment[$key]['comment_like'] = $getCommentLike[0]['comment_like'];
+					$getCommentDislike = $this->db->query("SELECT COUNT(id) AS comment_dislike FROM user_comment_dislike WHERE comment_id = '".$value['id']."'")->result_array();
+					$getcomment[$key]['comment_dislike'] = $getCommentDislike[0]['comment_dislike'];
+					$getCommentreply = $this->db->query("SELECT COUNT(id) AS comment_reply FROM user_post_comment_reply WHERE comment_id = '".$value['id']."'")->result_array();
+					$getcomment[$key]['comment_reply'] = $getCommentreply[0]['comment_reply'];
+				}
+			} else {
+				$getcomment = "No comment posted yet";
+			}
+			$response = array("status"=> "success", "result"=> $getcomment);
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function addLikeForEachComment() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$comment_id = $formdata['comment_id'];
+			$data = array(
+				'user_id'=> $user_id,
+				'comment_id'=> $comment_id,
+				'created_date'=> date("Y-m-d h:i:sa")
+			);
+			$this->Crud_model->SaveData('user_comment_like', $data);
+			$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
+			$response = array("status"=> "success", "result"=> "Liked");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function addDislikeForEachComment() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$comment_id = $formdata['comment_id'];
+			$data = array(
+				'user_id'=> $user_id,
+				'comment_id'=> $comment_id,
+				'created_date'=> date("Y-m-d h:i:sa")
+			);
+			$this->Crud_model->SaveData('user_comment_dislike', $data);
+			$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
+			$response = array("status"=> "success", "result"=> "Disliked");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function add_post_comment_rply() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata["user_id"];
+			$post_id = $formdata["post_id"];
+			$comment_id = $formdata["comment_id"];
+			$comment_reply = $formdata["comment_reply"];
+			$data = array(
+				"user_id"=> $user_id,
+				"post_id"=> $post_id,
+				"comment_id"=> $comment_id,
+				"comment_reply"=> $comment_reply,
+				"created_date"=> date("Y-m-d H:i:s")
+			);
+			$this->Crud_model->SaveData('user_post_comment_reply', $data);
+			$response = array("status"=> "success", "result"=> "Comment Added");
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function get_comment_reply() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$comment_id = $formdata['comment_id'];
+			$getCommentRply = $this->db->query("SELECT * FROM user_post_comment_reply WHERE comment_id = '".$comment_id."'")->result_array();
+			if(!empty($getCommentRply)) {
+				$getcommentrply = array();
+				foreach ($getCommentRply as $key => $value) {
+					$getcommentrply[$key]['id'] = $value['id'];
+					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->result_array();
+					if($getUser[0]['userType'] == 1){
+						$getcommentrply[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
+					} else {
+						$getcommentrply[$key]['fullname'] = $getUser[0]['organizername'];
+					} 
+					$getcommentrply[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+					$getcommentrply[$key]['post_id'] = $value['post_id'];
+					$getcommentrply[$key]['comment'] = $value['comment_reply'];
+					$getcommentrply[$key]['commented_on'] = date ('D, jS M Y h:i a', strtotime($value['created_date']));
+				}
+			} else {
+				$getcommentrply = "No comment posted yet";
+			}
+			$response = array("status"=> "success", "result"=> $getcommentrply);
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
