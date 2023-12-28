@@ -31,7 +31,8 @@ class Authentication extends CI_Controller {
 					'longitude' => $formdata['longitude'],
 					'password' => md5($formdata['password']),
 					'created'=> date('Y-m-d H:i:s'),
-					'status'=> 0
+					'status'=> 1,
+					'email_verified'=> 1
 				);
 
 				$result = $this->Mymodel->insert('users',$data);
