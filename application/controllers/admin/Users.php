@@ -42,7 +42,9 @@ class Users extends MY_Controller {
             //     $btn = ''.anchor(base_url('employerdetail/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-eye mr-1"></i></span>');
             // }
             // $btn .= ' | '.anchor(base_url('profile/'.base64_encode($row->userId)),'<span class="btn btn-sm bg-success-light mr-2"><i class="far fa-edit mr-1"></i></span>','target=_blank');
-            $btn = '<span data-placement="right" class="btn btn-sm btn-danger mr-2"  onclick="Delete(this,'.$row->userId.')" style="margin-left: 8px;"><i class="fa fa-trash mr-1"></i></span>';
+            $btn = '<span data-placement="right" class="btn btn-sm btn-danger mr-2" onclick="Delete(this,'.$row->userId.')" style="margin-left: 8px;"><i class="fa fa-trash mr-1"></i></span>';
+            $btn .= '|'.'<span data-placement="right" class="btn btn-sm bg-success-light mr-2" onclick="viewPass(this,'.$row->userId.')" style="margin-left: 8px;"><i class="fa fa-key mr-1"></i></span>';
+            $btn .= '|'.'<span data-placement="right" class="btn btn-sm bg-success-light mr-2" onclick="resetPass(this,'.$row->userId.')" style="margin-left: 8px;">Reset</span>';
             // if($row->userType == 1) {
             //     if(!empty($row->resume)) {
             //         $btn .= ' |  '.'<a href="'.base_url('uploads/users/resume/'.$row->resume).'" download="'.$row->firstname.'_'.$row->lastname.'_resume" title="Download Resume"><span data-placement="right" class="btn btn-sm bg-success-light mr-2" style="margin-left: 8px;"><i class="fa fa-download" style="font-size:15px"></i></span></a>';
@@ -153,7 +155,6 @@ class Users extends MY_Controller {
             $email_verified='1';
 
         }
-
         $data=array(
             'email_verified'=>$email_verified,
             'status'=> '1',
@@ -162,12 +163,26 @@ class Users extends MY_Controller {
 
     }
 
-    public function delete()
-    {
-        if(isset($_POST['cid']))
-        {
+    public function delete() {
+        if(isset($_POST['cid'])) {
             $this->Crud_model->DeleteData('users',"userId='".$_POST['cid']."'");
         }
+    }
+
+    public function viewPass() {
+        $uID = $_POST['id'];
+        $get_password = $this->db->query("SELECT password FROM users WHERE userId = '".$uID."'")->result_array();
+        echo $upass = base64_decode($get_password[0]['password']);
+    }
+
+    public function changePass() {
+        $uID = $_POST['uIDforpass'];
+        $newpass = base64_encode($_POST['changepass']);
+        $data = array(
+            "password" => $newpass
+        );
+        $this->Crud_model->SaveData("users",$data,"userId='".$uID."'");
+        echo "Reset password Succeesful";
     }
 
 }//end controller

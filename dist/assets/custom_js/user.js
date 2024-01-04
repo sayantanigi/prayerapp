@@ -75,3 +75,67 @@ function Delete(obj,cid) {
 	    }
 	});
 }
+
+function viewPass(obj,uid) {
+	id = uid;
+	var admin_url=$('#admin_url').val();
+	$.ajax({
+		type:"POST",
+		url:admin_url+"users/viewPass",
+		data:{id:id},
+		cache:false,
+		success:function(returndata) {
+			$.confirm({
+				title: 'Password',
+				content: returndata,
+				buttons: {
+					somethingElse: {
+						text: 'Ok',
+						btnClass: 'btn-blue',
+						keys: ['enter', 'shift'],
+						action: function(){
+							location.reload();
+						}
+					}
+				}
+			});
+		}
+	});
+}
+
+function resetPass(obj,uid) {
+	jQuery('#createPassModal').addClass('createPassModal');
+	jQuery('#uIDforpass').val(uid);
+}
+
+function closePass() {
+	location.reload();
+}
+
+function changePass() {
+	var uIDforpass = $('#uIDforpass').val();
+	var changepass = $('#changepass').val();
+	var admin_url=$('#admin_url').val();
+	$.ajax({
+		type:"POST",
+		url:admin_url+"users/changePass",
+		data:{uIDforpass:uIDforpass, changepass:changepass},
+		cache:false,
+		success:function(returndata) {
+			$.confirm({
+				title: '',
+				content: returndata,
+				buttons: {
+					somethingElse: {
+						text: 'Ok',
+						btnClass: 'btn-blue',
+						keys: ['enter', 'shift'],
+						action: function(){
+							location.reload();
+						}
+					}
+				}
+			});
+		}
+	});
+}

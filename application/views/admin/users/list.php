@@ -93,6 +93,35 @@
 </div>
 </div>
 </div>
+<div id="createPassModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Change Password</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closePass()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="#" method="post">
+                            <div class="form-group">
+                                <label>New Password<span style="color:red;">*</span> <span id="changepass_err"></span></label>
+                                <input class="form-control" type="text" name="changepass" id="changepass">
+                            </div>
+                            <input type="hidden" id="uIDforpass" name="uIDforpass" value="">
+                            <div class="mt-4">
+                                <button class="btn btn-primary" type="button" onclick="return changePass();">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-info" onclick="return getvalidation()">Submit</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div> -->
+    </div>
+</div>
 
 <script>
 var url = '<?= admin_url('Users/ajax_manage_page')?>';
@@ -128,4 +157,9 @@ $('#refreshForm').click(function(){
     background: #fff;
     z-index: 100;
 }
+.jconfirm-title-c{text-align: center !important;}
+.jconfirm-content-pane{margin: 0 !important;}
+.jconfirm-content{text-align: center !important; font-size: 28px !important;}
+.createPassModal {opacity: 1 !important; display: block !important;}
+.jconfirm-box52142{font-size: 18px !important;}
 </style>

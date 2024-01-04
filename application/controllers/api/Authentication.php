@@ -29,7 +29,7 @@ class Authentication extends CI_Controller {
 					'address' => $formdata['location'],
 					'latitude' => $formdata['latitude'],
 					'longitude' => $formdata['longitude'],
-					'password' => md5($formdata['password']),
+					'password' => base64_encode($formdata['password']),
 					'created'=> date('Y-m-d H:i:s'),
 					'status'=> 1,
 					'email_verified'=> 1
@@ -115,7 +115,7 @@ class Authentication extends CI_Controller {
             $formdata = json_decode(file_get_contents('php://input'), true);
             $email = $formdata["email"];
     		$password = $formdata["password"];
-			$check_user = $this->db->query("SELECT * FROM users WHERE email = '".$email."' AND password = '".md5($password)."' AND status = '1'")->result_array();
+			$check_user = $this->db->query("SELECT * FROM users WHERE email = '".$email."' AND password = '".base64_encode($password)."' AND status = '1'")->result_array();
 			if(!empty($check_user)) {
 				if($check_user['0']['userType'] == '1') {
 					$check_user = $this->db->query("SELECT userId, CONCAT(firstname,' ', lastname) as name, short_bio, mobile, gender, email, address, userType FROM users WHERE userId = '".$check_user['0']['userId'] ."' AND status = '1'")->result_array();
@@ -205,12 +205,17 @@ class Authentication extends CI_Controller {
         	if(!empty($formdata['email'])) {
          		$get_email = $this->Crud_model->get_single('users',"email = '".$formdata['email']."'");
              	if(!empty($get_email)) {
-                 	$data = array(
-    					'email' => $get_email->email
+                 	// $data = array(
+    				// 	'email' => $get_email->email
+    				// );
+    				$numbers = rand(000000,999999);
+    				$data1 = array(
+    					'forgot_otp' => $numbers
     				);
-    				$get_setting = $this->Crud_model->get_single('setting');
+    				$this->Crud_model->SaveData('users',$data1,"email = '".$get_email->email."'");
+					$get_setting = $this->Crud_model->get_single('setting');
     				//$htmlContent = $this->load->view('email_template/forgot_password',$data,TRUE);
-                 	$htmlContent = "<div style='width:600px;margin: 0 auto;background: #fff; border: 1px solid #e6e6e6;'><div style='padding: 30px 30px 15px 30px;box-sizing: border-box;'><img src='cid:Logo' style='width:100px;float: right;margin-top: 0 auto;'><h3 style='padding-top:40px; line-height: 30px;'>Greetings from<span style='font-weight: 900;font-size: 25px;color: #505050; display: block;'>Prayer App</span></h3><p style='font-size: 17px; margin: 0;'>Hello User,</p><p style='font-size: 17px; margin: 0;'>Trouble signing in? Resetting your password is easy.</p><p style='font-size: 17px; margin: 5px 0 0 0;'>Just press the button below and follow the instructions.</p><p style='text-align: center;'><a href='".base_url('new-password/'.base64_encode($get_email->email))."' style='height: 50px;width: 260px;background: rgb(253,179,2);background: linear-gradient(0deg, rgb(177 98 102) 0%, rgb(78 3 7) 100%);text-align: center;font-size: 18px;color: #fff;border-radius: 12px;display: inline-block;line-height: 50px;text-decoration: none;text-transform: uppercase;font-weight: 600'>CLICK HERE TO RESET</a></p><p style='font-size: 17px; margin: 5px 0 0 0;'>Thank you!</p><p style='font-size: 17px; margin: 5px 0 0 0; list-style: none;'>Sincerly</p><p style='list-style: none;margin: 5px 0 0 0;font-size: 15px;'><b>Prayer App</b></p><p style='list-style: none;margin: 5px 0 0 0;font-size: 10px;'><b>Visit us:</b> <span>$get_setting->address</span></p><p style='list-style: none;margin: 5px 0 0 0;font-size: 10px;'><b>Email us:</b> <span>$get_setting->email</span></p></div><table style='width: 100%;'><tr><td style='height:30px; width:100%; background: #7e0e14; padding: 10px 0px; font-size:13px; color: #fff; text-align: center;'>Copyright &copy; <?=date('Y')?> Prayer App. All rights reserved.</td></tr></table></div>";
+                 	$htmlContent = "<div style='width:600px;margin: 0 auto;background: #fff; border: 1px solid #e6e6e6;'><div style='padding: 30px 30px 15px 30px;box-sizing: border-box;'><img src='cid:Logo' style='width:100px;float: right;margin-top: 0 auto;'><h3 style='padding-top:40px; line-height: 30px;'>Greetings from<span style='font-weight: 900;font-size: 25px;color: #505050; display: block;'>Prayer App</span></h3><p style='font-size: 24px; margin: 0;'>Verification code</p><p style='font-size: 17px; margin: 5px 0 0 0;'>Please use the verification code below to sign in.</p><p style='font-size: 22px; margin: 5px 0 0 0;'><b>$numbers</b></p><p style='font-size: 17px; margin: 5px 0 0 0;'>If you didn’t request this, you can ignore this email.</p><p style='font-size: 17px; margin: 5px 0 0 0;'>Thank you!</p><p style='font-size: 17px; margin: 5px 0 0 0; list-style: none;'>Sincerly</p><p style='list-style: none;margin: 5px 0 0 0;font-size: 15px;'><b>Prayer App</b></p><p style='list-style: none;margin: 5px 0 0 0;font-size: 10px;'><b>Visit us:</b><span>$get_setting->address</span></p><p style='list-style: none;margin: 5px 0 0 0;font-size: 10px;'><b>Email us:</b><span>$get_setting->email</span></p></div><table style='width: 100%;'><tr><td style='height:30px; width:100%; background: #7e0e14; padding: 10px 0px; font-size:13px; color: #fff; text-align: center;'>Copyright &copy; <?=date('Y')?> Prayer App. All rights reserved.</td></tr></table></div>";
     				require 'vendor/autoload.php';
     				$mail = new PHPMailer(true);
     				try {
@@ -250,6 +255,37 @@ class Authentication extends CI_Controller {
         }
         echo json_encode($response);
 	}
+
+	public function set_new_password() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			if(!empty($formdata['u_otp'])) {
+		 		$check_otp = $this->Crud_model->GetData('users','',"forgot_otp='".$formdata['u_otp']."'",'','','','1');
+		 		if(!empty($check_otp)) {
+		 			$get_email = $this->Crud_model->GetData('users','',"forgot_otp='".$formdata['u_otp']."'",'','','','1');
+		 			if(!empty($get_email)) {
+						$data = array('password' => md5($formdata['new_password']));
+					 	$con="userId='".$get_email->userId."'";
+					 	$this->Crud_model->SaveData('users',$data, $con);
+					 	$data1 = array(
+	    					'forgot_otp' => ""
+	    				);
+					 	$this->Crud_model->SaveData('users',$data1,"userId='".$get_email->userId."'");
+					 	$response = array('status'=> 'success','result'=> 'You have reset your password successfully. Please try to login.');
+		            } else {
+		            	$response = array('status'=> 'error','result'=> 'Something went wrong. Please try again later!');
+		            }
+		 		} else {
+		 			$response = array('status'=> 'error','result'=> 'Invalid OTP');
+		 		}
+	        }
+		} catch (Exception $e) {
+			$response = array('status'=> 'error','result'=> $e->getMessage());
+        }
+        echo json_encode($response);
+		
+	}
+
 
     public function logout() {
 	    unset($_SESSION['afrebay']);
