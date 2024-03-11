@@ -2,7 +2,7 @@
 <html>
 <?php $settings = $this->db->query("SELECT * FROM setting")->row();?>
 <head>
-    <title>120Connect - Home</title>
+    <title>120 ARMY - Home</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,6 +15,7 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
     <style>
         .right_event span i {margin-right: 10px;}
+        .Donate_Btn {width: 100%;height: auto;top: 90%;right: 50%;transform: translate(50%, -50%);position: absolute;font-size: 25px;font-weight: bolder;padding: 5px 25px;cursor: pointer;pointer-events: all;z-index: 100;text-decoration: none;color: var(--Primary); text-align: center;}
     </style>
 </head>
 <body>
@@ -61,8 +62,12 @@
             $j = 1;
             foreach ($banner as $slprayer) { ?>
             <div data-pause="true" data-interval="10000" class="carousel-item <?php if($j == '1') { echo "active";}?>">
-                <!-- <h2 class="d-block sliderSubtitle"><?= $slprayer['page_name']?></h2> -->
-                <a href="" class="Donate_Btn">Donate Now</a>
+                <!-- Paypal Button Start -->
+                <form action="https://www.sandbox.paypal.com/donate" method="post" target="_top" class="Donate_Btn">
+                    <input type="hidden" name="hosted_button_id" value="U3JU8K97MQJ22" />
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" style="width: 150px;"/>
+                </form>
+                <!-- Paypal Button End -->
                 <?php 
                 $allowed = array('JPEG', 'PNG', 'JPG', 'GIF', 'jpeg', 'jpg', 'png', 'gif');
                 $filename = $slprayer['image'];
@@ -226,6 +231,7 @@
     <script src="<?= base_url() ?>assets/js/owl.carousel.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.1/js/bootstrap.min.js'></script>
+    <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
     <script>
         $(document).ready(function() {
             $('a[href = "#"]').click(function(e) {
@@ -235,6 +241,6 @@
                 }, 500);
             });
         });
-    </script>
+</script>
 </body>
 </html>

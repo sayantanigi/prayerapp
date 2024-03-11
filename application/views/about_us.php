@@ -2,7 +2,7 @@
 <html>
 <?php $settings = $this->db->query("SELECT * FROM setting")->row();?>
 <head>
-    <title>120Connect - About Us</title>
+    <title>120 ARMY - About Us</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/responsive.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+    <style>
+        .Donate_Btn {width: 100%;height: auto;top: 98%;right: 50%;transform: translate(50%, -50%);position: absolute;font-size: 25px;font-weight: bolder;padding: 5px 25px;cursor: pointer;pointer-events: all;z-index: 100;text-decoration: none;color: var(--Primary); text-align: center;}
+    </style>
 </head>
 
 <body>
@@ -58,7 +61,14 @@
     <section class="blesings_sec">
         <h3>Your help is a Blessing</h3>
         <p>Quisque lobortis volutpat pellentesque. Quisque vehicula lorem in nibh lobortis, et ornare odio pellentesque. Proin id aliquet ipsum. Donec lacinia lorem iaculis, posuere velit vel, viverra diam.</p>
-        <a class="nav-link custom_donate_big" href="#">Donate</a>
+        <!-- <a class="nav-link custom_donate_big" href="#">Donate</a> -->
+        <!-- Paypal Button Start -->
+        <form action="https://www.sandbox.paypal.com/donate" method="post" target="_top" class="Donate_Btn">
+            <input type="hidden" name="hosted_button_id" value="53LPWMUF3QSC4" />
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" style="width: 150px;"/>
+            <!-- <img alt="" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" /> -->
+        </form>
+        <!-- Paypal Button End -->
     </section>
 
     <section class="banner" style="margin-top: 20px;">

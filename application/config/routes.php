@@ -56,6 +56,9 @@ $route['terms_and_condition'] = 'Home/terms_and_condition';
 $route['privacy_policy'] = 'Home/privacy_policy';
 $route['download'] = 'Home/download';
 $route['contact'] = 'Home/contact';
+$route['completed'] = 'Home/completed';
+$route['cancel'] = 'Home/cancel';
+
 //ADMIN URL
 $route['admin'] = 'admin/login/index';
 $route['admin/logout'] = 'admin/login/logout';

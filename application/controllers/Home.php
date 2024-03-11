@@ -113,4 +113,12 @@ class Home extends MY_Controller {
 				header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here
 		}
 	}
+
+	public function completed() {
+		$this->load->view('completed');
+	}
+
+	public function cancel() {
+		$this->load->view('cancel');
+	}
 }
