@@ -1,0 +1,751 @@
+:root {
+  --white: #ffffff;
+  --Black: #000000;
+  --Gold: #ba8c15;
+  --Primary: #741623;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #666;
+  font-family: "Abhaya Libre";
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.mt-70 {
+  margin-top: 70px;
+}
+
+.mt-100 {
+  margin-top: 100px;
+}
+
+.mb-70 {
+  margin-bottom: 70px;
+}
+
+ul {
+  padding: 0;
+}
+
+h2 {
+  font-size: 38px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span {
+  font-family: "Abhaya Libre";
+}
+
+p,
+li {
+  font-size: 19px;
+  line-height: 24px;
+  font-family: "Abhaya Libre";
+}
+
+p,
+a,
+ul {
+  margin: 0;
+  padding: 0;
+  font-family: "Abhaya Libre";
+}
+
+.main_header {
+  z-index: 9;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  height: 100px;
+}
+
+.sub_header {
+  background-color: var(--Primary);
+  position: relative;
+}
+
+.main_header ul li a {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--white);
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.main_header .navbar-brand {
+  width: 80px;
+  margin: 0;
+}
+
+.main_header .navbar-brand img {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.custom_donate {
+  background: url(../images/donate_bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 102px;
+  text-align: center;
+  color: var(--Gold);
+}
+
+.banner {
+  background: url(../images/banner_back.png);
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: cover;
+}
+
+.item_inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item_left {
+  text-align: center;
+  padding: 10px 70px 10px 0;
+}
+
+.item_left p {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--white);
+}
+
+.item_left h3 {
+  font-size: 100px;
+  font-weight: 600;
+  line-height: 95px;
+  color: var(--white);
+}
+
+.item_right {
+  padding: 0 0 0 50px;
+  position: relative;
+}
+
+.item_right:before {
+  content: "";
+  width: 1px;
+  background: var(--white);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.item_right p {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--white);
+}
+
+.item_right h3 {
+  font-size: 50px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.banner_inner {
+  padding: 80px 0;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.banner_inner #banner_inner .owl-nav {
+  position: absolute;
+  top: 35%;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-prev span {
+  color: var(--white);
+  font-size: 50px;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-next {
+  right: 0;
+  position: absolute;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-next span {
+  color: var(--white);
+  font-size: 50px;
+}
+
+.banner .banner_inner h1 {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--white);
+  text-align: center;
+  margin: 0 0 30px 0;
+}
+
+.icon_flex {
+  justify-content: center;
+}
+
+.icon_flex a {
+  background: url(../images/app_bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 200px;
+  height: 65px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--Primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon_flex a:nth-child(1) {
+  margin-right: 10px;
+}
+
+.icon_flex a:hover {
+  opacity: 0.7;
+}
+
+.icon_flex a img {
+  margin: 0 10px 0 0;
+}
+
+.banner_bottom .container {
+  position: relative;
+}
+
+.banner_bottom .container:after {
+  background: url(../images/timeline_icon.png) no-repeat;
+  width: 100%;
+  height: 160px;
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: 0;
+  left: 0;
+}
+
+.banner_bottom {
+  background: url(../images/banner_back.png);
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: cover;
+  width: 100%;
+  padding: 150px 0 0 0;
+  position: relative;
+}
+
+.banner_bottom .pray {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--white);
+  position: absolute;
+  right: 26.7%;
+  bottom: 115px;
+}
+
+.main_section {
+  padding: 50px 0 100px 0;
+}
+
+.main_section_left h3 {
+  font-size: 36px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 1px;
+  margin: 0 0 30px 0;
+}
+
+.prayer_images {
+  position: relative;
+}
+
+.prayer_images img {
+  object-fit: cover;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.prayer_images_content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: #33333394;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.prayer_images_content span {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--white);
+  display: block;
+}
+
+.prayer_images_content p a {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.vmore_events {
+  background: url(../images/vmore_events.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  text-align: center;
+  height: 92px;
+  display: block;
+  line-height: 87px;
+  font-size: 15px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.vmore_events:hover {
+  color: var(--white);
+}
+
+.main_section_left h5 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--Black);
+  border-bottom: 1px solid #d9d9d9;
+  padding: 0 0 20px 0;
+  margin: 0 0 20px 0;
+}
+
+.main_section_left ul {
+  list-style: none;
+}
+
+.main_section_left ul li {
+  display: flex;
+  align-items: center;
+  margin: 0 0 15px 0;
+}
+
+.main_section_left ul li h4 {
+  font-size: 35px;
+  color: var(--Primary);
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+.main_section_left ul li h4 span {
+  display: block;
+  font-size: 14px;
+}
+
+.right_event {
+  padding: 0 0 0 20px;
+}
+
+.right_event p {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--Black);
+  line-height: 20px;
+  margin: 0 0 10px 0;
+}
+
+.right_event span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #c6c6c6;
+}
+
+.right_event span i {
+  color: var(--Primary);
+}
+
+.see_m {
+  background: url(../images/seemore.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 182px;
+  text-align: center;
+  height: 77px;
+  display: block;
+  line-height: 76px;
+  font-size: 15px;
+  color: var(--white);
+  font-weight: 600;
+  margin: 0 auto;
+}
+
+.see_m:hover {
+  color: var(--white);
+}
+
+.blesings_sec {
+  background: url(../images/banner_back.png);
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: cover;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.blesings_sec h3 {
+  font-size: 50px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.blesings_sec p {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--white);
+  width: 60%;
+  margin: 0 auto 50px auto;
+  line-height: 30px;
+}
+
+.custom_donate_big {
+  background: url(../images/donate_big.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 182px;
+  text-align: center;
+  color: #ba8c15 !important;
+  margin: 0 auto;
+}
+
+.footer_main {
+  padding: 50px 0;
+}
+
+.f_content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--Black);
+  margin: 0;
+}
+
+.f_content a {
+  font-size: 15px;
+  font-weight: 400;
+  display: block;
+  color: var(--Black);
+}
+
+.f_content a img {
+  max-width: 70%;
+}
+
+.app_sec {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.app_sec li {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--Black);
+  margin: 0 5px;
+}
+
+.download_appsec_outer {
+  overflow-x: hidden;
+}
+
+.download_appsec {
+  background: url(../images/mobile-banner.png) no-repeat;
+  background-position: 100% 50%;
+  background-size: cover;
+  height: 600px;
+  background-repeat: no-repeat;
+}
+
+.download_appsec_content {
+  height: 100%;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.download_appsec_content h3 {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--Black);
+}
+
+.download_appsec_content p {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--Black);
+}
+
+.qr_sec {
+  margin: 50px 0 0 0;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qr_sec .icon_flex a {
+  margin: 0 0 15px 0;
+}
+
+/* New CSS */
+.Custom_Carousel,
+.Custom_Carousel .carousel-inner {
+  height: 100vh;
+}
+
+.Custom_Carousel .carousel-inner::after {
+  display: none;
+}
+
+.Custom_Carousel .carousel-item {
+  transform: scale(1);
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* .Custom_Carousel .sliderTitle {
+  display: none;
+  top: 65vh;
+  left: -10vw;
+  right: 30vw;
+  color: white;
+  font-size: 50px;
+  position: absolute;
+  transition: none;
+  padding: 5px 15px;
+}
+.Custom_Carousel .active .sliderTitle {
+  display: block;
+  top: 65vh;
+  left: 10vw;
+  right: 30vw;
+  color: white;
+  font-size: 50px;
+  position: absolute;
+  transition: none;
+  padding: 5px 15px;
+} */
+.Custom_Carousel .sliderSubtitle {
+  display: none;
+  top: 70vh;
+  left: -10vw;
+  right: 10vw;
+  color: white;
+  font-size: 35px;
+  line-height: 1.5;
+  position: absolute;
+  transition: none;
+  padding: 5px 15px;
+}
+
+.Custom_Carousel .active .sliderSubtitle {
+  display: block;
+  top: 70vh;
+  left: 10vw;
+  right: 10vw;
+  color: white;
+  font-size: 35px;
+  line-height: 1.5;
+  position: absolute;
+  transition: none;
+  padding: 5px 15px;
+}
+
+.Custom_Carousel .carousel-inner img {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  background-repeat: no-repeat;
+}
+
+.Custom_Carousel #carouselExampleIndicators {
+  position: relative;
+  height: 100vh;
+}
+
+.Custom_Carousel .containerVideobg {
+  background-color: var(--Black);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: -2;
+  padding: 0 !important;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.Custom_Carousel .videoSliderBackground {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  min-width: 100vh;
+  max-height: 100vh;
+  min-height: 100vh;
+  background-color: var(--Black);
+}
+
+.Custom_Carousel .elVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.Custom_Carousel .active .videoSlider {
+  margin-top: 0;
+  width: 100%;
+  border: none;
+  box-shadow: none;
+}
+
+.Custom_Carousel a.Donate_Btn {
+  top: 90%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  position: absolute;
+  font-size: 25px;
+  font-weight: bolder;
+  padding: 5px 25px;
+  cursor: pointer;
+  pointer-events: all;
+  z-index: 100;
+  text-decoration: none;
+  color: var(--Primary);
+}
+
+.Custom_Carousel a.Donate_Btn::before {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  border-radius: 10px;
+  background: -webkit-linear-gradient(left, #8f6B29, #FDE08D, #DF9F28);
+}
+
+.red_zone {
+  background: var(--Primary);
+  padding: 15px 0;
+}
+
+.red_zone_data {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.red_zone h3 {
+  font-size: 25px;
+  font-weight: 600;
+  color: var(--white);
+  margin: 0;
+}
+
+.red_zone a {
+  background: var(--white);
+  color: var(--Primary);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px 25px;
+  border-radius: 10px;
+}
+
+.red_zone a:hover {
+  opacity: 0.8;
+  color: var(--Primary);
+  text-decoration: none;
+}
+
+.navbar-expand-lg .navbar-collapse {
+  justify-content: flex-end;
+}
+
+.Data_Container {
+  padding: 50px 0;
+}
+
+.Data_Container h1 {
+  font-size: 36px;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 1px;
+  margin: 30px 0;
+  text-align: center;
+}
+
+.Data_Container p {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--Black);
+  line-height: 30px;
+  margin: 0 0 10px 0;
+}
+
+.red_zone .red_zone_data .Store_Icon a {
+  padding: 10px 30px;
+  border-radius: 25px;
+}
+
+.red_zone .red_zone_data .Store_Icon a:nth-child(1) {
+  margin-right: 15px;
+}
+
+.red_zone .red_zone_data .Store_Icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.Custom_Accordion .accordion-button {
+  font-size: 25px;
+  background: var(--Primary);
+  color: var(--white) !important;
+}
+
+.Custom_Accordion .accordion-body span {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--Black);
+  line-height: 30px;
+}
