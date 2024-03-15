@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/responsive.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
+    <style>
+        dl, ol, ul {margin-left: 55px !important;}
+        .Data_Container *{color: #000 !important;}
+    </style>
 </head>
 
 <body>

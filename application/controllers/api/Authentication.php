@@ -55,7 +55,7 @@ class Authentication extends CI_Controller {
 					require 'vendor/autoload.php';
 					$mail = new PHPMailer(true);
 					$mail->CharSet = 'UTF-8';
-					$mail->SetFrom('no-reply@goigi.com', 'Prayer App');
+					$mail->SetFrom('info@120army.com');
 					$mail->AddAddress($formdata['email']);
 					$mail->IsHTML(true);
 					$mail->Subject = 'Verify Your Email Address From Prayer App';
@@ -64,10 +64,10 @@ class Authentication extends CI_Controller {
 					$mail->IsSMTP();
 					$mail->SMTPAuth = true;
 					$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-					$mail->Host = "smtp.gmail.com";
+					$mail->Host = "mail.120army.com";
 					$mail->Port = 587; //587 465
-					$mail->Username = "no-reply@goigi.com";
-					$mail->Password = "wj8jeml3eu0z";
+					$mail->Username = "info@120army.com";
+					$mail->Password = "Y&u,nPsT4JW6";
 					$mail->send();
 					$msg = "We have sent an activation link to your account to continue with the registration process.";
 					$response = array('status'=> 'success','result'=> $msg);
@@ -221,7 +221,7 @@ class Authentication extends CI_Controller {
     				try {
     					//Server settings
     					$mail->CharSet = 'UTF-8';
-    					$mail->SetFrom('no-reply@goigi.com', 'Prayper App');
+    					$mail->SetFrom('info@120army.com', '120 Army');
     					$mail->AddAddress($formdata['email']);
     					$mail->IsHTML(true);
     					$mail->Subject = "Forgot Password Confirmation message from Prayper App";
@@ -231,10 +231,10 @@ class Authentication extends CI_Controller {
     					$mail->IsSMTP();
     					$mail->SMTPAuth = true;
     					$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    					$mail->Host = "smtp.gmail.com";
-    					$mail->Port = 587; //587 465
-    					$mail->Username = "no-reply@goigi.com";
-    					$mail->Password = "wj8jeml3eu0z";
+    					$mail->Host = "smtp.120army.com";
+						$mail->Port = 587; //587 465
+						$mail->Username = "info@120army.com";
+						$mail->Password = "Y&u,nPsT4JW6";
     					$mail->send();
     					$msg = 'Please check your inbox. We have sent you an email to reset your password.';
     					$response = array('status'=> 'success','result'=> $msg);

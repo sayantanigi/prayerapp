@@ -89,7 +89,7 @@ function update_category() {
 	});
 }
 
-function categoryDelete(obj,cid) {
+function prod_categoryDelete(obj,cid) {
 	var admin_url=$('#admin_url').val();
 	$.confirm({
 	    title: 'Confirm!',

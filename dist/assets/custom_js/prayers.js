@@ -2,9 +2,9 @@ function create_event() {
     var admin_url = $('#admin_url').val();
     var user_id = $('#user_id').val();
     var prayer_name = $('#prayer_name').val();
-    var prayer_description= CKEDITOR.instances['prayer_description'].getData();
     var prayer_subheading = $('#prayer_subheading').val();
     var prayer_location = $('#prayer_location').val();
+    var prayer_description = CKEDITOR.instances['prayer_description'].getData();
     var prayer_datetime = $('#prayer_datetime').val();
 
     if(prayer_name == "") {
@@ -28,13 +28,6 @@ function create_event() {
         return false;
     }
 
-    if(prayer_location == "") {
-        $("#prayer_location_err").fadeIn().html("Please Enter Prayer Location").css("color","red");
-        setTimeout(function(){$("#prayer_location_err").fadeOut("&nbsp;");},2000);
-        $("#prayer_location").focus();
-        return false;
-    }
-
     if(prayer_datetime == "") {
         $("#prayer_datetime_err").fadeIn().html("Please Enter Prayer Date Time").css("color","red");
         setTimeout(function(){$("#prayer_datetime_err").fadeOut("&nbsp;");},2000);
@@ -49,8 +42,8 @@ function create_event() {
     form_data.append('prayer_name', prayer_name);
     form_data.append('prayer_subheading', prayer_subheading);
     form_data.append('prayer_description', prayer_description);
-    form_data.append('prayer_location', prayer_location);
     form_data.append('prayer_datetime', prayer_datetime);
+    form_data.append('prayer_location', prayer_location);
     $.ajax({
         type:"post",
         url:admin_url+"Manage_prayers/create_action",
@@ -87,8 +80,8 @@ function getValue(id) {
             $("#edit_prayer_name").val(obj.prayer_name);
             $("#edit_prayer_subheading").val(obj.prayer_subheading);
             CKEDITOR.instances.edit_prayer_description.setData(obj.prayer_description);
-            $("#edit_prayer_location").val(obj.prayer_location);
             $("#edit_prayer_datetime").val(obj.prayer_datetime);
+            $("#edit_prayer_location").val(obj.prayer_location);
             $("#show_img").html(obj.image);
             $("#old_image").val(obj.old_image);
             $("#id").val(obj.id);
@@ -102,8 +95,8 @@ function update_event() {
     var old_image=$("#old_image").val();
     var prayer_name = $("#edit_prayer_name").val().trim();
     var prayer_datetime = $("#edit_prayer_datetime").val();
+    var prayer_location = $('#edit_prayer_location').val();
     var prayer_description = CKEDITOR.instances['edit_prayer_description'].getData();
-    var prayer_location = $("#edit_prayer_location").val();
     var prayer_subheading = $("#edit_prayer_subheading").val().trim();
     var prayer_image = $('#edit_prayer_image')[0].files[0];
     var id = $("#id").val();   
@@ -129,13 +122,6 @@ function update_event() {
         return false;
     }
 
-    if(prayer_location == "") {
-        $("#edit_prayer_location_err").fadeIn().html("Please enter location").css('color','red');
-        setTimeout(function(){$("#edit_prayer_location_err").html("&nbsp;");},3000);
-        $("#edit_prayer_location").focus();
-        return false;
-    }
-
     if(prayer_datetime == "") {
         $("#edit_prayer_datetime_err").fadeIn().html("Please enter Date Time").css('color','red');
         setTimeout(function(){$("#edit_prayer_datetime_err").html("&nbsp;");},3000);
@@ -146,10 +132,10 @@ function update_event() {
     var form_data= new FormData();
     form_data.append('prayer_image',prayer_image);
     form_data.append('prayer_name',prayer_name); 
+    form_data.append('prayer_location',prayer_location); 
     form_data.append('prayer_datetime',prayer_datetime);
     form_data.append('prayer_description',prayer_description);
     form_data.append('prayer_subheading',prayer_subheading);
-    form_data.append('prayer_location',prayer_location);
     form_data.append('old_image',old_image);
     form_data.append('id',id);
     $.ajax({

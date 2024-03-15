@@ -47,11 +47,11 @@ class Manage_videos extends CI_Controller {
             $btn .= ' | '.'<a href=manage_videos/view/'.base64_encode($row->id).' class="btn btn-sm bg-success-light"><i class="far fa-eye"></i></a>';
             $btn .= ' | '.'<span data-placement="right" class="btn btn-sm btn-danger" onclick="videosDelete(this,'.$row->id.')"><i class="fa fa-trash"></i></span>';
             //$btn .= ' | '.'<span class="btn btn-sm bg-success-light" data-placement="right" class="btn btn-sm btn-success" onclick="podcastDetails(this,'.$row->id.')"><i class="fa fa-eye"></i></span>';
-            if(!empty($row->cover_image)) {
-                if(!file_exists("uploads/videos/cover_image/".$row->cover_image)) {
+            if(!empty($row->video_cover_image)) {
+                if(!file_exists("uploads/videos/cover_image/".$row->video_cover_image)) {
                     $img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
                 } else {
-                    $img ='<a href="'.base_url('uploads/videos/cover_image/'.$row->cover_image).'" data-lightbox="roadtrip"><img class="rounded service-img mr-1"src="'.base_url('uploads/videos/cover_image/'.$row->cover_image).'"><a>';
+                    $img ='<a href="'.base_url('uploads/videos/cover_image/'.$row->video_cover_image).'" data-lightbox="roadtrip"><img class="rounded service-img mr-1"src="'.base_url('uploads/videos/cover_image/'.$row->video_cover_image).'"><a>';
                 }
             } else {
                 $img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';

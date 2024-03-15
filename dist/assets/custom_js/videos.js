@@ -153,12 +153,12 @@ function update_event() {
     })
 }
 
-function podcastDetails(id) {      
+function videoDetails(id) {      
     var admin_url = $("#admin_url").val();
     $.ajax({
         type:'post',
         cache:false,
-        url:admin_url+'Manage_podcast/view',
+        url:admin_url+'Manage_videos/view',
         data:{
           id:id,
         },
@@ -169,7 +169,7 @@ function podcastDetails(id) {
     })
 }
 
-function podcastDelete(obj,cid) {
+function videosDelete(obj,cid) {
     var admin_url=$('#admin_url').val();
     $.confirm({
         title: 'Confirm!',
@@ -180,7 +180,7 @@ function podcastDelete(obj,cid) {
                 var datastring="cid="+cid;
                 $.ajax({
                     type:"POST",
-                    url:admin_url+'Manage_podcast/delete',
+                    url:admin_url+'Manage_videos/delete',
                     data:datastring,
                     cache:false,
                     success:function(returndata) {

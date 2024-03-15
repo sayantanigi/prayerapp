@@ -58,6 +58,7 @@ $route['download'] = 'Home/download';
 $route['contact'] = 'Home/contact';
 $route['completed'] = 'Home/completed';
 $route['cancel'] = 'Home/cancel';
+$route['email-verification/(:any)'] = 'Home/email_verification/$1';
 
 //ADMIN URL
 $route['admin'] = 'admin/login/index';
@@ -88,6 +89,7 @@ $route['api/homeList'] = "api/Home/home_list";
 $route['api/about_us'] = 'api/Home/about_us';
 $route['api/privacy_policy'] = 'api/Home/privacy_policy';
 $route['api/contact'] = 'api/Home/contact';
+$route['api/save_contact'] = 'api/Home/save_contact';
 $route['api/term_and_conditions'] = 'api/Home/term_and_conditions';
 $route['api/add_prayer'] = "api/User_dashboard/add_prayer";
 $route['api/edit_prayer'] = "api/User_dashboard/edit_prayer";

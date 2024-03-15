@@ -97,7 +97,27 @@ class Home extends MY_Controller {
             echo $msg = "2";
         }
 	}
-
+	public function email_verification($id) {
+		$givenotp = base64_decode(urldecode($id));
+        $sql = "SELECT * FROM `users` WHERE userId = '".$givenotp."' AND status = '0' AND `email_verified` = '0'";
+        $check = $this->db->query($sql)->num_rows();
+        
+		if ($check > 0) {
+            //$usr = $this->db->query($sql)->row();
+            $result = $this->db->query("UPDATE `users` SET `email_verified` = 1, `status` = 1 where `userId` = '".$givenotp."'");
+            if ($result) {
+                $this->session->set_flashdata('message', 'Your Email Address is verified successfully and your account is active.');
+				redirect(base_url('/'), 'refresh');
+            } else {
+                $this->session->set_flashdata('message', 'Sorry! There is error verifying your Email Address!');
+                redirect(base_url('/'), 'refresh');
+            }
+        } else {
+            //$this->session->set_flashdata('message', 'Sorry! Activation link is expired!');
+            $this->session->set_flashdata('message', 'Your Email Address is already verified.');
+            redirect(base_url('/'), 'refresh');
+        }
+	}
 	public function download() {
 		$iPod = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
 		$iPhone = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
@@ -113,11 +133,9 @@ class Home extends MY_Controller {
 				header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here
 		}
 	}
-
 	public function completed() {
 		$this->load->view('completed');
 	}
-
 	public function cancel() {
 		$this->load->view('cancel');
 	}

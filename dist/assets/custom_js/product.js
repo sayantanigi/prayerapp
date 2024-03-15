@@ -89,10 +89,10 @@ function getValue(id) {
 		},
 		success:function(returndata) {
 			var obj=$.parseJSON(returndata);
-            //console.log(obj);
+            console.log(obj);
 			//$("#edit_category_name").val(obj.category_name);
 			$("#id").val(obj.id);
-            $("#edit_category_id").val(obj.pro_cat_id);
+            $("#edit_category_id").val(obj.pro_cat_id).attr("selected", "selected");;
             $("#edit_pro_name").val(obj.pro_name);
             //$("#edit_pro_desc").val(obj.pro_desc);
             CKEDITOR.instances.edit_pro_desc.setData(obj.pro_desc);

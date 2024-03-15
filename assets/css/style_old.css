@@ -1,0 +1,564 @@
+:root {
+    --white: #FFFFFF;
+    --Black: #000000;
+    --Gold: #BA8C15;
+    --Primary: #741623;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #666;
+    font-family: 'Inter', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+.mt-70 {
+    margin-top: 70px;
+}
+
+.mt-100 {
+    margin-top: 100px;
+}
+
+.mb-70 {
+    margin-bottom: 70px;
+}
+
+ul {
+    padding: 0;
+}
+
+h2 {
+    font-size: 38px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Inter';
+    color: #0087CC;
+}
+
+p,
+li {
+    font-size: 19px;
+    line-height: 24px;
+}
+
+p,
+a,
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.main_header {
+    background: url(../images/banner_back.png);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-size: cover;
+}
+
+.main_header ul li a {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--white);
+    font-family: 'Inter';
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.main_header .navbar-brand {
+    width: 100px;
+}
+
+.main_header .navbar-brand img {
+    max-width: 100%;
+}
+
+.custom_donate {
+    background: url(../images/donate_bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 102px;
+    text-align: center;
+    color: var(--Gold);
+}
+
+.banner {
+    background: url(../images/banner_back.png);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-size: cover;
+}
+
+.item_inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item_left {
+    text-align: center;
+    padding: 10px 70px 10px 0;
+}
+
+.item_left p {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--white);
+    font-family: 'Inter';
+}
+
+.item_left h3 {
+    font-size: 100px;
+    font-weight: 600;
+    line-height: 95px;
+    color: var(--white);
+    font-family: 'Abhaya Libre', serif;
+}
+
+.item_right {
+    padding: 0 0 0 50px;
+    position: relative;
+}
+
+.item_right:before {
+    content: "";
+    width: 1px;
+    background: var(--white);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.item_right p {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--white);
+    font-family: 'Inter';
+}
+
+.item_right h3 {
+    font-size: 50px;
+    font-weight: 600;
+    color: var(--white);
+    font-family: 'Abhaya Libre', serif;
+}
+
+.banner_inner {
+    padding: 80px 0;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.banner_inner #banner_inner .owl-nav {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-prev span {
+    color: var(--white);
+    font-size: 50px;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-next {
+    right: 0;
+    position: absolute;
+}
+
+.banner_inner #banner_inner .owl-nav .owl-next span {
+    color: var(--white);
+    font-size: 50px;
+}
+
+.banner .banner_inner h1 {
+    font-size: 40px;
+    font-weight: 600;
+    color: var(--white);
+    font-family: 'Abhaya Libre';
+    text-align: center;
+    margin: 50px 0 40px 0;
+}
+
+.icon_flex {
+    justify-content: center;
+}
+
+.icon_flex a {
+    background: url(../images/app_bg.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 200px;
+    height: 65px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    margin: 0 0 0 20px;
+    font-weight: 600;
+    color: var(--Primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter';
+}
+
+.icon_flex a:hover {
+    opacity: 0.7;
+}
+
+.icon_flex a img {
+    margin: 0 10px 0 0;
+}
+
+.banner_bottom .container {
+    position: relative;
+}
+
+.banner_bottom .container:after {
+    background: url(../images/timeline_icon.png) no-repeat;
+    width: 100%;
+    height: 160px;
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    left: 0;
+}
+
+.banner_bottom {
+    background: url(../images/banner_back.png);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-size: cover;
+    width: 100%;
+    padding: 150px 0 0 0;
+    position: relative;
+}
+
+.banner_bottom .pray {
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--white);
+    position: absolute;
+    right: 26.7%;
+    bottom: 115px;
+}
+
+.red_zone {
+    background: var(--Primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    position: relative;
+}
+
+.red_zone h3 {
+    font-size: 25px;
+    font-weight: 600;
+    font-family: 'Abhaya Libre';
+    color: var(--white);
+    margin: 0 35px 0 0;
+    letter-spacing: 1;
+}
+
+.red_zone h3 a {
+    color: var(--white);
+}
+
+.red_click {
+    background: var(--white);
+    color: var(--Primary);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 10px;
+}
+
+.red_click:hover {
+    opacity: 0.8;
+    color: var(--Primary);
+}
+
+.main_section {
+    padding: 50px 0 100px 0;
+}
+
+.main_section_left h3 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #333;
+    font-family: 'Abhaya Libre';
+    letter-spacing: 1px;
+    margin: 0 0 30px 0;
+}
+
+.prayer_images {
+    position: relative;
+}
+
+.prayer_images img {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 15px;
+}
+
+.prayer_images_content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: #33333394;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.prayer_images_content span {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--white);
+    font-family: 'Inter';
+    display: block;
+    margin: 0 0 20px 0;
+}
+
+.prayer_images_content p a {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    font-family: 'Inter';
+}
+
+.vmore_events {
+    background: url(../images/vmore_events.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    text-align: center;
+    height: 92px;
+    display: block;
+    line-height: 87px;
+    font-size: 15px;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.vmore_events:hover {
+    color: var(--white);
+}
+
+.main_section_left h5 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--Black);
+    border-bottom: 1px solid #D9D9D9;
+    padding: 0 0 20px 0;
+    margin: 0 0 20px 0;
+}
+
+.main_section_left ul {
+    list-style: none;
+}
+
+.main_section_left ul li {
+    display: flex;
+    align-items: center;
+    margin: 0 0 15px 0;
+}
+
+.main_section_left ul li h4 {
+    font-size: 35px;
+    color: var(--Primary);
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+}
+
+.main_section_left ul li h4 span {
+    display: block;
+    font-size: 14px;
+}
+
+.right_event {
+    padding: 0 0 0 20px;
+}
+
+.right_event p {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--Black);
+    font-family: 'Inter';
+    line-height: 20px;
+    margin: 0 0 10px 0;
+}
+
+.right_event span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #C6C6C6;
+}
+
+.right_event span i {
+    color: var(--Primary);
+}
+
+.see_m {
+    background: url(../images/seemore.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 182px;
+    text-align: center;
+    height: 77px;
+    display: block;
+    line-height: 76px;
+    font-size: 15px;
+    color: var(--white);
+    font-weight: 600;
+    margin: 0 auto;
+}
+
+.see_m:hover {
+    color: var(--white);
+}
+
+.blesings_sec {
+    background: url(../images/banner_back.png);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    background-size: cover;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.blesings_sec h3 {
+    font-size: 50px;
+    font-weight: 600;
+    color: var(--white);
+    font-family: 'Abhaya Libre';
+}
+
+.blesings_sec p {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--white);
+    width: 60%;
+    margin: 0 auto 50px auto;
+    line-height: 30px;
+    font-family: 'Inter';
+}
+
+.custom_donate_big {
+    background: url(../images/donate_big.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 182px;
+    text-align: center;
+    color: #BA8C15 !important;
+    margin: 0 auto;
+}
+
+.red_zone a {
+    margin: 0 20px 0 0;
+}
+
+.footer_main {
+    padding: 50px 0;
+}
+
+.f_content h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--Black);
+    margin: 0;
+}
+
+.f_content a {
+    font-size: 15px;
+    font-weight: 400;
+    font-family: 'Inter';
+    display: block;
+    color: var(--Black);
+}
+
+.f_content a img {
+    max-width: 70%;
+}
+
+.app_sec {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.app_sec li {
+    font-size: 15px;
+    font-weight: 400;
+    font-family: 'Inter';
+    color: var(--Black);
+    margin: 0 5px;
+}
+
+.download_appsec_outer {
+    overflow-x: hidden;
+}
+
+.download_appsec {
+    background: url(../images/mobile-banner.png) no-repeat;
+    background-position: 100% 40%;
+    background-size: cover;
+    height: 600px;
+    background-repeat: no-repeat;
+}
+
+.download_appsec_content {
+    height: 100%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.download_appsec_content h3 {
+    font-size: 36px;
+    font-weight: 600;
+    font-family: 'Abhaya Libre';
+    color: var(--Black);
+}
+
+.download_appsec_content p {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--Black);
+}
+
+.qr_sec {
+    margin: 50px 0 0 0;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.qr_sec .icon_flex a {
+    margin: 0 0 15px 0;
+}
