@@ -1899,22 +1899,22 @@ class User_dashboard extends CI_Controller {
 	
 	public function deleteAccount() {
 		try {
-			$formdata = json_decode(file_get_contents('php://input'), true);
-			$getuserDetails = $this->db->query("SELECT * FROM users WHERE userId = '".$formdata['user_id']."'")->result_array();
+			$userId = $this->input->get('userId');
+			$getuserDetails = $this->db->query("SELECT * FROM users WHERE userId = '".$userId."'")->result_array();
 			if(!empty($getuserDetails)) {
-				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_address WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM users_post WHERE user_id = '".$formdata['user_id']."'");
-				$this->db->query("DELETE FROM users WHERE userId = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_address WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM users_post WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM users WHERE userId = '".$userId."'");
 				$response = array("status"=> "success", "result"=> "You have successfully deleted your profile");
 			} else {
 				$response = array("status"=> "error", "result"=> "Profile not found.");
