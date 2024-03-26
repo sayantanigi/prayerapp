@@ -79,6 +79,16 @@
                     <video width="100%" class="elVideo" loop="loop" autoPlay playsInline muted id='video-slider-<?= $j?>'>
                         <source src="<?= base_url()?>uploads/banner/<?= $slprayer['image']?>" type="video/mp4">
                     </video>
+                    <div style="text-align: center;color: #fff;position: absolute;top: 30%;width: 90%;font-size: 30px;left: 60px;"><?= $slprayer['page_name']?></div>
+                    <div style=" text-align: center; color: #fff; position: absolute; top: 70%; width: 100%; font-size: 30px;">
+                        <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470" style="background: #fff;width: 12%;display: inline-block;border-radius: 25px;padding: 10px 0;color: #000;font-size: 20px;text-decoration: none;">
+                            <img src="<?= base_url() ?>assets/images/iphoneicon.png" alt="" style="width: 30px; height: 30px;"> App Store
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer" style="background: #fff;width: 12%;display: inline-block;border-radius: 25px;padding: 10px 0;color: #000;font-size: 20px;text-decoration: none;">
+                            <img src="<?= base_url() ?>assets/images/playstoreicon.png" alt="" style="width: 30px; height: 30px;"> Play Store
+                        </a>
+                    </div>
+                    
                 <?php } } else { ?>
                 <img src="<?= base_url()?>uploads/no_image.png?>" alt="" style="height: 750px">
                 <?php } ?>
@@ -106,7 +116,7 @@
                                     <?php if (!empty($events['prayer_image'])) { ?>
                                         <img src="<?= base_url() ?>uploads/prayer/<?= $events['prayer_image'] ?>" alt="" style="height: 256px">
                                     <?php } else { ?>
-                                        <img src="<?= base_url() ?>uploads/no_image.png?>" alt="" style="height: 256px">
+                                        <img src="<?= base_url() ?>uploads/no_image.png" alt="" style="height: 256px">
                                     <?php } ?>
                                     <div class="prayer_images_content">
                                         <span><i class="fa fa-area-chart" aria-hidden="true"></i> Event</span>
@@ -156,11 +166,11 @@
             <div class="col-xl-4 col-md-6 col-sm-12">
                 <div class="download_appsec_content">
                     <h3>Download This App</h3>
-                    <p>Quisque lobortis volutpat pellentesque. Quisque vehicula lorem in nibh lobortis, et ornare odio pellentesque. Proin id aliquet ipsum.</p>
+                    <p>Discover a faith enhancing spiritual journey with our Prayer App, your all-in-one faithful companion.</p>
                     <div class="qr_sec d-flex">
                         <div class="icon_flex">
                             <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""> Play Store</a>
-                            <a href="#"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
+                            <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
                         </div>
                         <div class="qr_code">
                             <img src="<?= base_url() ?>assets/images/qr_code.png" alt="" style="width: 100px; height:100px;">
@@ -181,7 +191,7 @@
                     <h3>Organize your prayer schedule on the Click To Prayer App</h3>
                     <div class="Store_Icon">
                         <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"> <img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""></a>
-                        <a href="#"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""></a>
+                        <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -201,9 +211,8 @@
                     <div class="f_content  mt-5 d-flex">
                         <h2>Download the Prayer App</h2>
                         <ul class="app_sec">
-                            <li><a href="#">AppStore</a></li>
-                            <li>/</li>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer">Google Play</a></li>
+                            <li><a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""></a></li>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""></a></li>
                         </ul>
                         <ul class="app_sec social_sec">
                             <li><a href="<?= @$settings->fb_link; ?>" class="fb"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
