@@ -65,7 +65,7 @@
                 <h1>Try our Prayer app for more things to do</h1>
                 <div class="d-flex icon_flex">
                     <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""> Play Store</a>
-                    <a href=""><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
+                    <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     <div class="f_content  mt-5 d-flex">
                         <h2>Download the Prayer App</h2>
                         <ul class="app_sec">
-                            <li><a href="">AppStore</a></li>
+                            <li><a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470">AppStore</a></li>
                             <li>/</li>
                             <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer">Google Play</a></li>
                         </ul>

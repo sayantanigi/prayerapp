@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/responsive.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
     <style>
-        .Donate_Btn {width: 100%;height: auto;top: 72%;right: 50%;transform: translate(50%, -50%);position: absolute;font-size: 25px;font-weight: bolder;padding: 5px 25px;cursor: pointer;pointer-events: all;z-index: 100;text-decoration: none;color: var(--Primary); text-align: center;}
+        .Donate_Btn {width: 100%;height: auto;top: 72%;right: 50%;transform: translate(50%, -50%);position: relative;font-size: 25px;font-weight: bolder;padding: 5px 25px;cursor: pointer;pointer-events: all;z-index: 100;text-decoration: none;color: var(--Primary); text-align: center;}
         .blesings_sec p {margin: 0 auto !important;}
         dl, ol, ul {margin-left: 55px !important;}
     </style>
@@ -77,7 +77,7 @@
                 <h1>Try our Prayer app for more things to do</h1>
                 <div class="d-flex icon_flex">
                     <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""> Play Store</a>
-                    <a href=""><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
+                    <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                     <div class="f_content  mt-5 d-flex">
                         <h2>Download the Prayer App</h2>
                         <ul class="app_sec">
-                            <li><a href="">AppStore</a></li>
+                            <li><a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470">AppStore</a></li>
                             <li>/</li>
                             <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer">Google Play</a></li>
                         </ul>

@@ -66,7 +66,8 @@
                             </div> -->
                             <div class="form-group">
                                 <label>Heading</label>
-                                <input class="form-control" type="text" name="page_name" id="page_name" placeholder="Enter Heading">
+                                <!-- <input class="form-control" type="text" name="page_name" id="page_name" placeholder="Enter Heading"> -->
+                                <textarea class="form-control" name="page_name" id="page_name" placeholder="Enter Description"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Attachment <span style="color:red;">*</span><span id="image_err"></span></label>
@@ -112,7 +113,8 @@
                             </div> -->
                             <div class="form-group">
                                 <label>Heading </label>
-                                <input class="form-control" type="text" name="page_name" id="edit_page_name" placeholder="Enter Heading">
+                                <!-- <input class="form-control" type="text" name="page_name" id="edit_page_name" placeholder="Enter Heading"> -->
+                                <textarea class="form-control" name="page_name" id="edit_page_name"></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Attachment <span style="color:red;">*</span><span id="edit_image_err"></span></label>
@@ -145,6 +147,11 @@ var actioncolumn=3;
 
 <script type="text/javascript" src="<?= base_url('dist/assets/custom_js/banner.js')?>"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('page_name');
+    CKEDITOR.replace('edit_page_name');
+</script>
 <script>
 $(window).scroll(function(){
     var filter_inputs = $('#filter_inputs');
@@ -171,5 +178,11 @@ $('#refreshForm').click(function(){
     top: 96px;
     background: #fff;
     z-index: 100;
+}
+iframe img {width: 100px !important; height: 100px !important}
+.service-img {width: 100% !important}
+.modal-dialog {
+    max-width: 770px !important;
+    margin: 1.75rem auto;
 }
 </style>

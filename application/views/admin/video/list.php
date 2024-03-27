@@ -15,11 +15,11 @@
                 </div>
             </div>
         </div>
-        <div class="card filter-card" id="filter_inputs" style="display: block">
+        <div class="card filter-card" id="filter_inputs" style="display: none;">
             <div class="card-body pb-0">
                 <form id="categorySearch" action="#" method="post">
                     <div class="row filter-row">
-                        <div class="col-sm-6 col-md-5">
+                        <div class="col-sm-6 col-md-5 d-none">
                             <div class="form-group">
                                 <label></label>
                                 <select class="form-control select filter_search_data6" name="">
