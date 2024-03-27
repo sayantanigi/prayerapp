@@ -16,36 +16,55 @@
     <style>
         .right_event span i {margin-right: 10px;}
         .Donate_Btn {width: 100%;height: auto;top: 90%;right: 50%;transform: translate(50%, -50%);position: absolute;font-size: 25px;font-weight: bolder;padding: 5px 25px;cursor: pointer;pointer-events: all;z-index: 100;text-decoration: none;color: var(--Primary); text-align: center;}
-        .sliderText {text-align: center;color: #fff;position: absolute;top: 30%;width: 90%;font-size: 30px;left: 60px;}
+        .sliderText * {text-align: center; color: #fff; font-size: 30px;}
         .downloadLink {text-align: center; color: #fff; position: absolute; top: 70%; width: 100%; font-size: 30px;}
         .idownloadLink {background: #fff;width: 12%;display: inline-block;border-radius: 25px;padding: 10px 0;color: #000;font-size: 20px;text-decoration: none;}
         .idownloadLink img {width: 30px !important; height: 30px !important;}
         .gdownloadLink {background: #fff;width: 12%;display: inline-block;border-radius: 25px;padding: 10px 0;color: #000;font-size: 20px;text-decoration: none;}
         .gdownloadLink img {width: 30px !important; height: 30px !important;}
         @media screen and (max-width: 1024px) {
-            .sliderText * {font-size: 22px !important; position: absolute; top: 30px; line-height: 30px;}
+            .sliderText * {font-size: 22px !important;}
             .idownloadLink {font-size: 15px; text-decoration: none !important; color: #000 !important;}
             .idownloadLink img {width: 26px !important; height: 26px !important;}
             .gdownloadLink {font-size: 15px; text-decoration: none !important; color: #000 !important;}
             .gdownloadLink img {width: 26px !important; height: 26px !important;}
         }
         @media screen and (max-width: 768px) {
-            .sliderText * {font-size: 25px !important; position: absolute; top: 12px; line-height: 32px; width: 93%;}
+            .sliderText * {font-size: 25px !important; width: 90%;}
             .idownloadLink {width: 18%; font-size: 20px; text-decoration: none !important; color: #000 !important;}
             .idownloadLink img {width: 30px !important; height: 30px !important;}
             .gdownloadLink {width: 18%; font-size: 20px; text-decoration: none !important; color: #000 !important;}
             .gdownloadLink img {width: 30px !important; height: 30px !important;}
         }
         @media screen and (max-width: 425px) {
-            .sliderText * {font-size: 20px !important; position: absolute; top: 5px; line-height: 22px; width: 100%; right: 40px;}
+            .sliderText * {font-size: 20px !important; width: 90%;}
             .idownloadLink {width: 34%; font-size: 20px; text-decoration: none !important; color: #000 !important;}
             .idownloadLink img {width: 30px !important; height: 30px !important;}
             .gdownloadLink {width: 34%; font-size: 20px; text-decoration: none !important; color: #000 !important;}
             .gdownloadLink img {width: 30px !important; height: 30px !important;}
         }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 375px) {
+            .sliderText * {font-size: 20px !important; width: 90%;}
             .idownloadLink {font-size: 15px;}
             .gdownloadLink {font-size: 15px;}
+        }
+
+        .carousel-item-next, .carousel-item-prev, .carousel-item.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sliderText {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .downloadLink a:hover {
+            color: #000 !important;
+            text-decoration: none !important;
         }
     </style>
 </head>
