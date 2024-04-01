@@ -615,13 +615,18 @@ class User_dashboard extends CI_Controller {
 			if(!empty($podcast_list)) {
 				$podcastList = array();
 				foreach ($podcast_list as $key => $value) {
-					$podcastList[$key]['id'] = $value->id;
-					$podcastList[$key]['podcast_name'] = $value->podcast_name;
-					$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
-					$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
-					$podcastList[$key]['podcast_singer_name'] = $value->podcast_singer_name;
+					$podcastList['list'][$key]['id'] = $value->id;
+					$podcastList['list'][$key]['podcast_name'] = $value->podcast_name;
+					$podcastList['list'][$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
+					$podcastList['list'][$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					$podcastList['list'][$key]['podcast_singer_name'] = $value->podcast_singer_name;
 					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					//$podcastList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$likedPodcast = $this->db->query("SELECT all_podcasts.podcast_cover_image FROM all_podcasts JOIN user_liked_podcast ON all_podcasts.id = user_liked_podcast.podcast_id WHERE all_podcasts.status = 1 AND all_podcasts.is_delete = 1")->result_array();
+					//$podcastList['listofliked'] = $likedPodcast;
+					foreach ($likedPodcast as $key1 => $value1) {
+						$podcastList['listofliked'][$key1]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value1['podcast_cover_image'];
+					}
 				}
 				$response = array('status'=> 'success', 'result'=> $podcastList);
 			} else {
@@ -1899,6 +1904,34 @@ class User_dashboard extends CI_Controller {
 	
 	public function deleteAccount() {
 		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$getuserDetails = $this->db->query("SELECT * FROM users WHERE userId = '".$formdata['user_id']."'")->result_array();
+			if(!empty($getuserDetails)) {
+				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_address WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM users_post WHERE user_id = '".$formdata['user_id']."'");
+				$this->db->query("DELETE FROM users WHERE userId = '".$formdata['user_id']."'");
+				$response = array("status"=> "success", "result"=> "You have successfully deleted your profile");
+			} else {
+				$response = array("status"=> "error", "result"=> "Profile not found.");
+			}
+		} catch (Exception $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+	
+	public function delete_account() {
+		try {
 			$userId = $this->input->get('userId');
 			$getuserDetails = $this->db->query("SELECT * FROM users WHERE userId = '".$userId."'")->result_array();
 			if(!empty($getuserDetails)) {
@@ -1919,6 +1952,43 @@ class User_dashboard extends CI_Controller {
 			} else {
 				$response = array("status"=> "error", "result"=> "Profile not found.");
 			}
+		} catch (Exception $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function userlikedPodcast() {
+    	try{
+    		$formdata = json_decode(file_get_contents('php://input'), true);
+    		$user_id = $formdata['user_id'];
+    		$podcast_id = $formdata['podcast_id'];
+    		$data = array(
+    			'user_id' => $formdata['user_id'],
+    			'podcast_id' => $formdata['podcast_id']
+    		);
+    		$this->db->insert('user_liked_podcast',$data);
+    		$response = array('status'=> 'success', 'result'=> "Liked this podcast");
+    	} catch(\Exception $e) {
+    		$response = array('status' => 'error', 'result' => $e->getMessage());
+    	}
+    	echo json_encode($response);
+    }
+
+	public function LikedPodcast() {
+		try{
+			$likedPodcast = $this->db->query("SELECT all_podcasts.podcast_cover_image, all_podcasts.podcast_file, all_podcasts.podcast_name, all_podcasts.podcast_singer_name, all_podcasts.podcast_description FROM all_podcasts JOIN user_liked_podcast ON all_podcasts.id = user_liked_podcast.podcast_id WHERE all_podcasts.status = 1 AND all_podcasts.is_delete = 1")->result_array();
+			if(!empty($likedPodcast)) {
+				foreach ($likedPodcast as $keyue => $uevalue) {
+					$uevalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$uevalue['podcast_cover_image'];
+					$uevalue['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$uevalue['podcast_file'];
+					$uevalue['is_liked'] = '1';
+					$returnue[$keyue] = $uevalue;
+				}
+			} else {
+				$returnue = "";
+			}
+			$response = array('status'=> 'success', 'result'=> $returnue);
 		} catch (Exception $th) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
