@@ -18,7 +18,12 @@ class User_dashboard extends CI_Controller {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$userid = $formdata['user_id'];
 			//$user_info = $this->Crud_model->get_single('users', "userId='".$userid."'");
-			$user_info = $this->db->query("SELECT `userId`, `organizername`, `firstname`, `lastname`, `short_bio`, `mobile`, `gender`, `email`, `address`, `userType`, `latitude`, `longitude` FROM users WHERE `userId` = '".$userid."'")->result_array();
+			$user_info = $this->db->query("SELECT `userId`, `organizername`, `firstname`, `lastname`, `short_bio`, `mobile`, `gender`, `email`, `address`, `userType`, `latitude`, `longitude`, `profilePic` FROM users WHERE `userId` = '".$userid."'")->result_array();
+			if(!empty($user_info[0]['profilePic'])){
+				$user_info[0]['profilePic'] = base_url().'uploads/users/'.$user_info[0]['profilePic'];
+			} else {
+				$user_info[0]['profilePic'] = base_url().'uploads/no_image.png';
+			}
 			$data['userinfo'] = $user_info;
 			$response = array('status'=> 'success', 'result'=> $data);
 		} catch(\Exception $e) {
@@ -53,6 +58,40 @@ class User_dashboard extends CI_Controller {
 			$updateProfile = $this->db->query("UPDATE users SET organizername = '".$formdata['organizername']."', firstname = '".$formdata['firstname']."', lastname = '".$formdata['lastname']."', mobile = '".$formdata['mobile']."', gender = '".$formdata['gender']."', address = '".$formdata['address']."', latitude = '".$formdata['latitude']."', longitude = '".$formdata['longitude']."', short_bio = '".$formdata['short_bio']."' WHERE userId = '".$formdata['user_id']."'");
 			if($updateProfile > 0){
 				$response = array('status'=> 'success','result'=> 'Profile updated successfully');
+			} else {
+				$response = array('status'=> 'error','result'=> 'Oops, Something went wrong please try again later');
+			}
+		} catch(\Exception $e) {
+			$response = array('status'=> 'error','result'=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function updateProfilePics() {
+		try {
+			if ($_FILES['profilePic']['name'] != '') {
+				$_POST['profilePic'] = rand(0000, 9999) . "_" . $_FILES['profilePic']['name'];
+				$config2['image_library'] = 'gd2';
+				$config2['source_image'] =  $_FILES['profilePic']['tmp_name'];
+				$config2['new_image'] =   getcwd() . '/uploads/users/' . $_POST['profilePic'];
+				$config2['upload_path'] =  getcwd() . '/uploads/users/';
+				$config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
+				$config2['maintain_ratio'] = FALSE;
+				$this->image_lib->initialize($config2);
+				if (!$this->image_lib->resize()) {
+					echo ('<pre>');
+					echo ($this->image_lib->display_errors());
+					exit;
+				} else {
+					$image = $_POST['profilePic'];
+					@unlink('uploads/users/' . $_POST['old_image']);
+				}
+			} else {
+				$image = $_POST['old_image'];
+			}
+			$updateProfilePic = $this->db->query("UPDATE users SET profilePic = '".$image."' WHERE userId = '".$_POST['userId']."'");
+			if($updateProfilePic > 0){
+				$response = array('status'=> 'success','result'=> 'Profile Picture updated successfully');
 			} else {
 				$response = array('status'=> 'error','result'=> 'Oops, Something went wrong please try again later');
 			}
@@ -620,6 +659,7 @@ class User_dashboard extends CI_Controller {
 					$podcastList['list'][$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
 					$podcastList['list'][$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
 					$podcastList['list'][$key]['podcast_singer_name'] = $value->podcast_singer_name;
+					$podcastList['list'][$key]['podcast_singer_image'] = base_url().'uploads/podcast/singer_image/'.$value->podcast_singer_image;
 					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					//$podcastList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
 					$likedPodcast = $this->db->query("SELECT all_podcasts.podcast_cover_image FROM all_podcasts JOIN user_liked_podcast ON all_podcasts.id = user_liked_podcast.podcast_id WHERE all_podcasts.status = 1 AND all_podcasts.is_delete = 1")->result_array();
@@ -642,6 +682,7 @@ class User_dashboard extends CI_Controller {
     	try {
     		$formdata = json_decode(file_get_contents('php://input'), true);
     		$podcast_id = $formdata['podcast_id'];
+    		$user_id = $formdata['user_id'];
 			$podcast_details = $this->Crud_model->GetData('all_podcasts', '', "id = '".$podcast_id."'");
 			if(!empty($podcast_details)) {
 				$podcastDetails = array();
@@ -652,8 +693,12 @@ class User_dashboard extends CI_Controller {
 					$podcastDetails[$key]['podcast_name'] = $value->podcast_name;
 					$podcastDetails[$key]['podcast_description'] = $value->podcast_description;
 					$podcastDetails[$key]['podcast_singer_name'] = $value->podcast_singer_name;
-					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
-					//$podcastDetails[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
+					$isLiked = $this->db->query("SELECT * FROM user_liked_podcast WHERE podcast_id = '".$value->id."' AND '".$user_id."'")->row();
+					if(!empty($isLiked)) {
+						$podcastDetails[$key]['isliked'] = '1';
+					} else {
+						$podcastDetails[$key]['isliked'] = '0';
+					}
 				}
 				$response = array('status'=> 'success', 'result'=> $podcastDetails);
 			} else {
@@ -837,7 +882,7 @@ class User_dashboard extends CI_Controller {
     		$formdata = json_decode(file_get_contents('php://input'), true);
     		$video_id = $formdata['video_id'];
 			$video_details = $this->Crud_model->GetData('all_videos', '', "id = '".$video_id."'");
-			$viewcount = $video_details[0]->view_count+1;
+			$viewcount = @$video_details[0]->view_count+1;
 			$insert_data=array('view_count'=>$viewcount);
 			$this->Crud_model->SaveData('all_videos',$insert_data,"id='".$video_id."'");
 			$video_details = $this->Crud_model->GetData('all_videos', '', "id = '".$video_id."'");
@@ -845,8 +890,18 @@ class User_dashboard extends CI_Controller {
 				$videoDetails = array();
 				foreach ($video_details as $key => $value) {
 					$videoDetails[$key]['id'] = $value->id;
-					$videoDetails[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value->video_cover_image;
-					$videoDetails[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value->videos_file;
+					$videoDetails[$key]['user_id'] = $value->user_id;
+					if(!empty($value->video_cover_image)){
+						$videoDetails[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value->video_cover_image;
+					} else {
+						$videoDetails[$key]['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($value->videos_file)){
+						$videoDetails[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value->videos_file;
+					} else {
+						$videoDetails[$key]['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$videoDetails[$key]['videos_name'] = $value->videos_name;
 					$videoDetails[$key]['videos_description'] = $value->videos_description;
 					$videoDetails[$key]['view_count'] = $value->view_count;
@@ -860,8 +915,24 @@ class User_dashboard extends CI_Controller {
 			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
 			if(!empty($videoscollection)) {
 				foreach ($videoscollection as $keyvn => $vnvalue) {
-					$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
-					$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					if(!empty($vnvalue['profilePic'])){
+						$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					} else {
+						$vnvalue['profilePic'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($vnvalue['video_cover_image'])){
+						$vnvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$vnvalue['video_cover_image'];
+					} else {
+						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($vnvalue['video_cover_image'])){
+						$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					} else {
+						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
+					
 					$returnvn[$keyvn] = $vnvalue;
 				}
 			} else {
@@ -875,10 +946,88 @@ class User_dashboard extends CI_Controller {
     	echo json_encode($response);
     }
 
+    public function users_video_details() {
+    	try {
+    		$formdata = json_decode(file_get_contents('php://input'), true);
+    		$user_id = $formdata['user_id'];
+    		$userDetails = $this->db->query("SELECT organizername, profilePic, short_bio FROM users WHERE userId = '".$user_id."'")->row();
+    		if(!empty($userDetails->profilePic)) {
+    			$userDetails->profilePic = base_url().'uploads/videos/cover_image/'.$userDetails->profilePic;
+    		} else {
+    			$userDetails->profilePic = base_url().'uploads/users/user.png';
+    		}
+    		$data['user_details'] = $userDetails;
+
+			$video_details = $this->Crud_model->GetData('all_videos', '', "user_id = '".$user_id."' order by id DESC");
+			if(!empty($video_details)) {
+				$videoDetails = array();
+				foreach ($video_details as $key => $value) {
+					$videoDetails[$key]['id'] = $value->id;
+					if(!empty($value->video_cover_image)){
+						$videoDetails[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value->video_cover_image;
+					} else {
+						$videoDetails[$key]['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($value->videos_file)){
+						$videoDetails[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value->videos_file;
+					} else {
+						$videoDetails[$key]['videos_file'] = base_url().'uploads/no_image.png';
+					}
+					$videoDetails[$key]['videos_name'] = $value->videos_name;
+					$videoDetails[$key]['videos_description'] = $value->videos_description;
+					$videoDetails[$key]['view_count'] = $value->view_count;
+				}
+				$return[$key] = $videoDetails;
+			} else {
+				$return = 'No data found';
+			}
+			$data['recent_upload'] = $return;
+
+			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			if(!empty($videoscollection)) {
+				foreach ($videoscollection as $keyvn => $vnvalue) {
+					if(!empty($vnvalue['profilePic'])){
+						$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					} else {
+						$vnvalue['profilePic'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($vnvalue['video_cover_image'])){
+						$vnvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$vnvalue['video_cover_image'];
+					} else {
+						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($vnvalue['video_cover_image'])){
+						$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					} else {
+						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
+					
+					$returnvn[$keyvn] = $vnvalue;
+				}
+			} else {
+				$returnvn = "";
+			}
+			$data['users_video_collection'] = $returnvn;
+
+			$response = array('status'=> 'success', 'result'=> $data);
+    	} catch(\Exception $e) {
+    		$response = array('status'=> 'error', 'result' => $e->getMessage());
+    	}
+    	echo json_encode($response);
+    }
+
 	public function allVideoList() {
 		try {
 			//$formdata = json_decode(file_get_contents('php://input'), true);
 			$bannersectionVideos = $this->db->query("SELECT id, created_date, video_cover_image, videos_file, videos_name, view_count FROM all_videos order by id desc limit 1")->result_array();
+			if(!empty($bannersectionVideos[0]['video_cover_image'])) {
+				$bannersectionVideos[0]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$bannersectionVideos[0]['video_cover_image'];
+			} else {
+				$bannersectionVideos[0]['video_cover_image'] = base_url().'uploads/no_image.png';
+			}
 			$bannersectionVideos[0]['videos_file'] = base_url().'uploads/videos/videos_file/'.$bannersectionVideos[0]['videos_file'];
 			$bannersectionVideos[0]['created_date'] = date('Y', strtotime($bannersectionVideos[0]['created_date']));
 			$data['bannerSection'] = $bannersectionVideos;
@@ -886,6 +1035,11 @@ class User_dashboard extends CI_Controller {
 			$gettopweekVideos = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name FROM all_videos")->result_array();
 			if(!empty($gettopweekVideos)) {
 				foreach ($gettopweekVideos as $keyvi => $vivalue) {
+					if(!empty($vivalue['video_cover_image'])) {
+						$vivalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$vivalue['video_cover_image'];
+					} else {
+						$vivalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
 					$vivalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vivalue['videos_file'];
 					$returnvi[$keyvi] = $vivalue;
 				}
@@ -897,6 +1051,11 @@ class User_dashboard extends CI_Controller {
 			$favVideosChnnl = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name FROM all_videos")->result_array();
 			if(!empty($favVideosChnnl)) {
 				foreach ($gettopweekVideos as $keyvc => $vcvalue) {
+					if(!empty($vcvalue['video_cover_image'])) {
+						$vcvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$vcvalue['video_cover_image'];
+					} else {
+						$vcvalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
 					$vcvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vcvalue['videos_file'];
 					$returnvc[$keyvc] = $vcvalue;
 				}
@@ -908,7 +1067,18 @@ class User_dashboard extends CI_Controller {
 			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
 			if(!empty($videoscollection)) {
 				foreach ($videoscollection as $keyvn => $vnvalue) {
-					$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					if(!empty($vnvalue['video_cover_image'])) {
+						$vnvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$vnvalue['video_cover_image'];
+					} else {
+						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+
+					if(!empty($vnvalue['profilePic'])) {
+						$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
+					} else {
+						$vnvalue['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					//$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
 					$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
 					$returnvn[$keyvn] = $vnvalue;
 				}
@@ -1967,8 +2137,14 @@ class User_dashboard extends CI_Controller {
     			'user_id' => $formdata['user_id'],
     			'podcast_id' => $formdata['podcast_id']
     		);
-    		$this->db->insert('user_liked_podcast',$data);
-    		$response = array('status'=> 'success', 'result'=> "Liked this podcast");
+    		if($formdata['islike'] == '1') {
+    			$this->db->insert('user_liked_podcast',$data);
+    			$response = array('status'=> 'success', 'result'=> "Liked this podcast");
+    		} else {
+    			$this->db->query("DELETE FROM user_liked_podcast WHERE podcast_id = '".$formdata['podcast_id']."' AND user_id = '".$formdata['podcast_id']."'");
+    			$response = array('status'=> 'success', 'result'=> "Disliked this podcast");
+    		}
+    		
     	} catch(\Exception $e) {
     		$response = array('status' => 'error', 'result' => $e->getMessage());
     	}

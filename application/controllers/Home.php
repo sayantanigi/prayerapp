@@ -127,7 +127,7 @@ class Home extends MY_Controller {
 		//check if user is using ipod, iphone or ipad...
 		if( $iPod || $iPhone || $iPad ){
 				//we send these people to Apple Store
-				header('Location: https://www.apple.com/in/'); // <-apple store link here
+				header('Location: https://apps.apple.com/us/app/120-army-prayer/id6478201470'); // <-apple store link here
 		}else if($Android){
 				//we send these people to Android Store
 				header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here

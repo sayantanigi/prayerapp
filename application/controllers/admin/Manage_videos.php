@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH')  OR exit('No direct script are allowed');
+require 'vendor/autoload.php';
 class Manage_videos extends CI_Controller {
 
     public function __construct() {
@@ -48,10 +49,10 @@ class Manage_videos extends CI_Controller {
             $btn .= ' | '.'<span data-placement="right" class="btn btn-sm btn-danger" onclick="videosDelete(this,'.$row->id.')"><i class="fa fa-trash"></i></span>';
             //$btn .= ' | '.'<span class="btn btn-sm bg-success-light" data-placement="right" class="btn btn-sm btn-success" onclick="podcastDetails(this,'.$row->id.')"><i class="fa fa-eye"></i></span>';
             if(!empty($row->video_cover_image)) {
-                if(!file_exists("uploads/videos/cover_image/".$row->video_cover_image)) {
+                if(empty($row->video_cover_image)) {
                     $img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
                 } else {
-                    $img ='<a href="'.base_url('uploads/videos/cover_image/'.$row->video_cover_image).'" data-lightbox="roadtrip"><img class="rounded service-img mr-1"src="'.base_url('uploads/videos/cover_image/'.$row->video_cover_image).'"><a>';
+                    $img ='<a href="'.$row->video_cover_image.'" data-lightbox="roadtrip"><img class="rounded service-img mr-1"src="'.$row->video_cover_image.'"><a>';
                 }
             } else {
                 $img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
@@ -212,6 +213,20 @@ class Manage_videos extends CI_Controller {
             $dest = getcwd() . '/uploads/videos/videos_file/' . $avatar1;
 			if (move_uploaded_file($src, $dest)) {
                 $file  = @$avatar1;
+
+                /*$sec = 10;
+                $thumbnail = 'thumbnail.png';
+                $ffmpeg = FFMpeg\FFMpeg::create([
+                    'ffmpeg.binaries' => $this->ffmpegBinaryPath,
+                    'ffprobe.binaries' => $this->ffprobeBinaryPath,
+                    'timeout' => 3600,
+                    'ffmpeg.threads' => 0,
+                ]);
+                $video = $ffmpeg->open($file);
+                $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec));
+                $frame->save($thumbnail);
+                echo '<img src="'.$thumbnail.'">';
+                die();*/
                 @unlink('uploads/videos/videos_file/' . $_POST['old_videos_file']);
             }
 		} else {
@@ -236,6 +251,12 @@ class Manage_videos extends CI_Controller {
 		redirect(base_url('admin/manage_videos'));
     }
 
+    public function update_coverImage() {
+        $id = $_POST['id'];
+        $image = $_POST['image_data'];
+        $this->db->query("UPDATE all_videos SET video_cover_image = '".$image."' WHERE id = '".$id."'");
+    }
+
     public function view($id) {
         $vid_id=base64_decode($id);
         $update_vid=$this->Crud_model->get_single('all_videos',"id = '".$vid_id."'");
@@ -256,7 +277,7 @@ class Manage_videos extends CI_Controller {
         if(isset($_POST['cid'])) {
             $this->Crud_model->DeleteData('all_videos',"id='".$_POST['cid']."'");
             // $data = array('is_delete' => '2');
-            // $this->Crud_model->SaveData('all_videos',$data,"id='".$_POST['id']."'"); 
+            // $this->Crud_model->SaveData('all_videos',$data,"id='".$_POST['id']."'");
             $this->session->set_flashdata('message', 'Videos deleted successfully');
             echo 0; exit;
         }

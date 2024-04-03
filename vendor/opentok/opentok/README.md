@@ -4,13 +4,19 @@
 
 <img src="https://assets.tokbox.com/img/vonage/Vonage_VideoAPI_black.svg" height="48px" alt="Tokbox is now known as Vonage" />
 
-The OpenTok PHP SDK lets you generate [sessions](http://tokbox.com/developer/guides/create-session/) and
-[tokens](http://tokbox.com/developer/guides/create-token/) for [OpenTok](http://www.tokbox.com/)
-applications, and [archive](http://tokbox.com/developer/guides/archiving/) sessions.
-It also includes methods for working with OpenTok
-[archives](http://tokbox.com/developer/guides/archiving), working with OpenTok
-[SIP interconnect](http://tokbox.com/developer/guides/sip), and
-[disconnecting clients from sessions](http://tokbox.com/developer/guides/moderation/rest/).
+The OpenTok PHP SDK provides methods for:
+
+* Generating
+[sessions](https://tokbox.com/developer/guides/create-session/) and
+[tokens](https://tokbox.com/developer/guides/create-token/) for
+[OpenTok](https://www.tokbox.com/) applications that run on the .NET platform
+* Working with [OpenTok archives](https://tokbox.com/opentok/tutorials/archiving)
+* Working with [OpenTok live streaming broadcasts](https://tokbox.com/developer/guides/broadcast/live-streaming/)
+* Working with [OpenTok SIP interconnect](https://tokbox.com/developer/guides/sip)
+* [Sending signals to clients connected to a session](https://tokbox.com/developer/guides/signaling/)
+* [Disconnecting clients from sessions](https://tokbox.com/developer/guides/moderation/rest/)
+* [Forcing clients in a session to disconnect or mute published audio](https://tokbox.com/developer/guides/moderation/)
+* Working with OpenTok [Audio Connector](https://tokbox.com/developer/guides/audio-connector)
 
 ## Installation
 
@@ -18,11 +24,11 @@ It also includes methods for working with OpenTok
 
 Composer helps manage dependencies for PHP projects. Find more info here: <http://getcomposer.org>
 
-Add this package (`opentok/opentok`) to your `composer.json` file, or just run the following at the
+Add this package (`opentok/opentok`) to your `composer.json` file, or run the following at the
 command line:
 
-```
-$ ./composer.phar require opentok/opentok ^4.0
+```bash
+$ composer require opentok/opentok ^4.0
 ```
 
 ## Usage
@@ -273,19 +279,36 @@ You can only start live streaming broadcasts for sessions that use the OpenTok M
 Start the live streaming broadcast of an OpenTok Session using the
 `startBroadcast($sessionId, $options)` method of the `OpenTok\OpenTok` class.
 This will return an `OpenTok\Broadcast` instance. The `$options` parameter is
-an optional array used to assign broadcast options such as layout, maxDuration, resolution, and more.
+an array used to define the broadcast streams, assign broadcast options such as layout,
+maxDuration, resolution, and more.
 
 ```php
+// Define options for the broadcast
+$options = [
+  'layout' => Layout::getBestFit(),
+  'maxDuration' => 5400,
+  'resolution' => '1280x720',
+  'output' => [
+    'hls' => [
+      'dvr' => true,
+      'lowLatency' => false
+    ],
+    'rtmp' => [
+      [
+        'id' => 'foo',
+        'serverUrl' => 'rtmps://myfooserver/myfooapp',
+        'streamName' => 'myfoostream'
+      ],
+      [
+        'id' => 'bar',
+        'serverUrl' => 'rtmps://myfooserver/mybarapp',
+        'streamName' => 'mybarstream'
+      ],
+    ]
+  ]
+];
+
 // Start a live streaming broadcast of a session
-$broadcast = $opentok->startBroadcast($sessionId);
-
-
-// Start a live streaming broadcast of a session, using broadcast options
-$options = array(
-    'layout' => Layout::getBestFit(),
-    'maxDuration' => 5400,
-    'resolution' => '1280x720'
-);
 $broadcast = $opentok->startBroadcast($sessionId, $options);
 
 // Store the broadcast ID in the database for later use
@@ -370,6 +393,17 @@ use OpenTok\OpenTok;
 $opentok->forceDisconnect($sessionId, $connectionId);
 ```
 
+### Forcing clients in a session mute published audio
+
+You can force the publisher of a specific stream to stop publishing audio using the 
+`Opentok.forceMuteStream($sessionId, $stream)` method.
+
+You can force the publisher of all streams in a session (except for an optional list of streams)
+to stop publishing audio using the `Opentok.forceMuteAll($sessionId, $excludedStreamIds)` method.
+You can then disable the mute state of the session by calling the
+`Opentok.DisableForceMute(sessionId)` or `Opentok.DisableForceMuteAsync(sessionId)`
+method.
+
 ### Sending Signals
 
 Once a Session is created, you can send signals to everyone in the session or to a specific connection.
@@ -411,7 +445,7 @@ $opentok->signal($sessionId, $signalPayload);
 For more information, see the [OpenTok signaling developer
 guide](https://tokbox.com/developer/guides/signaling/).
 
-## Working with SIP Interconnect
+### Working with SIP Interconnect
 
 You can add an audio-only stream from an external third-party SIP gateway using the SIP
 Interconnect feature. This requires a SIP URI, the session ID you wish to add the audio-only
@@ -441,58 +475,11 @@ $opentok->dial($sessionId, $token, $sipUri, $options);
 For more information, see the [OpenTok SIP Interconnect developer
 guide](https://tokbox.com/developer/guides/sip/).
 
-## Force Disconnect
+### Working with Audio Connector
 
-Your application server can disconnect a client from an OpenTok session by calling the `forceDisconnect($sessionId, $connectionId)`
-method of the `OpenTok\OpenTok` class.
-
-```php
-use OpenTok\OpenTok;
-
-// Force disconnect a client connection
-$opentok->forceDisconnect($sessionId, $connectionId);
-```
-
-## Sending Signals
-
-Once a Session is created, you can send signals to everyone in the session or to a specific connection.
-You can send a signal by calling the `signal($sessionId, $payload, $connectionId)` method of the
+You can start an [Audio Connector](https://tokbox.com/developer/guides/audio-connector) WebSocket
+by calling the `connectAudio()` method of the
 `OpenTok\OpenTok` class.
-
-The `$sessionId` parameter is the session ID of the session.
-
-The `$payload` parameter is an associative array used to set the
-following:
-
-- `data` (string) -- The data string for the signal. You can send a maximum of 8kB.
-
-- `type` (string) -- &mdash; (Optional) The type string for the signal. You can send a maximum of 128 characters, and only the following characters are allowed: A-Z, a-z, numbers (0-9), '-', '\_', and '~'.
-
-The `$connectionId` parameter is an optional string used to specify the connection ID of
-a client connected to the session. If you specify this value, the signal is sent to
-the specified client. Otherwise, the signal is sent to all clients connected to the session.
-
-```php
-use OpenTok\OpenTok;
-
-// Send a signal to a specific client
-$signalPayload = array(
-    'data' => 'some signal message',
-    'type' => 'signal type'
-);
-$connectionId = 'da9cb410-e29b-4c2d-ab9e-fe65bf83fcaf';
-$opentok->signal($sessionId, $signalPayload, $connectionId);
-
-// Send a signal to everyone in the session
-$signalPayload = array(
-    'data' => 'some signal message',
-    'type' => 'signal type'
-);
-$opentok->signal($sessionId, $signalPayload);
-```
-
-For more information, see the [OpenTok signaling developer
-guide](https://tokbox.com/developer/guides/signaling/).
 
 ## Samples
 
@@ -511,7 +498,7 @@ Reference documentation is available at
 ## Requirements
 
 You need an OpenTok API key and API secret, which you can obtain by logging into your
-[TokBox account](https://tokbox.com/account).
+[Vonage Video API account](https://tokbox.com/account).
 
 The OpenTok PHP SDK requires PHP 7.2 or higher.
 
@@ -548,6 +535,34 @@ The API_Config class has been removed. Store your OpenTok API key and API secret
 See the reference documentation
 <http://www.tokbox.com/opentok/libraries/server/php/reference/index.html> and in the
 docs directory of the SDK.
+
+## Running code quality tooling
+
+This library makes use of two code quality tools, plus a full PHPUnit test suite.
+
+* [phpcs](https://github.com/squizlabs/PHP_CodeSniffer)
+
+To run phpcs, enter the following on the command line:
+
+```bash
+ $ composer run phpcs
+ ```
+
+* [phpstan](https://github.com/phpstan/phpstan)
+
+To run phpstan, enter the following on the command line:
+
+```bash
+ $ composer run phpstan
+ ```
+
+* [phpunit](https://phpunit.de/)
+
+To run PhpUnit, enter the following on the command line:
+
+```bash
+ $ composer run test
+ ```
 
 ## Development and Contributing
 

@@ -127,6 +127,20 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $file  = $_POST['old_image'];
                 }*/
+
+                if ($_FILES['singer_image']['name'] != '') {
+                    $src_simage = $_FILES['singer_image']['tmp_name'];
+                    $filEncImg = time();
+                    $avatar_simage = rand(0000, 9999) . "_" . $_FILES['singer_image']['name'];
+                    $avatarsImage = str_replace(array('(', ')', ' '), '', $avatar_simage);
+                    $dest_simage = getcwd() . '/uploads/podcast/singer_image/' . $avatarsImage;
+                    if (move_uploaded_file($src_simage, $dest_simage)) {
+                        $simgfile  = $avatarsImage;
+                        @unlink('uploads/podcast/singer_image/' . $_POST['old_simage']);
+                    }
+                } else {
+                    $simgfile  = $_POST['old_simage'];
+                }
                 
                 if ($_FILES['cover_image']['name'] != '') {
                     $src_image = $_FILES['cover_image']['tmp_name'];
@@ -161,6 +175,7 @@ class Manage_podcast extends CI_Controller {
                     'podcast_name'=> $_POST['podcast_name'],
                     'podcast_description'=> $_POST['podcast_description'],
                     'podcast_singer_name'=> $_POST['podcast_singer_name'],
+                    'podcast_singer_image'=> $simgfile,
                     'podcast_cover_image'=> $_imgfile,
                     'podcast_file'=> $podcast_file,
                     'created_date'=> date('Y-m-d H:i:s')
@@ -250,6 +265,7 @@ class Manage_podcast extends CI_Controller {
             'podcast_description'=>set_value('podcast_description',$update_pod->podcast_description),
             'podcast_singer_name'=>set_value('podcast_singer_name',$update_pod->podcast_singer_name),
             'podcast_cover_image'=>set_value('podcast_cover_image',$update_pod->podcast_cover_image),
+            'podcast_singer_image'=>set_value('podcast_singer_image',$update_pod->podcast_singer_image),
             'podcast_file'=>set_value('podcast_file',$update_pod->podcast_file),
             'id'=>$pod_id,
             //'pod_content'=>$pod_content,
@@ -384,6 +400,20 @@ class Manage_podcast extends CI_Controller {
         } else {
             $podcast_file  = $_POST['old_file'];
         }
+
+        if ($_FILES['singer_image']['name'] != '') {
+            $src_simage = $_FILES['singer_image']['tmp_name'];
+            $filEncImg = time();
+            $avatar_simage = rand(0000, 9999) . "_" . $_FILES['singer_image']['name'];
+            $avatarsImage = str_replace(array('(', ')', ' '), '', $avatar_simage);
+            $dest_simage = getcwd() . '/uploads/podcast/singer_image/' . $avatarsImage;
+            if (move_uploaded_file($src_simage, $dest_simage)) {
+                $simgfile  = $avatarsImage;
+                @unlink('uploads/podcast/singer_image/' . $_POST['old_simage']);
+            }
+        } else {
+            $simgfile  = $_POST['old_simage'];
+        }
         
         $get_data=$this->Crud_model->get_single_record('all_podcasts',"podcast_name = '".$_POST['podcast_name']."' and id != '".$_POST['id']."'");
         if(empty($get_data)) {
@@ -395,6 +425,7 @@ class Manage_podcast extends CI_Controller {
                 'podcast_singer_name'=> $_POST['podcast_singer_name'],
                 'podcast_cover_image'=> $_imgfile,
                 'podcast_file'=> $podcast_file,
+                'podcast_singer_image'=> $simgfile,
                 'created_date'=> date('Y-m-d H:i:s')
             );
             //print_r($_POST); die;

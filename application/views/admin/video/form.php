@@ -42,10 +42,10 @@
 									<option value="2" <?php if(@$videos_type == 2) { echo "selected";}?>>Video Link</option>
 								</select>
 							</div> -->
-							<?php if(@$button=='Update') { 
+							<?php if(@$button=='Update') {
 								if(!empty(@$videos_file)) { ?>
 							<div class="form-group">
-								<video width="320" height="240" controls>
+								<video id="video" width="320" height="240" controls>
 									<source src="<?php echo base_url()?>/uploads/videos/videos_file/<?= @$videos_file?>">
 								</video>
 							</div>
@@ -55,16 +55,11 @@
 							</div>
 							<?php } } ?>
 
-							<?php if(@$button=='Update') { 
+							<?php if(@$button=='Update') {
 								if(!empty(@$video_cover_image)) { ?>
 							<div class="form-group">
-								<video width="320" height="240" controls>
-									<source src="<?php echo base_url()?>/uploads/videos/cover_image/<?= @$video_cover_image?>">
+								<img src="<?= @$video_cover_image?>" style="width: 320px;">
 								</video>
-							</div>
-							<?php } else { ?>
-							<div class="form-group">
-								<!--<img src="<?php echo base_url()?>/uploads/no_image.png" style="width: 150px;">-->
 							</div>
 							<?php } } ?>
 
@@ -72,11 +67,10 @@
 								<label>Video File</label>
 								<input type="file" name="videos_file" id="videos_file" class="form-control">
 							</div>
-							<!--<div class="form-group videoLink">-->
-							<!--	<label>Video Link</label>-->
-							<!--	<input type="text" name="videos_link" id="videos_link" class="form-control" value="<?= @$videos_link?>">-->
-							<!--</div>-->
-							<input type="hidden" name="id" value="<?php echo $id; ?>">
+							<?php if(empty(@$video_cover_image)) { ?>
+							<canvas id="canvas"></canvas>
+							<?php } ?>
+							<input type="hidden" name="id" id="dataID" value="<?php echo $id; ?>">
 							<input type="hidden" name="button" value="<?php echo $button; ?>">
 							<input type="hidden" name="user_id" value="<?php echo @$_SESSION['afrebay_admin']['id']; ?>">
 							<input type="hidden" name="old_videos_file" value="<?php echo @$videos_file; ?>">
@@ -125,7 +119,7 @@ function remove(row) {
 	}
 }*/
 
-// $(document).ready(function() {
+$(document).ready(function() {
 // 	$("#videos_type").change(function(){
 // 		if($(this).val() == 1) {
 // 			$(".videoFile").show();
@@ -150,7 +144,19 @@ function remove(row) {
 // 		$(".videoFile").hide();
 // 		$(".videoLink").hide();
 // 	}
-// })
+	<?php if(empty(@$video_cover_image)) { ?>
+		var imgData = canvas.toDataURL('image/png');
+		if(imgData == "") {
+			setTimeout(function(){
+				capture();
+			}, 1000);
+		} else {
+			setTimeout(function(){
+				capture();
+			}, 2000);
+		}
+	<?php } ?>
+})
 
 function only_number(event) {
     var x = event.which || event.keyCode;
@@ -184,7 +190,7 @@ $("#videoForm").submit(function(e) {
     if($("#videos_type").val() == '2') {
 		var link = $('#videos_link').val();
 		const domainName = link.match(/(?:http(?:s)?:\/\/)?(?:w{3}\.)?([^\.]+)/i)[1];
-		alert(domainName);
+		//alert(domainName);
 		if(domainName == 'youtu' || domainName == 'youtube') {
 			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
 			var match = link.match(regExp);
@@ -195,7 +201,7 @@ $("#videoForm").submit(function(e) {
 		} else if(domainName == 'facebook') {
 			var regExp = /facebook\.com\/(?:photo.php\?v=|video\/embed\?video_id=|v\/?)(\d+)/gi;
 			var match = link.match(regExp);
-			alert(match[7]);
+			//alert(match[7]);
 			return false;
 		} else if(domainName == 'instagram') {
 
@@ -206,5 +212,21 @@ $("#videoForm").submit(function(e) {
 			return false;
 		}
 	}
-});
+})
+function capture() {
+	var id = $('#dataID').val();
+	var canvas = document.getElementById('canvas');
+    var video = document.getElementById('video');
+    var image = canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+	var imgData = canvas.toDataURL('image/png');
+	$('#canvas1').text(imgData);
+	$.ajax({
+        "url": '<?= base_url()?>admin/Manage_videos/update_coverImage',
+        "method": 'POST',
+        "data": {id: id, image_data: imgData},
+		"success": function(response) {
+			console.log(response);
+		}
+    })
+}
 </script>

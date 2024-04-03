@@ -19,7 +19,11 @@ class Home extends MY_Controller {
 			$upcoming_events = $this->db->query("SELECT all_prayers.id, users.organizername, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, all_prayers.prayer_location FROM all_prayers LEFT JOIN users ON all_prayers.user_id = users.userId WHERE all_prayers.status = '1' AND all_prayers.is_delete = '1' AND all_prayers.prayer_datetime > '".$todaysDate."'")->result_array();
 			if(!empty($upcoming_events)) {
 				foreach ($upcoming_events as $keyue => $uevalue) {
-					$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					if(!empty($uevalue['prayer_image'])) {
+						$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					} else {
+						$uevalue['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$uevalue['prayer_datetime'] = date('d F Y H:i', strtotime($uevalue['prayer_datetime']));
 					$uevalue['countdown'] = $datetime1->diff(new DateTime(date('Y-m-d h:i a', strtotime($uevalue['prayer_datetime']))))->format('%a days, %h:%i Hour');
 					$returnue[$keyue] = $uevalue;
@@ -33,7 +37,12 @@ class Home extends MY_Controller {
 			$prayer_wall = $this->db->query("SELECT all_prayers.id, all_prayers.user_id, all_prayers.prayer_name, all_prayers.prayer_description, all_prayers.prayer_location, all_prayers.prayer_image, all_prayers.prayer_subheading, all_prayers.prayer_datetime, count(user_joined_event.id) as count FROM all_prayers LEFT JOIN user_joined_event ON all_prayers.id = user_joined_event.event_id WHERE all_prayers.status = '1' AND all_prayers.is_delete = '1' group by all_prayers.id")->result_array();
 			if(!empty($prayer_wall)) {
 				foreach ($prayer_wall as $keypw => $pwvalue) {
-					$pwvalue['prayer_image'] = base_url().'uploads/prayer/'.$pwvalue['prayer_image'];
+					if(!empty($pwvalue['prayer_image'])) {
+						$pwvalue['prayer_image'] = base_url().'uploads/prayer/'.$pwvalue['prayer_image'];
+					} else {
+						$pwvalue['prayer_image'] = base_url().'uploads/no_image.png';
+					}
+					
 					$pwvalue['prayer_datetime'] = date('d F Y H:i', strtotime($pwvalue['prayer_datetime']));
 					$returnpw[$keypw] = $pwvalue;
 				}
@@ -45,7 +54,12 @@ class Home extends MY_Controller {
 			$latest_podcast = $this->db->query("SELECT all_podcasts.id, all_podcasts.user_id, category.category_name, all_podcasts.podcast_name, all_podcasts.podcast_description, all_podcasts.podcast_cover_image FROM all_podcasts LEFT JOIN category ON all_podcasts.podcast_cat_id = category.id WHERE all_podcasts.status = '1' AND all_podcasts.is_delete = '1'")->result_array();
 			if(!empty($latest_podcast)) {
 				foreach ($latest_podcast as $keylp => $lpvalue) {
-					$lpvalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$lpvalue['podcast_cover_image'];
+					if(!empty($lpvalue['podcast_cover_image'])) {
+						$lpvalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$lpvalue['podcast_cover_image'];
+					} else {
+						$lpvalue['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					
 					$returnlp[$keylp] = $lpvalue;
 				}
 			} else {
@@ -58,8 +72,16 @@ class Home extends MY_Controller {
 			if(!empty($latest_videos)) {
 				foreach ($latest_videos as $keylv => $lvvalue) {
 					$lvvalue['profilePic'] = base_url().'uploads/users/'.$lvvalue['profilePic'];
-					$lvvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$lvvalue['video_cover_image'];
-					$lvvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$lvvalue['videos_file'];
+					if(!empty($lvvalue['video_cover_image'])) {
+						$lvvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$lvvalue['video_cover_image'];
+					} else {
+						$lvvalue['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($lvvalue['videos_file'])) {
+						$lvvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$lvvalue['videos_file'];
+					} else {
+						$lvvalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$returnlv[$keylv] = $lvvalue;
 				}
 			} else {

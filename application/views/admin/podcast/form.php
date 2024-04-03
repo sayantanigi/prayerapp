@@ -38,6 +38,24 @@
 								<label>Singer <span style="color:red;">*</span></label>
 								<input class="form-control" type="text" placeholder="Example: Singer Name" name="podcast_singer_name" value="<?= @$podcast_singer_name;?>" required>
 							</div>
+
+							<div class="form-group">
+								<label>Singer Image <span style="color:red;">*</span></label>
+								<input type="file" name="singer_image" id="singer_image" class="form-control">
+								<input type="hidden" name="old_simage" value="<?= @$podcast_singer_image?>">
+							</div>
+							<?php if($button=='Update') { 
+								if(!empty($podcast_singer_image)) { ?>
+							<div class="form-group">
+								<img src="<?php echo base_url()?>/uploads/podcast/singer_image/<?= @$podcast_singer_image?>" style="width: 150px;">
+							</div>
+							<?php } else { ?>
+							<div class="form-group">
+								<img src="<?php echo base_url()?>/uploads/no_image.png" style="width: 150px;">
+							</div>
+							<?php } } ?>
+
+
 							<div class="form-group">
 								<label>Cover Image <span style="color:red;">*</span></label>
 								<input type="file" name="cover_image" id="cover_image" class="form-control">

@@ -97,7 +97,7 @@ class Banner extends MY_Controller {
 		}
 		$data=array(
 			//'heading'=>$this->input->post('name'),
-			'page_name'=>$this->input->post('page_name'),
+			'page_name'=>$_POST['page_name'],
 			'image'=>$image,
 			'created_date'=>date('Y-m-d H:i:s'),
 		);
@@ -110,12 +110,12 @@ class Banner extends MY_Controller {
 		$banner_data=$this->Crud_model->get_single('banner',"id='".$_POST['id']."'");
 		if(!empty($banner_data->image)) {
 			if(!file_exists("uploads/banner/".$banner_data->image)) {
-				$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
+				$img ='<iframe class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
 			} else {
-				$img ='<img  class="rounded service-img mr-1" src="'.base_url('uploads/banner/'.$banner_data->image).'" >';
+				$img ='<iframe class="rounded service-img mr-1" src="'.base_url('uploads/banner/'.$banner_data->image).'" >';
 			}
 		} else {
-			$img ='<img class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
+			$img ='<iframe class="rounded service-img mr-1" src="'.base_url('uploads/no_image.png').'">';
 		}
 		$data=array(
 			'id'=>$banner_data->id,
@@ -163,7 +163,7 @@ class Banner extends MY_Controller {
 		}
 		$data = array(
 			//'heading'=>$this->input->post('name'),
-			'page_name'=>$this->input->post('page_name'),
+			'page_name'=>$_POST['page_name'],
 			'image'=>$image,
 
 		);
