@@ -1849,7 +1849,12 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$getUserDetails[$key]['fullname'] = $value['organizername'];
 					}
-					$getUserDetails[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+					if(!empty($value['profilePic'])) {
+						$getUserDetails[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+					} else {
+						$getUserDetails[$key]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					//$getUserDetails[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
 				}
 			} else {
 				$getUserDetails = "No Data Found";
@@ -1861,18 +1866,72 @@ class User_dashboard extends CI_Controller {
 		echo json_encode($response);
 	}
 
+	public function social_listByUser() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$getSocialPostList = $this->db->query("SELECT * FROM users_post WHERE user_id = '".$user_id."'")->result_array();
+			//print_r($getSocialPostList); die();
+			if(!empty($getSocialPostList)) {
+				$getPostDetails = array();
+				foreach ($getSocialPostList as $key => $value) {
+					$getPostDetails[$key]['id'] = $value['id'];
+					$userDetails = $this->db->query("SELECT organizername, firstname, lastname, userType, profilePic FROM users WHERE userId = '".$user_id."'")->row();
+					$getPostDetails[$key]['organizername'] = $userDetails->organizername;
+					$getPostDetails[$key]['firstname'] = $userDetails->firstname;
+					$getPostDetails[$key]['lastname'] = $userDetails->lastname;
+					if(!empty($userDetails->profilePic)) {
+						$getPostDetails[$key]['profilePic'] = base_url().'uploads/users_post/'.$userDetails->profilePic;
+					} else {
+						$getPostDetails[$key]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value['social_img'])) {
+						$getPostDetails[$key]['social_img'] = base_url().'uploads/social_img/'.$value['social_img'];
+					} else {
+						$getPostDetails[$key]['social_img'] = base_url().'uploads/no_image.png';
+					}
+					$getPostDetails[$key]['created_date'] = date("jS M Y", strtotime($value['created_date']));
+					$likedPost = $this->db->query("SELECT count(*) AS liked FROM user_post_like WHERE post_id = '".$value['id']."'")->row();
+					$getPostDetails[$key]['liked'] = $likedPost->liked;
+					$commentPost = $this->db->query("SELECT count(*) AS comment FROM user_post_comment WHERE post_id = '".$value['id']."'")->row();
+					$getPostDetails[$key]['comment'] = $commentPost->comment;
+					$isliked = $this->db->query("SELECT COUNT(*) AS liked FROM user_post_like WHERE user_id = '".$user_id."' AND post_id = '".$value['id']."'")->row();
+					if(!empty($isliked->liked)) {
+						$getPostDetails[$key]['isliked'] = "1";
+					} else {
+						$getPostDetails[$key]['isliked'] = "0";
+					}
+				}
+			} else {
+				$getPostDetails = "No Data Found";
+			}
+			$response = array('status'=> 'success', 'result'=> $getPostDetails);
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
 	public function user_post_like() {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
 			$post_id = $formdata["post_id"];
+			$isLiked = $formdata["isLiked"];
 			$data = array(
 				"user_id"=>$user_id,
 				"post_id"=>$post_id,
 				"created_date"=>date("Y-m-d h:i:sa")
 			);
-			$this->Crud_model->SaveData('user_post_like', $data);
-			$response = array("status"=> "success", "result"=> "Liked");
+			if($formdata['isLiked'] == '1') {
+    			$this->Crud_model->SaveData('user_post_like', $data);
+				$response = array("status"=> "success", "result"=> "Liked");
+    		} else {
+    			$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$user_id."' AND post_id = '".$post_id."'");
+				$response = array("status"=> "success", "result"=> "Disliked");
+    		}
+			//$this->Crud_model->SaveData('user_post_like', $data);
+			//$response = array("status"=> "success", "result"=> "Liked");
 		} catch (\Throwable $th) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
@@ -1987,21 +2046,29 @@ class User_dashboard extends CI_Controller {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
 			$comment_id = $formdata['comment_id'];
+			$isliked = $formdata['isliked'];
 			$data = array(
 				'user_id'=> $user_id,
 				'comment_id'=> $comment_id,
 				'created_date'=> date("Y-m-d h:i:sa")
 			);
-			$this->Crud_model->SaveData('user_comment_like', $data);
-			$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
-			$response = array("status"=> "success", "result"=> "Liked");
+			if($formdata['isliked'] == '1') {
+    			$this->Crud_model->SaveData('user_comment_dislike', $data);
+				$response = array("status"=> "success", "result"=> "Liked");
+    		} else {
+    			$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
+			$response = array("status"=> "success", "result"=> "Disliked");
+    		}
+			//$this->Crud_model->SaveData('user_comment_like', $data);
+			//$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
+			//$response = array("status"=> "success", "result"=> "Liked");
 		} catch (\Throwable $th) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
 		echo json_encode($response);
 	}
 
-	public function addDislikeForEachComment() {
+	/*public function addDislikeForEachComment() {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
@@ -2018,7 +2085,7 @@ class User_dashboard extends CI_Controller {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
 		echo json_encode($response);
-	}
+	}*/
 
 	public function add_post_comment_rply() {
 		try {
@@ -2144,7 +2211,6 @@ class User_dashboard extends CI_Controller {
     			$this->db->query("DELETE FROM user_liked_podcast WHERE podcast_id = '".$formdata['podcast_id']."' AND user_id = '".$formdata['podcast_id']."'");
     			$response = array('status'=> 'success', 'result'=> "Disliked this podcast");
     		}
-    		
     	} catch(\Exception $e) {
     		$response = array('status' => 'error', 'result' => $e->getMessage());
     	}
