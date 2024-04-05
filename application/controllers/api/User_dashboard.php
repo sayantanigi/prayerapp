@@ -2414,4 +2414,180 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function getOrganizationList() {
+		try{
+			$organizationList = $this->db->query("SELECT userId, organizername, firstname, lastname, profilePic FROM users WHERE userType = '2'")->result_array();
+			if(!empty($organizationList)) {
+				foreach ($organizationList as $key => $value) {
+					$organizationList[$key]['userId'] = $value['userId'];
+					$organizationList[$key]['organizername'] = $value['organizername'];
+					$organizationList[$key]['firstname'] = $value['firstname'];
+					$organizationList[$key]['lastname'] = $value['lastname'];
+					if(!empty($value['profilePic'])) {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+					} else {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					$returnorg = $organizationList;
+				}
+			} else {
+				$returnorg = "";
+			}
+			$data['organizationList'] = $returnorg;
+
+			$organizationList1 = $this->db->query("SELECT userId, organizername, firstname, lastname, profilePic FROM users WHERE userType = '2'")->result_array();
+			if(!empty($organizationList1)) {
+				foreach ($organizationList1 as $key1 => $value1) {
+					$organizationList1[$key1]['userId'] = $value1['userId'];
+					$organizationList1[$key1]['organizername'] = $value1['organizername'];
+					$organizationList1[$key1]['firstname'] = $value1['firstname'];
+					$organizationList1[$key1]['lastname'] = $value1['lastname'];
+					if(!empty($value1['profilePic'])) {
+						$organizationList1[$key1]['profilePic'] = base_url().'uploads/users/'.$value1['profilePic'];
+					} else {
+						$organizationList1[$key1]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					$joined_user = $this->db->query("SELECT * FROM joined_organization WHERE org_id = '".$value1['userId']."'")->result_array();
+					if(!empty($joined_user)) {
+						foreach ($joined_user as $key2 => $value2) {
+							$userprofile = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$value2['user_id']."'")->row();
+							if(!empty($userprofile->profilePic)) {
+								$organizationList1[$key1]['joined'][$key2]['image'] = base_url().'uploads/users/'.$userprofile->profilePic;
+							} else {
+								$organizationList1[$key1]['joined'][$key2]['image'] = base_url().'uploads/no_image.png';
+							}
+						}
+					} else {
+						$organizationList1[$key1]['joined'] = "";
+					}
+					$returnorg1 = $organizationList1;
+				}
+			} else {
+				$returnorg1 = "";
+			}
+			$data['organizationList1'] = $returnorg1;
+
+
+			$response = array('status'=> 'success','result'=> $data);
+		} catch (Exception $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function viewAllOrganization() {
+		try {
+			$organizationList = $this->db->query("SELECT userId, organizername, firstname, lastname, profilePic FROM users WHERE userType = '2'")->result_array();
+			if(!empty($organizationList)) {
+				foreach ($organizationList as $key => $value) {
+					$organizationList[$key]['userId'] = $value['userId'];
+					$organizationList[$key]['organizername'] = $value['organizername'];
+					$organizationList[$key]['firstname'] = $value['firstname'];
+					$organizationList[$key]['lastname'] = $value['lastname'];
+					if(!empty($value['profilePic'])) {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+					} else {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					$joined_user = $this->db->query("SELECT * FROM joined_organization WHERE org_id = '".$value['userId']."'")->result_array();
+					if(!empty($joined_user)) {
+						foreach ($joined_user as $key1 => $value1) {
+							$userprofile = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$value1['user_id']."'")->row();
+							if(!empty($userprofile->profilePic)) {
+								$organizationList[$key]['joined'][$key1]['image'] = base_url().'uploads/users/'.$userprofile->profilePic;
+							} else {
+								$organizationList[$key]['joined'][$key1]['image'] = base_url().'uploads/no_image.png';
+							}
+						}
+					} else {
+						$organizationList[$key]['joined'] = "";
+					}
+					$returnorg = $organizationList;
+				}
+			} else {
+				$returnorg = "";
+			}
+			$data['viewallorganization'] = $returnorg;
+			$response = array('status'=> 'success', 'result'=> $data);
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function organizationDetails() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$orgId = $formdata['org_id'];
+			$getorgDetails = $this->db->query("SELECT * FROM users WHERE userID = '".$orgId."' AND userType = '2'")->result_array();
+			if(!empty($getorgDetails)) {
+				foreach ($getorgDetails as $key => $value) {
+					$organizationList[$key]['userId'] = $value['userId'];
+					$organizationList[$key]['organizername'] = $value['organizername'];
+					$organizationList[$key]['firstname'] = $value['firstname'];
+					$organizationList[$key]['lastname'] = $value['lastname'];
+					if(!empty($value['profilePic'])) {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/users/'.$value['profilePic'];
+					} else {
+						$organizationList[$key]['profilePic'] = base_url().'uploads/no_image.png';
+					}
+					$organizationList[$key]['short_bio'] = $value['short_bio'];
+					$joined_user = $this->db->query("SELECT COUNT(*) AS member FROM joined_organization WHERE org_id = '".$value['userId']."'")->row();
+					if(!empty($joined_user)) {
+						$organizationList[$key]['member'] = $joined_user->member." Joined";
+					} else {
+						$organizationList[$key]['member'] = "0 Joined";
+					}
+					$videos = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name, view_count FROM all_videos WHERE user_id = '".$orgId."' AND status = 1 AND is_delete = 1")->result_array();
+					if(!empty($videos)) {
+						foreach ($videos as $key1 => $value1) {
+							$organizationList[$key]['videos'][$key1]['id'] = $value1['id'];
+							$organizationList[$key]['videos'][$key1]['videos_name'] = $value1['videos_name'];
+							if(!empty($value1['video_cover_image'])) {
+								$organizationList[$key]['videos'][$key1]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value1['video_cover_image'];
+							} else {
+								$organizationList[$key]['videos'][$key1]['video_cover_image'] = base_url().'uploads/no_image.png';
+							}
+							if(!empty($value1['videos_file'])) {
+								$organizationList[$key]['videos'][$key1]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value1['video_cover_image'];
+							} else {
+								$organizationList[$key]['videos'][$key1]['videos_file'] = base_url().'uploads/no_image.png';
+							}
+							$organizationList[$key]['videos'][$key1]['view_count'] = $value1['view_count'];
+						}
+					} else {
+						$organizationList[$key]['videos'] = "";
+					}
+					$returnorg = $organizationList;
+				}
+			} else {
+				$returnorg = 'user not found';
+			}
+			$data['organization_detail'] = $returnorg;
+			$response = array('status'=> 'success', 'result'=> $data);
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function joined_organization() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$dataList = array(
+		    	"org_id" => $formdata['org_id'],
+			    "user_id" => $formdata['user_id'],
+			    "name" => $formdata['name'],
+			    "phno" => $formdata['phno'],
+			    "gender" => $formdata['gender'],
+			    "nationality" => $formdata['nationality']
+		    );
+		    $this->Crud_model->SaveData('joined_organization', $dataList);
+			$response = array('status'=> 'success', 'result'=> "Joined successfully");
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
