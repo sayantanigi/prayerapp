@@ -157,7 +157,11 @@ class User_dashboard extends CI_Controller {
 					$prayer_datetime = date('Y-m-d h:i A', strtotime($value['prayer_datetime']));
 					$prayer_datetime = date_create($prayer_datetime);
 					$prayerList[$key]['id'] = $value['id'];
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value['prayer_image'];
+					if(!empty($value['prayer_image'])){
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value['prayer_image'];
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_name'] = $value['prayer_name'];
 					$prayerList[$key]['prayer_subheading'] = $value['prayer_subheading'];
 					$prayerList[$key]['prayer_description'] = $value['prayer_description'];
@@ -230,9 +234,11 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
-					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
-					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)){
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -263,7 +269,11 @@ class User_dashboard extends CI_Controller {
 					$prayerDetails[$key]['prayer_subheading'] = $value->prayer_subheading;
 					$prayerDetails[$key]['prayer_description'] = $value->prayer_description;
 					$prayerDetails[$key]['prayer_location'] = $value->prayer_location;
-					$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)){
+						$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerDetails[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerDetails[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerDetails[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -329,7 +339,11 @@ class User_dashboard extends CI_Controller {
 			}
 			if(!empty($upcoming_events)) {
 				foreach ($upcoming_events as $keyue => $uevalue) {
-					$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					if(!empty($uevalue['prayer_image'])){
+						$uevalue['prayer_image'] = base_url().'uploads/prayer/'.$uevalue['prayer_image'];
+					} else {
+						$uevalue['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$uevalue['prayer_datetime'] = date('d F Y H:i', strtotime($uevalue['prayer_datetime']));
 					$uevalue['countdown'] = $datetime1->diff(new DateTime(date('Y-m-d h:i a', strtotime($uevalue['prayer_datetime']))))->format('%a days, %h:%i Hour');
 					$returnue[$keyue] = $uevalue;
@@ -356,9 +370,12 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
-					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
 					$prayerList[$key]['prayer_description'] = $value->prayer_description;
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)){
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -402,9 +419,11 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
-					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
-					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)){
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -414,7 +433,11 @@ class User_dashboard extends CI_Controller {
 					if(!empty($joineduserId)) {
 						foreach ($joineduserId as $key1 => $val) {
 							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-							$val['joinedUserImage'] = @$getuserimage[0]['profilePic'];
+							if(!empty(@$getuserimage[0]['profilePic'])){
+								$val['joinedUserImage'] = base_url().'uploads/users/'.@$getuserimage[0]['profilePic'];
+							} else {
+								$val['joinedUserImage'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$joineduser = $return;
 							$prayerList[$key]['joinedUserImage'] = $joineduser;
@@ -445,9 +468,11 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
-					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
-					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)){
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -457,7 +482,11 @@ class User_dashboard extends CI_Controller {
 					if(!empty($joineduserId)) {
 						foreach ($joineduserId as $key1 => $val) {
 							$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-							$val['joinedUserImage'] = $getuserimage[0]['profilePic'];
+							if(!empty(@$getuserimage[0]['profilePic'])){
+								$val['joinedUserImage'] = base_url().'uploads/users/'.@$getuserimage[0]['profilePic'];
+							} else {
+								$val['joinedUserImage'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$joineduser = $return;
 							$prayerList[$key]['joinedUserImage'] = $joineduser;
@@ -475,9 +504,7 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
-    //Prayer API End
 
-    //Podcast API Start
     public function add_podcast() {
 		try{
 			if(!empty($this->input->post())) {
@@ -502,7 +529,6 @@ class User_dashboard extends CI_Controller {
 	                } else {
 	                    $file = $_POST['old_image'];
 	                }
-
 	                if ($_FILES['podcast_file']['name'] != '') {
 	                    $src = $_FILES['podcast_file']['tmp_name'];
 	                    $filEnc = time();
@@ -516,7 +542,6 @@ class User_dashboard extends CI_Controller {
 	                } else {
 	                    $podcast_file  = $_POST['old_file'];
 	                }
-
 	                $data = array(
 	                    'user_id' => $this->input->post('user_id'),
 	                    //'podcast_cat_id' =>$_POST['podcast_cat_id'],
@@ -548,8 +573,16 @@ class User_dashboard extends CI_Controller {
 				$podcastList = array();
 				foreach ($podcast_list as $key => $value) {
 					$podcastList[$key]['id'] = $value['id'];
-					$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value['podcast_cover_image'];
-					$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value['podcast_file'];
+					if(!empty($value['podcast_cover_image'])){
+						$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value['podcast_cover_image'];
+					} else {
+						$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value['podcast_file'])){
+						$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value['podcast_file'];
+					} else {
+						$podcastList[$key]['podcast_file'] = base_url().'uploads/no_image.png';
+					}
 					$podcastList[$key]['podcast_name'] = $value['podcast_name'];
 					$podcastList[$key]['podcast_singer_name'] = $value['podcast_singer_name'];
 					$podcastList[$key]['podcast_description'] = $value['podcast_description'];
@@ -632,8 +665,16 @@ class User_dashboard extends CI_Controller {
 				foreach ($podcast_list as $key => $value) {
 					$podcastList[$key]['id'] = $value->id;
 					$podcastList[$key]['podcast_name'] = $value->podcast_name;
-					$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
-					$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					if(!empty($value->podcast_cover_image)){
+						$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
+					} else {
+						$podcastList[$key]['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value->podcast_file)){
+						$podcastList[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					} else {
+						$podcastList[$key]['podcast_file'] = base_url().'uploads/no_image.png';
+					}
 					$podcastList[$key]['podcast_singer_name'] = $value->podcast_singer_name;
 					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					//$podcastList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -656,16 +697,33 @@ class User_dashboard extends CI_Controller {
 				foreach ($podcast_list as $key => $value) {
 					$podcastList['list'][$key]['id'] = $value->id;
 					$podcastList['list'][$key]['podcast_name'] = $value->podcast_name;
-					$podcastList['list'][$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
-					$podcastList['list'][$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					if(!empty($value->podcast_cover_image)){
+						$podcastList['list'][$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
+					} else {
+						$podcastList['list'][$key]['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value->podcast_file)){
+						$podcastList['list'][$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					} else {
+						$podcastList['list'][$key]['podcast_file'] = base_url().'uploads/no_image.png';
+					}
 					$podcastList['list'][$key]['podcast_singer_name'] = $value->podcast_singer_name;
-					$podcastList['list'][$key]['podcast_singer_image'] = base_url().'uploads/podcast/singer_image/'.$value->podcast_singer_image;
+					if(!empty($value->podcast_singer_image)){
+						$podcastList['list'][$key]['podcast_singer_image'] = base_url().'uploads/podcast/singer_image/'.$value->podcast_singer_image;
+					} else {
+						$podcastList['list'][$key]['podcast_singer_image'] = base_url().'uploads/no_image.png';
+					}
 					//$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					//$podcastList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
 					$likedPodcast = $this->db->query("SELECT all_podcasts.podcast_cover_image FROM all_podcasts JOIN user_liked_podcast ON all_podcasts.id = user_liked_podcast.podcast_id WHERE all_podcasts.status = 1 AND all_podcasts.is_delete = 1")->result_array();
 					//$podcastList['listofliked'] = $likedPodcast;
 					foreach ($likedPodcast as $key1 => $value1) {
-						$podcastList['listofliked'][$key1]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value1['podcast_cover_image'];
+						if(!empty($value1['podcast_cover_image'])) {
+							$podcastList['listofliked'][$key1]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value1['podcast_cover_image'];
+						} else {
+							$podcastList['listofliked'][$key1]['podcast_cover_image'] = base_url().'uploads/no_image.png';
+						}
+						
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $podcastList);
@@ -688,8 +746,16 @@ class User_dashboard extends CI_Controller {
 				$podcastDetails = array();
 				foreach ($podcast_details as $key => $value) {
 					$podcastDetails[$key]['id'] = $value->id;
-					$podcastDetails[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
-					$podcastDetails[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					if(!empty($value->podcast_cover_image)){
+						$podcastDetails[$key]['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$value->podcast_cover_image;
+					} else {
+						$podcastDetails[$key]['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value->podcast_file)){
+						$podcastDetails[$key]['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$value->podcast_file;
+					} else {
+						$podcastDetails[$key]['podcast_file'] = base_url().'uploads/no_image.png';
+					}
 					$podcastDetails[$key]['podcast_name'] = $value->podcast_name;
 					$podcastDetails[$key]['podcast_description'] = $value->podcast_description;
 					$podcastDetails[$key]['podcast_singer_name'] = $value->podcast_singer_name;
@@ -780,8 +846,16 @@ class User_dashboard extends CI_Controller {
 				$videoList = array();
 				foreach ($video_list as $key => $value) {
 					$videoList[$key]['id'] = $value['id'];
-					$videoList[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value['video_cover_image'];
-					$videoList[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value['videos_file'];
+					if(!empty($value['video_cover_image'])){
+						$videoList[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value['video_cover_image'];
+					} else {
+						$videoList[$key]['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value['videos_file'])){
+						$videoList[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value['videos_file'];
+					} else {
+						$videoList[$key]['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$videoList[$key]['videos_name'] = $value['videos_name'];
 					$videoList[$key]['videos_description'] = $value['videos_description'];
 				}
@@ -863,8 +937,16 @@ class User_dashboard extends CI_Controller {
 					$videoList[$key]['id'] = $value->id;
 					$videoList[$key]['videos_name'] = $value->videos_name;
 					$videoList[$key]['videos_description'] = $value->videos_description;
-					$videoList[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value->video_cover_image;
-					$videoList[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value->videos_file;
+					if(!empty($value->video_cover_image)) {
+						$videoList[$key]['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$value->video_cover_image;
+					} else {
+						$videoList[$key]['video_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					if(!empty($value->videos_file)) {
+						$videoList[$key]['videos_file'] = base_url().'uploads/videos/videos_file/'.$value->videos_file;
+					} else {
+						$videoList[$key]['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$videoList[$key]['view_count'] = $value->view_count;
 				}
 				$response = array('status'=> 'success', 'result'=> $videoList);
@@ -927,7 +1009,7 @@ class User_dashboard extends CI_Controller {
 						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
 					}
 
-					if(!empty($vnvalue['video_cover_image'])){
+					if(!empty($vnvalue['videos_file'])){
 						$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
 					} else {
 						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
@@ -952,9 +1034,9 @@ class User_dashboard extends CI_Controller {
     		$user_id = $formdata['user_id'];
     		$userDetails = $this->db->query("SELECT organizername, profilePic, short_bio FROM users WHERE userId = '".$user_id."'")->row();
     		if(!empty($userDetails->profilePic)) {
-    			$userDetails->profilePic = base_url().'uploads/videos/cover_image/'.$userDetails->profilePic;
+    			$userDetails->profilePic = base_url().'uploads/users/'.$userDetails->profilePic;
     		} else {
-    			$userDetails->profilePic = base_url().'uploads/users/user.png';
+    			$userDetails->profilePic = base_url().'uploads/no_image.png';
     		}
     		$data['user_details'] = $userDetails;
 
@@ -999,7 +1081,7 @@ class User_dashboard extends CI_Controller {
 						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
 					}
 
-					if(!empty($vnvalue['video_cover_image'])){
+					if(!empty($vnvalue['videos_file'])){
 						$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
 					} else {
 						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
@@ -1028,7 +1110,12 @@ class User_dashboard extends CI_Controller {
 			} else {
 				$bannersectionVideos[0]['video_cover_image'] = base_url().'uploads/no_image.png';
 			}
-			$bannersectionVideos[0]['videos_file'] = base_url().'uploads/videos/videos_file/'.$bannersectionVideos[0]['videos_file'];
+			if(!empty($bannersectionVideos[0]['videos_file'])) {
+				$bannersectionVideos[0]['videos_file'] = base_url().'uploads/videos/videos_file/'.$bannersectionVideos[0]['videos_file'];
+			} else {
+				$bannersectionVideos[0]['videos_file'] = base_url().'uploads/no_image.png';
+			}
+			
 			$bannersectionVideos[0]['created_date'] = date('Y', strtotime($bannersectionVideos[0]['created_date']));
 			$data['bannerSection'] = $bannersectionVideos;
 			
@@ -1040,7 +1127,11 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vivalue['video_cover_image'] = base_url().'uploads/no_image.png';
 					}
-					$vivalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vivalue['videos_file'];
+					if(!empty($vivalue['videos_file'])) {
+						$vivalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vivalue['videos_file'];
+					} else {
+						$vivalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$returnvi[$keyvi] = $vivalue;
 				}
 			} else {
@@ -1056,7 +1147,12 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vcvalue['video_cover_image'] = base_url().'uploads/no_image.png';
 					}
-					$vcvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vcvalue['videos_file'];
+					if(!empty($vcvalue['videos_file'])) {
+						$vcvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vcvalue['videos_file'];
+					} else {
+						$vcvalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
+					
 					$returnvc[$keyvc] = $vcvalue;
 				}
 			} else {
@@ -1072,14 +1168,16 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vnvalue['video_cover_image'] = base_url().'uploads/no_image.png';
 					}
-
 					if(!empty($vnvalue['profilePic'])) {
 						$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
 					} else {
 						$vnvalue['profilePic'] = base_url().'uploads/no_image.png';
 					}
-					//$vnvalue['profilePic'] = base_url().'uploads/users/'.$vnvalue['profilePic'];
-					$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					if(!empty($vnvalue['videos_file'])) {
+						$vnvalue['videos_file'] = base_url().'uploads/videos/videos_file/'.$vnvalue['videos_file'];
+					} else {
+						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$returnvn[$keyvn] = $vnvalue;
 				}
 			} else {
@@ -1098,13 +1196,15 @@ class User_dashboard extends CI_Controller {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$keyword = $formdata['keyword'];
-			//print_r($formdata); die();
 			//echo "SELECT id, video_cover_image, videos_file, videos_name, view_count FROM all_videos WHERE videos_name LIKE '%".$keyword."%'";
 			$searchResult = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.videos_name LIKE '%".$keyword."%' AND all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
-			//print_r($searchResult);
 			if(!empty($searchResult)) {
 				foreach ($searchResult as $keysv => $value) {
-					$value['videos_file'] = base_url().'uploads/videos/videos_file/'.$value['videos_file'];
+					if(!empty($value['videos_file'])) {
+						$value['videos_file'] = base_url().'uploads/videos/videos_file/'.$value['videos_file'];
+					} else {
+						$value['videos_file'] = base_url().'uploads/no_image.png';
+					}
 					$returnsv[$keysv] = $value;
 				}
 				$data['search_results'] = $returnsv;
@@ -1131,9 +1231,11 @@ class User_dashboard extends CI_Controller {
 					$prayerList[$key]['id'] = $value->id;
 					$prayerList[$key]['prayer_name'] = $value->prayer_name;
 					$prayerList[$key]['prayer_location'] = $value->prayer_location;
-					//$prayerList[$key]['prayer_subheading'] = $value->prayer_subheading;
-					//$prayerList[$key]['prayer_description'] = $value->prayer_description;
-					$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)) {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerList[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 					$prayerList[$key]['prayer_datetime'] = date_format($prayer_datetime,"l dS F Y, h:i A");
 					$joinedUser = $this->db->query("SELECT count(id) as total FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					$prayerList[$key]['userjoined'] = $joinedUser[0]['total']." have joined already";
@@ -1142,7 +1244,11 @@ class User_dashboard extends CI_Controller {
 					$joineduserId = $this->db->query("SELECT user_id FROM user_joined_event WHERE event_id = '".$value->id."'")->result_array();
 					foreach ($joineduserId as $key1 => $val) {
 						$getuserimage = $this->db->query("SELECT profilePic FROM users WHERE userId = '".$val['user_id']."'")->result_array();
-						$prayerList[$key]['joinedUserImage'][$key1] = $getuserimage[0]['profilePic'];
+						if(!empty(@$getuserimage[0]['profilePic'])) {
+							$prayerList[$key]['joinedUserImage'][$key1] = base_url().'uploads/users/'.$getuserimage[0]['profilePic'];
+						} else {
+							$prayerList[$key]['joinedUserImage'][$key1] = base_url().'uploads/no_image.png';
+						}
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerList);
@@ -1166,7 +1272,11 @@ class User_dashboard extends CI_Controller {
 					$prayerDetails[$key]['id'] = $value->id;
 					$prayerDetails[$key]['prayer_name'] = $value->prayer_name;
 					$prayerDetails[$key]['prayer_location'] = $value->prayer_location;
-					$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					if(!empty($value->prayer_image)) {
+						$prayerDetails[$key]['prayer_image'] = base_url().'uploads/prayer/'.$value->prayer_image;
+					} else {
+						$prayerDetails[$key]['prayer_image'] = base_url().'uploads/no_image.png';
+					}
 				}
 				$response = array('status'=> 'success', 'result'=> $prayerDetails);
 			} else {
@@ -1211,7 +1321,11 @@ class User_dashboard extends CI_Controller {
 				foreach ($productCategory as $key => $value) {
 					$procatList[$key]['id'] = $value['id'];
 					$procatList[$key]['category_name'] = $value['category_name'];
-					$procatList[$key]['category_image'] =  base_url().'uploads/product_category/'.$value['category_image'];
+					if(!empty($value['category_image'])) {
+						$procatList[$key]['category_image'] =  base_url().'uploads/product_category/'.$value['category_image'];
+					} else {
+						$procatList[$key]['category_image'] = base_url().'uploads/no_image.png';
+					}
 					$procatList[$key]['status'] = $value['status'];
 				}
 				$response = array('status'=> 'success', 'result'=> $procatList);
@@ -1241,7 +1355,11 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1276,7 +1394,11 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1313,7 +1435,11 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1356,7 +1482,12 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
+							
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1426,7 +1557,11 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1480,7 +1615,11 @@ class User_dashboard extends CI_Controller {
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
 						foreach ($pro_Img as $key1 => $val) {
-							$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							if(!empty($val['pro_image'])) {
+								$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+							} else {
+								$val['pro_image'] = base_url().'uploads/no_image.png';
+							}
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1638,7 +1777,11 @@ class User_dashboard extends CI_Controller {
 				$saved['total_amount'] = array();
 				foreach ($getProductDetails as $key => $value) {
 					$getList['cartList'][$key]['id'] = $value['id'];
-					$getList['cartList'][$key]['pro_image'] = base_url().'uploads/product/'.$value['pro_image'];
+					if(!empty($value['pro_image'])) {
+						$getList['cartList'][$key]['pro_image'] = base_url().'uploads/product/'.$value['pro_image'];
+					} else {
+						$getList['cartList'][$key]['pro_image'] = base_url().'uploads/no_image.png';
+					}
 					$getList['cartList'][$key]['pro_name'] = $value['pro_name'];
 					$getList['cartList'][$key]['category_name'] = $value['category_name'];
 					$getList['cartList'][$key]['quantity'] = $value['quantity'];
@@ -1985,9 +2128,19 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$postDetails[$key]["fullname"] = $value["organizername"];
 					}
-					$postDetails[$key]["profilePic"] = base_url().'uploads/users/'.$value["profilePic"];
+					if(!empty($value["profilePic"])) {
+						$postDetails[$key]["profilePic"] = base_url().'uploads/users/'.$value["profilePic"];
+					} else {
+						$postDetails[$key]["profilePic"] = base_url().'uploads/no_image.png';
+					}
+					
 					$postDetails[$key]["post_id"] = $value["post_id"];
-					$postDetails[$key]["social_img"] = base_url().'uploads/social_img/'.$value["social_img"];
+					if(!empty($value["social_img"])) {
+						$postDetails[$key]["social_img"] = base_url().'uploads/social_img/'.$value["social_img"];
+					} else {
+						$postDetails[$key]["social_img"] = base_url().'uploads/no_image.png';
+					}
+					//$postDetails[$key]["social_img"] = base_url().'uploads/social_img/'.$value["social_img"];
 					$countLike = $this->db->query("SELECT COUNT(id) AS total_like FROM user_post_like WHERE post_id = '".$value["post_id"]."'")->result_array();
 					$postDetails[$key]["count_like"] = $countLike[0]['total_like'];
 					$countComment = $this->db->query("SELECT COUNT(id) AS total_comment FROM user_post_comment WHERE post_id = '".$value["post_id"]."'")->result_array();
@@ -2020,7 +2173,12 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$getcomment[$key]['fullname'] = $getUser[0]['organizername'];
 					} 
-					$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+					if(!empty($getUser[0]['profilePic'])) {
+						$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+					} else {
+						$getcomment[$key]["profilePic"] = base_url().'uploads/no_image.png';
+					}
+					//$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
 					$getcomment[$key]['post_id'] = $value['post_id'];
 					$getcomment[$key]['comment'] = $value['comment'];
 					$getcomment[$key]['commented_on'] = date ('D, jS M Y h:i a', strtotime($value['created_date']));
@@ -2030,6 +2188,12 @@ class User_dashboard extends CI_Controller {
 					$getcomment[$key]['comment_dislike'] = $getCommentDislike[0]['comment_dislike'];
 					$getCommentreply = $this->db->query("SELECT COUNT(id) AS comment_reply FROM user_post_comment_reply WHERE comment_id = '".$value['id']."'")->result_array();
 					$getcomment[$key]['comment_reply'] = $getCommentreply[0]['comment_reply'];
+					$getCommentLike = $this->db->query("SELECT * FROM user_comment_like WHERE comment_id = '".$value['id']."' AND user_id = '".$value['user_id']."'")->row();
+					if(!empty($getCommentLike)) {
+						$getcomment[$key]['isLiked'] = "1";
+					} else {
+						$getcomment[$key]['isLiked'] = "0";
+					}
 				}
 			} else {
 				$getcomment = "No comment posted yet";
@@ -2119,12 +2283,16 @@ class User_dashboard extends CI_Controller {
 				foreach ($getCommentRply as $key => $value) {
 					$getcommentrply[$key]['id'] = $value['id'];
 					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->result_array();
-					if($getUser[0]['userType'] == 1){
-						$getcommentrply[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
+					if(@$getUser[0]['userType'] == 1){
+						$getcommentrply[$key]['fullname'] = @$getUser[0]['firstname']." ".@$getUser[0]['lastname'];
 					} else {
-						$getcommentrply[$key]['fullname'] = $getUser[0]['organizername'];
+						$getcommentrply[$key]['fullname'] = @$getUser[0]['organizername'];
 					} 
-					$getcommentrply[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+					if(!empty(@$getUser[0]['profilePic'])) {
+						$getcommentrply[$key]["profilePic"] = base_url().'uploads/users/'.@$getUser[0]['profilePic'];
+					} else {
+						$getcommentrply[$key]["profilePic"] = base_url().'uploads/no_image.png';
+					}
 					$getcommentrply[$key]['post_id'] = $value['post_id'];
 					$getcommentrply[$key]['comment'] = $value['comment_reply'];
 					$getcommentrply[$key]['commented_on'] = date ('D, jS M Y h:i a', strtotime($value['created_date']));
@@ -2222,8 +2390,18 @@ class User_dashboard extends CI_Controller {
 			$likedPodcast = $this->db->query("SELECT all_podcasts.podcast_cover_image, all_podcasts.podcast_file, all_podcasts.podcast_name, all_podcasts.podcast_singer_name, all_podcasts.podcast_description FROM all_podcasts JOIN user_liked_podcast ON all_podcasts.id = user_liked_podcast.podcast_id WHERE all_podcasts.status = 1 AND all_podcasts.is_delete = 1")->result_array();
 			if(!empty($likedPodcast)) {
 				foreach ($likedPodcast as $keyue => $uevalue) {
-					$uevalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$uevalue['podcast_cover_image'];
-					$uevalue['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$uevalue['podcast_file'];
+					if(!empty($uevalue['podcast_cover_image'])) {
+						$uevalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$uevalue['podcast_cover_image'];
+					} else {
+						$uevalue['podcast_cover_image'] = base_url().'uploads/no_image.png';
+					}
+					//$uevalue['podcast_cover_image'] = base_url().'uploads/podcast/cover_image/'.$uevalue['podcast_cover_image'];
+					if(!empty($uevalue['podcast_file'])) {
+						$uevalue['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$uevalue['podcast_file'];
+					} else {
+						$uevalue['podcast_file'] = base_url().'uploads/no_image.png';
+					}
+					//$uevalue['podcast_file'] = base_url().'uploads/podcast/podcast_file/'.$uevalue['podcast_file'];
 					$uevalue['is_liked'] = '1';
 					$returnue[$keyue] = $uevalue;
 				}
