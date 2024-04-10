@@ -29,6 +29,9 @@
 				<li <?php if ($seg2 =='manage_cms') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_cms')?>"><i class="fas fa-circle"></i> <span>Content Management</span></a>
 				</li>
+				<li <?php if ($seg2 =='manage_donation') {?>class="active"<?php }?>>
+					<a href="<?= admin_url('manage_donation')?>"><i class="fa fa-calendar"></i> <span>Donation Management</span></a>
+				</li>
 				<li <?php if ($seg2 =='product-category') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('product-category')?>"><i class="fa fa-list"></i>
 						<span>Product Category</span>

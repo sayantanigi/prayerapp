@@ -133,6 +133,13 @@ class Home extends MY_Controller {
 				header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here
 		}
 	}
+	public function checkout($uid, $total) {
+		$data = array(
+			'user_id' => $uid,
+			'total' => $total 
+		); 
+		$this->load->view('checkout', $data);
+	}
 	public function completed() {
 		$this->load->view('completed');
 	}

@@ -1904,6 +1904,22 @@ class User_dashboard extends CI_Controller {
 		echo json_encode($response);
 	}
 
+	public function place_order() {
+		try {
+			$formdata = json_decode(file_get_contents("php://input"), true);
+			$user_id = $formdata['user_id'];
+			$cart_id = $formdata['cart_id'];
+			$address_id = $formdata['address_id'];
+			$amountQuery = $this->db->query("SELECT SUM(final_price) AS final_price FROM add_to_cart WHERE user_id = '".$user_id."' AND id = '".$cart_id."'")->row();
+			$data = array('user_id' => $user_id, 'cart_id' => $cart_id, 'address_id' => $address_id, 'final_price' => $amountQuery->final_price); 
+			$this->Crud_model->SaveData('place_order', $data);
+			$response = array('status'=>'success', 'result'=>'Order placed');
+		} catch (Exception $e) {
+			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
 	public function proceed_to_pay() {
 		try {
 			$formdata = json_decode(file_get_contents("php://input"), true);
@@ -2417,6 +2433,21 @@ class User_dashboard extends CI_Controller {
 
 	public function getOrganizationList() {
 		try{
+			$getDonationList = $this->db->query("SELECT * FROM donation")->result_array();
+			if(!empty($getDonationList)) {
+				foreach ($getDonationList as $key => $value) {
+					if(!empty($value['d_image'])) {
+						$getDonationList[$key]['d_image'] = base_url().'uploads/donation/'.$value['d_image'];
+					} else {
+						$getDonationList[$key]['d_image'] = base_url().'uploads/no_image.png';
+					}
+					$returndntn = $getDonationList;
+				}
+			} else {
+				$returndntn = "";
+			}
+			$data['donationList'] = $returndntn;
+
 			$organizationList = $this->db->query("SELECT userId, organizername, firstname, lastname, profilePic FROM users WHERE userType = '2'")->result_array();
 			if(!empty($organizationList)) {
 				foreach ($organizationList as $key => $value) {
@@ -2468,9 +2499,36 @@ class User_dashboard extends CI_Controller {
 			}
 			$data['organizationList1'] = $returnorg1;
 
-
 			$response = array('status'=> 'success','result'=> $data);
 		} catch (Exception $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function donation_details() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$donation_id = $formdata['donation_id'];
+			$donationDetails = $this->db->query("SELECT * FROM donation WHERE id = '".$donation_id."'")->result_array();
+			if(!empty($donationDetails)) {
+				foreach ($donationDetails as $key => $value) {
+					$donationDetails[$key]['id'] = $value['id'];
+					$donationDetails[$key]['d_title'] = $value['d_title'];
+					$donationDetails[$key]['d_description'] = $value['d_description'];
+					if(!empty($value['d_image'])) {
+						$donationDetails[$key]['d_image'] = base_url().'uploads/donation/'.$value['d_image'];
+					} else {
+						$donationDetails[$key]['d_image'] = base_url().'uploads/no_image.png';
+					}
+				}
+				$return = $donationDetails;
+			} else {
+				$return = "";
+			}
+			$data['donation_details'] = $return;
+			$response = array('status'=> 'success', 'result'=> $data);
+		} catch (Exception $e) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
 		echo json_encode($response);
@@ -2585,6 +2643,19 @@ class User_dashboard extends CI_Controller {
 		    );
 		    $this->Crud_model->SaveData('joined_organization', $dataList);
 			$response = array('status'=> 'success', 'result'=> "Joined successfully");
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function checkout() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$payment = $formdata['total_pay'];
+			$url = base_url().'checkout/'.$user_id.'/'.$payment;
+			header('Location:  '.$url);
 		} catch (Exception $e) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
