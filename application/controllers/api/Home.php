@@ -205,4 +205,14 @@ class Home extends MY_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function get_faq() {
+		$id = $_POST['id'];
+		$content = $this->db->query("SELECT * FROM faq WHERE id = '".$id."'")->row();
+		$data = array(
+			'question' => $content->question,
+			'answer' => $content->answer
+		);
+		echo json_encode($data);
+	}
 }

@@ -1431,6 +1431,7 @@ class User_dashboard extends CI_Controller {
 					$get_cat = $this->db->query("SELECT * FROM product_category WHERE id = '".$value['pro_cat_id']."' AND status = 'Active' ORDER BY id DESC")->result_array();
 					$proList[$key]['pro_cat'] = $get_cat[0]['category_name'];
 					$proList[$key]['pro_desc'] = strip_tags($value['pro_desc']);
+					$proList[$key]['price'] = $value['final_price'];
 					//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
 					$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
 					if(!empty($pro_Img)) {
@@ -1770,13 +1771,14 @@ class User_dashboard extends CI_Controller {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
-			$getProductDetails = $this->db->query("SELECT product_list.id, product_image.pro_image, product_list.pro_name, product_category.category_name, add_to_cart.mrp, add_to_cart.quantity, add_to_cart.final_price, add_to_cart.discount FROM product_list JOIN product_category ON product_list.pro_cat_id = product_category.id LEFT JOIN product_image ON product_image.prod_id = product_list.id JOIN add_to_cart ON add_to_cart.product_id = product_list.id WHERE add_to_cart.user_id = '".$user_id."' GROUP BY product_list.id")->result_array();
+			$getProductDetails = $this->db->query("SELECT product_list.id as prod_id, product_image.pro_image, product_list.pro_name, product_category.category_name, add_to_cart.id as cart_id, add_to_cart.mrp, add_to_cart.quantity, add_to_cart.final_price, add_to_cart.discount FROM product_list JOIN product_category ON product_list.pro_cat_id = product_category.id LEFT JOIN product_image ON product_image.prod_id = product_list.id JOIN add_to_cart ON add_to_cart.product_id = product_list.id WHERE add_to_cart.user_id = '".$user_id."' GROUP BY product_list.id")->result_array();
 			if(!empty($getProductDetails)) {
 				$getList['cartList'] = array();
 				$saved['total_saved'] = array();
 				$saved['total_amount'] = array();
 				foreach ($getProductDetails as $key => $value) {
-					$getList['cartList'][$key]['id'] = $value['id'];
+					$getList['cartList'][$key]['cart_id'] = $value['cart_id'];
+					$getList['cartList'][$key]['prod_id'] = $value['prod_id'];
 					if(!empty($value['pro_image'])) {
 						$getList['cartList'][$key]['pro_image'] = base_url().'uploads/product/'.$value['pro_image'];
 					} else {
@@ -1910,7 +1912,7 @@ class User_dashboard extends CI_Controller {
 			$user_id = $formdata['user_id'];
 			$cart_id = $formdata['cart_id'];
 			$address_id = $formdata['address_id'];
-			$amountQuery = $this->db->query("SELECT SUM(final_price) AS final_price FROM add_to_cart WHERE user_id = '".$user_id."' AND id = '".$cart_id."'")->row();
+			$amountQuery = $this->db->query("SELECT SUM(final_price) AS final_price FROM add_to_cart WHERE user_id = '".$user_id."' AND id IN ($cart_id)")->row();
 			$data = array('user_id' => $user_id, 'cart_id' => $cart_id, 'address_id' => $address_id, 'final_price' => $amountQuery->final_price); 
 			$this->Crud_model->SaveData('place_order', $data);
 			$response = array('status'=>'success', 'result'=>'Order placed');
@@ -2656,6 +2658,116 @@ class User_dashboard extends CI_Controller {
 			$payment = $formdata['total_pay'];
 			$url = base_url().'checkout/'.$user_id.'/'.$payment;
 			header('Location:  '.$url);
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function order_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$getplaceorderDetails = $this->db->query("SELECT * FROM place_order WHERE user_id IN (".$user_id.")")->result_array();
+			foreach ($getplaceorderDetails as $place) {
+				$getcartDetails = $this->db->query("SELECT group_concat(product_id) as product_id FROM add_to_cart WHERE id IN (".$place['cart_id'].")")->result_array();
+				foreach ($getcartDetails as $cart) {
+					$productDetails = $this->db->query("SELECT * FROM product_list WHERE id IN (".$cart['product_id'].")")->result_array();
+					if(!empty($productDetails)) {
+						$proList = array();
+						foreach ($productDetails as $key => $value) {
+							$proList[$key]['id'] = $value['id'];
+							$proList[$key]['pro_name'] = $value['pro_name'];
+							//$proList[$key]['pro_image'] =  base_url().'uploads/product/'.$value['pro_image'];
+							$proList[$key]['final_price'] = $value['final_price'];
+							$proList[$key]['status'] = $value['status'];
+							$pro_Img = $this->db->query("SELECT id, pro_image FROM product_image where prod_id = '".$value['id']."'")->result_array();
+							if(!empty($pro_Img)) {
+								foreach ($pro_Img as $key1 => $val) {
+									if(!empty($val['pro_image'])) {
+										$val['pro_image'] = base_url().'uploads/product/'.$val['pro_image'];
+									} else {
+										$val['pro_image'] = base_url().'uploads/no_image.png';
+									}
+									$proList[$key]['imageList'][$key1] = $val;
+									//$proimg = $return;
+									//$proList[$key]['imageList'] = $proimg;
+								}
+							} else {
+								$proList[$key]['imageList'] = [];
+							}
+						}
+					} else {
+						$response = array('status'=> 'error', 'result'=> 'No data found');
+					}
+				}
+			}
+			$response = array('status'=> 'success', 'result'=> $proList);
+		} catch (Exception $e) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function add_donation() {
+		try{
+			if(!empty($this->input->post())) {
+				$get_data=$this->Crud_model->get_single('donation',"d_title = '".$_POST['d_title']."'");
+				if(isset($_FILES['d_image']['name']) !='') {
+		            $_POST['d_image']= rand(0000,9999)."_".$_FILES['d_image']['name'];
+		            $config2['image_library'] = 'gd2';
+		            $config2['source_image'] =  $_FILES['d_image']['tmp_name'];
+		            $config2['new_image'] =   getcwd().'/uploads/donation/'.$_POST['d_image'];
+		            $config2['upload_path'] =  getcwd().'/uploads/donation/';
+		            $config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
+		            $config2['maintain_ratio'] = FALSE;
+		            $this->image_lib->initialize($config2);
+		            if(!$this->image_lib->resize()) {
+		                $response = array('status'=> 'error', 'result'=> "Something went wrong while uploding image. Please try again later!");
+		            } else {
+		                $image  = $_POST['d_image'];
+		            }
+		        } else {
+		            $image  = "";
+		        }
+		        if(empty($get_data)) {
+					$data = array(
+						'user_id' => $this->input->post('user_id'),
+						'd_image'=>$image,
+						'd_title' => $this->input->post('d_title'),
+						'd_description' => $this->input->post('d_description'),
+						'd_amount' => $this->input->post('d_amount'),
+						'created_date' => date("Y-m-d H:i:s"),
+					);
+					$this->Crud_model->SaveData('donation', $data);
+					$response = array('status'=> 'success', 'result'=> "Donation created successfully");
+				} else {
+					$response = array('status'=> 'error', 'result'=> "Donation Name Already Exists.");
+		        }
+		    }
+		} catch(\Exception $e) {
+			$response = array('status'=> 'error', 'result'=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function donation_list() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$getDonationList = $this->db->query("SELECT * FROM donation WHERE user_id = '".$formdata['user_id']."'")->result_array();
+			if(!empty($getDonationList)) {
+				foreach ($getDonationList as $key => $value) {
+					if(!empty($value['d_image'])) {
+						$getDonationList[$key]['d_image'] = base_url().'uploads/donation/'.$value['d_image'];
+					} else {
+						$getDonationList[$key]['d_image'] = base_url().'uploads/no_image.png';
+					}
+					$returndntn = $getDonationList;
+				}
+			} else {
+				$returndntn = "";
+			}
+			$response = array('status'=> 'success', 'result'=> $returndntn);
 		} catch (Exception $e) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}

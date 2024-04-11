@@ -32,6 +32,9 @@
 				<li <?php if ($seg2 =='manage_donation') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_donation')?>"><i class="fa fa-calendar"></i> <span>Donation Management</span></a>
 				</li>
+				<li <?php if ($seg2 =='manage_faq') {?>class="active"<?php }?>>
+					<a href="<?= admin_url('manage_faq')?>"><i class="fa fa-calendar"></i> <span>FAQ Management</span></a>
+				</li>
 				<li <?php if ($seg2 =='product-category') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('product-category')?>"><i class="fa fa-list"></i>
 						<span>Product Category</span>

@@ -66,9 +66,119 @@
             color: #000 !important;
             text-decoration: none !important;
         }
+
+        .modal {
+            position: absolute;
+            z-index: 10000; /* 1 */
+            top: 0;
+            left: 0;
+            visibility: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal.is-visible {
+            visibility: visible;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: hsla(0, 0%, 0%, 0.5);
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s linear 0.3s, opacity 0.3s;
+        }
+
+        .modal.is-visible .modal-overlay {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .modal-wrapper {
+            position: absolute;
+            z-index: 9999;
+            top: 6em;
+            left: 35%;
+            width: 900px;
+            margin-left: -16em;
+            background-color: #fff;
+            box-shadow: 0 0 1.5em hsla(0, 0%, 0%, 0.35);
+        }
+
+        .modal-transition {
+            transition: all 0.3s 0.12s;
+            transform: translateY(-10%);
+            opacity: 0;
+        }
+
+        .modal.is-visible .modal-transition {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header,
+        .modal-content {
+            padding: 1em;
+        }
+
+        .modal-header {
+            position: relative;
+            background-color: #fff;
+            box-shadow: 0 1px 2px hsla(0, 0%, 0%, 0.06);
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0 1em;
+            color: #aaa;
+            background: none;
+            border: 0;
+        }
+
+        .modal-close:hover {
+            color: #777;
+        }
+
+        .modal-heading {
+            font-size: 1.125em;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .modal-content > *:first-child {
+            margin-top: 0;
+        }
+
+        .modal-content > *:last-child {
+            margin-bottom: 0;
+        }
+        .modal-active {display: inline-block; top: 210%;}
     </style>
 </head>
 <body>
+    <div class="modal">
+        <div class="modal-overlay modal-toggle"></div>
+        <div class="modal-wrapper modal-transition">
+            <div class="modal-header">
+                <button class="modal-close modal-toggle">x</button>
+            </div>
+          
+            <div class="modal-body">
+                <h2 class="modal-heading"></h2>
+                <div class="modal-content"></div>
+            </div>
+        </div>
+    </div>
     <header class="main_header">
         <div class="container h-100">
             <nav class="navbar navbar-expand-lg p-0 h-100">
@@ -97,7 +207,7 @@
             </nav>
         </div>
     </header>
-    
+
     <div id="carouselExampleIndicators" class="carousel slide Custom_Carousel" data-ride="carousel">
         <ol class="carousel-indicators">
             <?php 
@@ -211,6 +321,7 @@
             </div>
         </div>
     </section>
+
     <section class="download_appsec_outer" id="download_appsec_outer">
         <div class="row">
             <div class="col-xl-4 col-md-6 col-sm-12">
@@ -252,12 +363,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
+                    <?php 
+                    $getFAQlist = $this->db->query("SELECT * FROM faq WHERE status = '1'")->result_array();
+                    if(!empty($getFAQlist)) { ?>
                     <div class="f_content">
                         <h2>More About Prayer App</h2>
-                        <a href="#">What is Prayer App?</a>
-                        <a href="#">How does Prayer App work?</a>
-                        <a href="#">Legal notice, privacy policy and cookies</a>
+                        <?php foreach ($getFAQlist as $value) { ?>
+                        <a href="javascript:void(0)" onclick="showContent(<?= $value['id']?>)"><?= $value['question']?></a>    
+                        <?php } ?>
                     </div>
+                    <?php } ?>
                     <div class="f_content  mt-5 d-flex">
                         <h2>Download the Prayer App</h2>
                         <ul class="app_sec">
@@ -284,7 +399,6 @@
             </div>
         </div>
     </footer>
-
     <script src="<?= base_url() ?>assets/js/jquery-3.6.0.min.js"></script>
     <script src="<?= base_url() ?>assets/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url() ?>assets/js/owl.carousel.js"></script>
@@ -299,7 +413,27 @@
                     scrollTop: $('#download_appsec_outer').offset().top
                 }, 500);
             });
+
+            $('.modal-close').click(function(){
+                $('.modal').removeClass('is-visible modal-active');
+            })
         });
-</script>
+
+        function showContent(id) {
+            $.ajax({
+                type:'post',
+                cache:false,
+                url: '<?= base_url() ?>api/Home/get_faq',
+                data:{id:id},
+                success:function(returndata) {
+                    var obj=$.parseJSON(returndata); 
+                    console.log(obj);
+                    $(".modal-heading").html(obj.question);
+                    $(".modal-content").html(obj.answer);
+                    $('.modal').addClass('is-visible modal-active');
+                }
+            })
+        }
+    </script>
 </body>
 </html>
