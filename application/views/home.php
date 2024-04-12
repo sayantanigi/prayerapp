@@ -165,8 +165,8 @@
         </div>
     </div>
 
-    <section class="main_section">
-        <div class="container">
+    <section class="main_section" style="padding: 50px 100px; height: 100vh;">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-8 col-md-12">
                     <div class="main_section_left">
@@ -176,7 +176,7 @@
                         if ($prayerEvents) {
                             $i = 1;
                             foreach ($prayerEvents as $events) { ?>
-                            <div class="col-md-6 mt-4 mb-4">
+                            <div class="col-md-4 mt-4 mb-4">
                                 <div class="prayer_images">
                                     <?php if (!empty($events['prayer_image'])) { ?>
                                         <img src="<?= base_url() ?>uploads/prayer/<?= $events['prayer_image'] ?>" alt="" style="height: 256px">
@@ -200,11 +200,11 @@
                         <h3>Future Events</h3>
                         <?php
                         $nowDate = date('Y-m-d');
-                        $futureDate = $this->db->query("SELECT distinct(prayer_datetime) FROM all_prayers WHERE prayer_datetime > '".$nowDate."' ORDER BY prayer_datetime ASC")->result_array();
+                        $futureDate = $this->db->query("SELECT distinct(prayer_datetime) FROM all_prayers WHERE prayer_datetime > '".$nowDate."' AND status = 1 AND is_delete = 1 ORDER BY prayer_datetime ASC limit 4")->result_array();
                         foreach ($futureDate as $day) { ?>
                         <h5><?= date('D', strtotime($day['prayer_datetime']))?></h5>
                         <?php 
-                        $getPrayer = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime = '".$day['prayer_datetime']."'")->result_array();
+                        $getPrayer = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime = '".$day['prayer_datetime']."' AND status = 1 AND is_delete = 1 ORDER BY prayer_datetime ASC limit 1")->result_array();
                         foreach ($getPrayer as $prayer) { ?>
                         <ul>
                             <li>

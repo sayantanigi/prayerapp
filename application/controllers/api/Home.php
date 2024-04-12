@@ -71,7 +71,11 @@ class Home extends MY_Controller {
 			$latest_videos = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_description, all_videos.videos_file, all_videos.videos_link, all_videos.view_count FROM all_videos LEFT JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1' ORDER BY id DESC")->result_array();
 			if(!empty($latest_videos)) {
 				foreach ($latest_videos as $keylv => $lvvalue) {
-					$lvvalue['profilePic'] = base_url().'uploads/users/'.$lvvalue['profilePic'];
+					if(!empty($lvvalue['profilePic'])) {
+						$lvvalue['profilePic'] = base_url().'uploads/users/'.$lvvalue['profilePic'];
+					} else {
+						$lvvalue['profilePic'] = base_url().'uploads/no_image.png';
+					}
 					if(!empty($lvvalue['video_cover_image'])) {
 						$lvvalue['video_cover_image'] = base_url().'uploads/videos/cover_image/'.$lvvalue['video_cover_image'];
 					} else {

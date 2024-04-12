@@ -7,7 +7,7 @@ class Home extends MY_Controller {
 		$data['banner'] = $this->db->query("SELECT * FROM banner WHERE status = 'Active' ORDER BY created_date DESC")->result_array();
 		//$data['sliderprayer'] = $this->db->query("SELECT * FROM all_prayers ORDER BY created_date DESC LIMIT 3")->result_array();
 		$data['prayerEvents'] = $this->db->query("SELECT * FROM all_prayers ORDER BY created_date DESC LIMIT 6")->result_array();
-		$data['futureprayer'] = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime > $currentDate ORDER BY created_date DESC LIMIT 12")->result_array();
+		$data['futureprayer'] = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime > $currentDate ORDER BY created_date DESC LIMIT 6")->result_array();
 		$this->load->view('home', $data);
 	}
 	public function about_us() {
