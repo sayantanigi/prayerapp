@@ -16,10 +16,23 @@
     <style>
         dl, ol, ul {margin-left: 55px !important;}
         .Data_Container *{color: #000 !important;}
+        .modal,.modal-overlay{top:0;left:0;width:100%;height:100%;visibility:hidden}.modal{position:absolute;z-index:10000}.modal.is-visible{visibility:visible}.modal-overlay{position:fixed;z-index:10;background:hsla(0,0%,0%,.5);opacity:0;transition:visibility 0s linear .3s,opacity .3s}.modal.is-visible .modal-overlay{opacity:1;visibility:visible;transition-delay:0s}.modal-wrapper{position:absolute;z-index:9999;top:6em;left:35%;width:900px;margin-left:-16em;background-color:#fff;box-shadow:0 0 1.5em hsla(0,0%,0%,.35)}.modal-transition{transition:.3s .12s;transform:translateY(-10%);opacity:0}.modal.is-visible .modal-transition{transform:translateY(0);opacity:1}.modal-content,.modal-header{padding:1em}.modal-header{position:relative;background-color:#fff;box-shadow:0 1px 2px hsla(0,0%,0%,.06);border-bottom:1px solid #e8e8e8}.modal-close{position:absolute;top:0;right:0;padding:0 1em;color:#aaa;background:0 0;border:0}.modal-close:hover{color:#777}.modal-heading{font-size:1.125em;margin:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.modal-content>:first-child{margin-top:0}.modal-content>:last-child{margin-bottom:0}.modal-active{display:inline-block;top:141%}
     </style>
 </head>
-
 <body>
+    <div class="modal">
+        <div class="modal-overlay modal-toggle"></div>
+        <div class="modal-wrapper modal-transition">
+            <div class="modal-header">
+                <button class="modal-close modal-toggle">x</button>
+            </div>
+          
+            <div class="modal-body">
+                <h2 class="modal-heading"></h2>
+                <div class="modal-content"></div>
+            </div>
+        </div>
+    </div>
     <header class="main_header sub_header">
         <div class="container h-100">
             <nav class="navbar navbar-expand-lg p-0 h-100">
@@ -75,18 +88,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
+                    <?php 
+                    $getFAQlist = $this->db->query("SELECT * FROM faq WHERE status = '1'")->result_array();
+                    if(!empty($getFAQlist)) { ?>
                     <div class="f_content">
                         <h2>More About Prayer App</h2>
-                        <a href="">What is Prayer App?</a>
-                        <a href="">How does Prayer App work?</a>
-                        <a href="">Legal notice, privacy policy and cookies</a>
+                        <?php foreach ($getFAQlist as $value) { ?>
+                        <a href="javascript:void(0)" onclick="showContent(<?= $value['id']?>)"><?= $value['question']?></a>    
+                        <?php } ?>
                     </div>
+                    <?php } ?>
                     <div class="f_content  mt-5 d-flex">
                         <h2>Download the Prayer App</h2>
                         <ul class="app_sec">
-                            <li><a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470">AppStore</a></li>
-                            <li>/</li>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer">Google Play</a></li>
+                            <li><a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""></a></li>
+                            <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""></a></li>
                         </ul>
                         <ul class="app_sec social_sec">
                             <li><a href="<?= @$settings->fb_link; ?>" class="fb"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
@@ -96,14 +112,13 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="f_content">
-                        <!-- <h2 class="text-end">Other projects</h2> -->
-                        <a href="" class="text-end">
-                        <img src="<?= base_url() ?>uploads/logo/<?= $settings->flogo?>" alt="">
+                    <div class="f_content F_Logo">
+                        <a href="<?= base_url() ?>" class="text-end">
+                            <img src="<?= base_url() ?>uploads/logo/<?= $settings->flogo?>">
                         </a>
                     </div>
-                    <div class="f_content mt-5 text-end">
-                        <a href="">Copyright © <?= date('Y') ?> 120Army</a>
+                    <div class="f_content mt-5 text-end F_Logo">
+                        <a href="javascript:void(0)">Copyright © <?= date('Y') ?> 120Army</a>
                     </div>
                 </div>
             </div>
@@ -112,17 +127,38 @@
     <script src="<?= base_url() ?>assets/js/jquery-3.6.0.min.js"></script>
     <script src="<?= base_url() ?>assets/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url() ?>assets/js/owl.carousel.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.1/js/bootstrap.min.js'></script>
+    <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
     <script>
-        $('#banner_inner').owlCarousel({
-            items: 1,
-            nav: true,
-            dots: false,
-            autoplay: true,
-            autoplayTimeout: 6000,
-            smartSpeed: 1500,
-            loop: true,
-        })
+        $(document).ready(function() {
+            $('a[href = "#"]').click(function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $('#download_appsec_outer').offset().top
+                }, 500);
+            });
+
+            $('.modal-close').click(function(){
+                $('.modal').removeClass('is-visible modal-active');
+            })
+        });
+
+        function showContent(id) {
+            $.ajax({
+                type:'post',
+                cache:false,
+                url: '<?= base_url() ?>api/Home/get_faq',
+                data:{id:id},
+                success:function(returndata) {
+                    var obj=$.parseJSON(returndata); 
+                    console.log(obj);
+                    $(".modal-heading").html(obj.question);
+                    $(".modal-content").html(obj.answer);
+                    $('.modal').addClass('is-visible modal-active');
+                }
+            })
+        }
     </script>
 </body>
-
 </html>
