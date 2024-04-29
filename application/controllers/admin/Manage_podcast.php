@@ -1,12 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script are allowed');
 class Manage_podcast extends CI_Controller {
-
     public function __construct() {
         parent::__construct();
         $this->load->model('Podcastmodel');
     }
-
     public function index() {
         $get_podcast=$this->Crud_model->GetData('all_podcasts');
         $get_category=$this->Crud_model->GetData('category');
@@ -21,7 +19,6 @@ class Manage_podcast extends CI_Controller {
         $this->load->view('admin/podcast/list',$data);
         $this->load->view('admin/footer');
     }
-
     public function ajax_manage_page() {
         $cond = "1=1";
         // $category = $_POST['SearchData6'];
@@ -29,18 +26,15 @@ class Manage_podcast extends CI_Controller {
         // if($category != '') {
         //     $cond .=" and all_podcasts.podcast_cat_id = '".$category."' ";
         // }
-
         if($create_date!='') {
             $cond .=" and all_podcasts.created_date >= '".date('Y-m-d',strtotime($create_date))."' ";
         }
-
         $GetData = $this->Podcastmodel->get_datatables($cond);
         if(empty($_POST['start'])) {
             $no=0;
         } else {
             $no =$_POST['start'];
         }
-
         $data = array();
         foreach ($GetData as $row) {
             $btn = ''.'<a href=manage_podcast/update/'.base64_encode($row->id).' class="btn btn-sm bg-success-light"><i class="far fa-edit"></i></a>';
@@ -82,7 +76,6 @@ class Manage_podcast extends CI_Controller {
         );
         echo json_encode($output);
     }
-
     public function create() {
         $category = $this->Crud_model->GetData('category');
         $header = array('title'=> 'Add');
@@ -102,13 +95,11 @@ class Manage_podcast extends CI_Controller {
         $this->load->view('admin/podcast/form',$data);
         $this->load->view('admin/footer');
     }
-
     public function create_action() {
         // print_r($this->input->post()); die();
         if(!empty($this->input->post())) {
             $get_data = $this->Crud_model->get_single('all_podcasts',"podcast_name = '".$_POST['podcast_name']."'");
             if(empty($get_data)) {
-
                 if (!empty($_FILES['singer_image']['name'])) {
                     $uploadDir = getcwd() . '/uploads/podcast/singer_image/';
                     $src_simage = $_FILES['singer_image']['tmp_name'];
@@ -126,14 +117,8 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $simgfile  = $_POST['old_simage'];
                 }
-
-
-
-
-
                 if (!empty($_FILES['cover_image']['name'])) {
                     $uploadDir = getcwd() . '/uploads/podcast/cover_image/';
-
                     $src_image = $_FILES['cover_image']['tmp_name'];
                     $filEncImg = time();
                     $avatar_image = rand(0000, 9999) . "_" . $_FILES['cover_image']['name'];
@@ -149,7 +134,6 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $_imgfile  = $_POST['old_image'];
                 }
-
                 if (!empty($_FILES['podcast_file']['name'])) {
                     $uploadDir = getcwd() . '/uploads/podcast/podcast_file/';
                     $src_file = $_FILES['podcast_file']['tmp_name'];
@@ -167,32 +151,6 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $podcast_file  = $_POST['old_file'];
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 $data = array(
                     'user_id'=> $_SESSION['afrebay_admin']['id'],
                     //'podcast_cat_id' =>$_POST['podcast_cat_id'],
@@ -206,7 +164,6 @@ class Manage_podcast extends CI_Controller {
                 );
                 $this->Crud_model->SaveData('all_podcasts',$data);
                 $this->session->set_flashdata('message', 'Podcast created successfully');
-
                 // echo 1; exit;
                 /*$last_id = $this->db->insert_id();
                 if(!empty($last_id)) {
@@ -251,7 +208,6 @@ class Manage_podcast extends CI_Controller {
         }
         redirect(base_url('admin/manage_podcast'));
     }
-
     public function get_value() {
         $podcast_data=$this->Crud_model->get_single('all_podcasts',"id='".$_POST['id']."'");
         if(!empty($podcast_data->podcast_image)) {
@@ -275,7 +231,6 @@ class Manage_podcast extends CI_Controller {
         );
         echo json_encode($data);exit;
     }
-
     public function update($id) {
         $get_category=$this->Crud_model->GetData('category');
         $pod_id=base64_decode($id);
@@ -302,7 +257,6 @@ class Manage_podcast extends CI_Controller {
         $this->load->view('admin/podcast/form',$data);
         $this->load->view('admin/footer');
     }
-
     /*public function update_action() {
         if(!empty($this->input->post())) {
             $get_data=$this->Crud_model->get_single_record('all_podcasts',"podcast_name = '".$_POST['podcast_name']."' and id != '".$_POST['id']."'");
@@ -326,7 +280,6 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $file  = $_POST['old_image'];
                 }
-
                 if (!empty($_FILES['podcast_file']['name'] != '')) {
                     //print_r($_FILES['podcast_file']); die();
                     $src = $_FILES['podcast_file']['tmp_name'];
@@ -341,7 +294,6 @@ class Manage_podcast extends CI_Controller {
                 } else {
                     $file_content  = $_POST['old_file'];
                 }
-
                 $data = array(
                     'user_id'=> $_SESSION['afrebay_admin']['id'],
                     'podcast_cat_id' =>$_POST['podcast_cat_id'],
@@ -397,7 +349,6 @@ class Manage_podcast extends CI_Controller {
         }
         redirect(base_url('admin/manage_podcast'));
     }*/
-
     public function update_action() {
         if ($_FILES['cover_image']['name'] != '') {
             $src_image = $_FILES['cover_image']['tmp_name'];
@@ -412,7 +363,6 @@ class Manage_podcast extends CI_Controller {
         } else {
             $_imgfile  = $_POST['old_image'];
         }
-
         if ($_FILES['podcast_file']['name'] != '') {
             $src_file = $_FILES['podcast_file']['tmp_name'];
             $filEncFile = time();
@@ -426,7 +376,6 @@ class Manage_podcast extends CI_Controller {
         } else {
             $podcast_file  = $_POST['old_file'];
         }
-
         if ($_FILES['singer_image']['name'] != '') {
             $src_simage = $_FILES['singer_image']['tmp_name'];
             $filEncImg = time();
@@ -440,7 +389,6 @@ class Manage_podcast extends CI_Controller {
         } else {
             $simgfile  = $_POST['old_simage'];
         }
-
         $get_data=$this->Crud_model->get_single_record('all_podcasts',"podcast_name = '".$_POST['podcast_name']."' and id != '".$_POST['id']."'");
         if(empty($get_data)) {
             $data = array(
@@ -464,7 +412,6 @@ class Manage_podcast extends CI_Controller {
         }
         redirect(base_url('admin/manage_podcast'));
     }
-
     public function view($id) {
         $pod_id=base64_decode($id);
         $update_pod=$this->Crud_model->get_single('all_podcasts',"id = '".$pod_id."'");
@@ -480,7 +427,6 @@ class Manage_podcast extends CI_Controller {
         $this->load->view('admin/podcast/details',$data);
         $this->load->view('admin/footer');
     }
-
     public function delete() {
         if(isset($_POST['cid'])) {
             $this->Crud_model->DeleteData('all_podcasts',"id='".$_POST['cid']."'");

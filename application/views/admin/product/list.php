@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
+<!-- <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css"> -->
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
@@ -10,7 +10,7 @@
                     <a class="btn btn-white filter-btn" href="javascript:void(0);" id="filter_search">
                         <i class="fas fa-filter"></i>
                     </a>
-                    <a href="#" class="btn btn-primary add-button ml-3" data-toggle="modal" data-target="#createModal">
+                    <a href="<?= admin_url('product/create')?>" class="btn btn-primary add-button">
                         <i class="fas fa-plus"></i>
                     </a>
                 </div>

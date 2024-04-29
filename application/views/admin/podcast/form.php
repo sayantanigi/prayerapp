@@ -33,9 +33,7 @@
 									<option value="">Select Category</option>
 									<?php if (!empty($category)) {
 										foreach ($category as $item) { ?>
-									<option value="<?= $item->id ?>" <?php if ($item->id == @$podcast_cat_id) {
-										  echo "selected";
-									  } ?>><?= ucfirst($item->category_name) ?></option>
+									<option value="<?= $item->id ?>" <?php if ($item->id == @$podcast_cat_id) { echo "selected"; } ?>><?= ucfirst($item->category_name) ?></option>
 									<?php }
 									} ?>
 								</select>
