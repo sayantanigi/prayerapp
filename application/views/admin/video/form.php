@@ -1,4 +1,26 @@
 <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css"> -->
+<style type="text/css">
+	#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#loader img {
+    width: 50px;
+    height: 50px;
+}
+#loader p {
+    margin-top: 10px;
+    font-size: 16px;
+}
+</style>
 <div class="page-wrapper">
 	<div class="content container-fluid">
 		<div class="row">
