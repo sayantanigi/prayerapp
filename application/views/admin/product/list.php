@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
@@ -15,6 +16,10 @@
                 </div>
             </div>
         </div>
+        <div id="loader" style="display:none;">
+					<img src="<?= base_url() ?>uploads/loading.gif" alt="Loading...">
+					<p>Please wait...</p>
+				</div>
         <div class="card filter-card" id="filter_inputs" style="display: block">
             <div class="card-body pb-0">
                 <form id="categorySearch" action="#" method="post">
@@ -151,7 +156,7 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        <form action="#" method="post" enctype="multipart/form-data">
+                        <form action="#" id="myForm" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label>Product Category<span style="color:red;">*</span> <span id="edit_category_id_err"></span></label>
                                 <select class="form-control select1" name="category_id" id="edit_category_id">
@@ -216,6 +221,16 @@ var actioncolumn=3;
     CKEDITOR.replace('edit_pro_desc');
 </script>
 <script>
+
+
+// $("#myForm").on("click", function(event) {
+//       // Show loader when form is clicked
+//       alert(2);
+//       $("#loader").show();
+//     });
+
+
+
 $(window).scroll(function() {
     var filter_inputs = $('#filter_inputs');
     var table_wrapper = $('#table_wrapper .row:nth-child(1)');
@@ -239,14 +254,14 @@ $('#refreshForm').click(function(){
 
 $('#pro_discount').keyup(function() {
     var pro_mrp = $('#pro_mrp').val();
-    var pro_discount = $('#pro_discount').val(); 
+    var pro_discount = $('#pro_discount').val();
     var discountPrice = pro_mrp * (pro_discount/100);
     var finalPrice = pro_mrp - discountPrice;
     $('#final_price').val(finalPrice.toFixed(2))
 })
 $('#pro_mrp').keyup(function() {
     var pro_mrp = $('#pro_mrp').val();
-    var pro_discount = $('#pro_discount').val(); 
+    var pro_discount = $('#pro_discount').val();
     var discountPrice = pro_mrp * (pro_discount/100);
     var finalPrice = pro_mrp - discountPrice;
     $('#final_price').val(finalPrice.toFixed(2))
@@ -254,14 +269,14 @@ $('#pro_mrp').keyup(function() {
 
 $('#edit_pro_discount').keyup(function() {
     var pro_mrp = $('#edit_pro_mrp').val();
-    var pro_discount = $('#edit_pro_discount').val(); 
+    var pro_discount = $('#edit_pro_discount').val();
     var discountPrice = pro_mrp * (pro_discount/100);
     var finalPrice = pro_mrp - discountPrice;
     $('#edit_final_price').val(finalPrice.toFixed(2))
 })
 $('#edit_pro_mrp').keyup(function() {
     var pro_mrp = $('#edit_pro_mrp').val();
-    var pro_discount = $('#edit_pro_discount').val(); 
+    var pro_discount = $('#edit_pro_discount').val();
     var discountPrice = pro_mrp * (pro_discount/100);
     var finalPrice = pro_mrp - discountPrice;
     $('#edit_final_price').val(finalPrice.toFixed(2))

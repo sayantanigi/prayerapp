@@ -104,31 +104,13 @@ class Manage_podcast extends CI_Controller {
     }
 
     public function create_action() {
-        //print_r($this->input->post()); die();
+        // print_r($this->input->post()); die();
         if(!empty($this->input->post())) {
             $get_data = $this->Crud_model->get_single('all_podcasts',"podcast_name = '".$_POST['podcast_name']."'");
             if(empty($get_data)) {
-                /*if ($_FILES['cover_image']['name'] != '') {
-                    $_POST['cover_image']= rand(0000,9999)."_".$_FILES['cover_image']['name'];
-                    $config2['image_library'] = 'gd2';
-                    $config2['source_image'] =  $_FILES['cover_image']['tmp_name'];
-                    $config2['new_image'] =   getcwd().'/uploads/podcast/cover_image/'.$_POST['cover_image'];
-                    $config2['upload_path'] =  getcwd().'/uploads/podcast/cover_image/';
-                    $config2['allowed_types'] = 'JPG|PNG|JPEG|jpg|png|jpeg';
-                    $config2['maintain_ratio'] = FALSE;
-                    $this->image_lib->initialize($config2);
-                    if(!$this->image_lib->resize()) {
-                        echo('<pre>');
-                        echo ($this->image_lib->display_errors());
-                        exit;
-                    } else {
-                        $file  = $_POST['cover_image'];
-                    }
-                } else {
-                    $file  = $_POST['old_image'];
-                }*/
 
-                if ($_FILES['singer_image']['name'] != '') {
+                if (!empty($_FILES['singer_image']['name'])) {
+                    $uploadDir = getcwd() . '/uploads/podcast/singer_image/';
                     $src_simage = $_FILES['singer_image']['tmp_name'];
                     $filEncImg = time();
                     $avatar_simage = rand(0000, 9999) . "_" . $_FILES['singer_image']['name'];
@@ -136,13 +118,22 @@ class Manage_podcast extends CI_Controller {
                     $dest_simage = getcwd() . '/uploads/podcast/singer_image/' . $avatarsImage;
                     if (move_uploaded_file($src_simage, $dest_simage)) {
                         $simgfile  = $avatarsImage;
-                        @unlink('uploads/podcast/singer_image/' . $_POST['old_simage']);
+                        // @unlink('uploads/podcast/singer_image/' . $_POST['old_simage']);
+                        if (!empty($_POST['old_simage'])) {
+                            @unlink($uploadDir . $_POST['old_simage']);
+                        }
                     }
                 } else {
                     $simgfile  = $_POST['old_simage'];
                 }
-                
-                if ($_FILES['cover_image']['name'] != '') {
+
+
+
+
+
+                if (!empty($_FILES['cover_image']['name'])) {
+                    $uploadDir = getcwd() . '/uploads/podcast/cover_image/';
+
                     $src_image = $_FILES['cover_image']['tmp_name'];
                     $filEncImg = time();
                     $avatar_image = rand(0000, 9999) . "_" . $_FILES['cover_image']['name'];
@@ -150,13 +141,17 @@ class Manage_podcast extends CI_Controller {
                     $dest_image = getcwd() . '/uploads/podcast/cover_image/' . $avatarImage;
                     if (move_uploaded_file($src_image, $dest_image)) {
                         $_imgfile  = $avatarImage;
-                        @unlink('uploads/podcast/cover_image/' . $_POST['old_image']);
+                        // @unlink('uploads/podcast/cover_image/' . $_POST['old_image']);
+                        if (!empty($_POST['old_image'])) {
+                            @unlink($uploadDir . $_POST['old_image']);
+                        }
                     }
                 } else {
                     $_imgfile  = $_POST['old_image'];
                 }
 
-                if ($_FILES['podcast_file']['name'] != '') {
+                if (!empty($_FILES['podcast_file']['name'])) {
+                    $uploadDir = getcwd() . '/uploads/podcast/podcast_file/';
                     $src_file = $_FILES['podcast_file']['tmp_name'];
                     $filEncFile = time();
                     $avatar_file = rand(0000, 9999) . "_" . $_FILES['podcast_file']['name'];
@@ -164,11 +159,40 @@ class Manage_podcast extends CI_Controller {
                     $dest_file = getcwd() . '/uploads/podcast/podcast_file/' . $avatarFile;
                     if (move_uploaded_file($src_file, $dest_file)) {
                         $podcast_file  = $avatarFile;
-                        @unlink('uploads/podcast/podcast_file/' . $_POST['old_podcast_file']);
+                        if (!empty($_POST['old_podcast_file'])) {
+                            @unlink($uploadDir . $_POST['old_podcast_file']);
+                        }
+                        // @unlink('uploads/podcast/podcast_file/' . $_POST['old_podcast_file']);
                     }
                 } else {
                     $podcast_file  = $_POST['old_file'];
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 $data = array(
                     'user_id'=> $_SESSION['afrebay_admin']['id'],
                     //'podcast_cat_id' =>$_POST['podcast_cat_id'],
@@ -182,6 +206,8 @@ class Manage_podcast extends CI_Controller {
                 );
                 $this->Crud_model->SaveData('all_podcasts',$data);
                 $this->session->set_flashdata('message', 'Podcast created successfully');
+
+                // echo 1; exit;
                 /*$last_id = $this->db->insert_id();
                 if(!empty($last_id)) {
                     if ($_FILES['podcast_file']['name'] != '') {
@@ -414,7 +440,7 @@ class Manage_podcast extends CI_Controller {
         } else {
             $simgfile  = $_POST['old_simage'];
         }
-        
+
         $get_data=$this->Crud_model->get_single_record('all_podcasts',"podcast_name = '".$_POST['podcast_name']."' and id != '".$_POST['id']."'");
         if(empty($get_data)) {
             $data = array(
@@ -459,7 +485,7 @@ class Manage_podcast extends CI_Controller {
         if(isset($_POST['cid'])) {
             $this->Crud_model->DeleteData('all_podcasts',"id='".$_POST['cid']."'");
             // $data = array('is_delete' => '2');
-            // $this->Crud_model->SaveData('all_podcasts',$data,"id='".$_POST['id']."'"); 
+            // $this->Crud_model->SaveData('all_podcasts',$data,"id='".$_POST['id']."'");
             $this->session->set_flashdata('message', 'Event deleted successfully');
             echo 0; exit;
         }

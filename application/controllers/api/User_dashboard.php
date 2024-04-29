@@ -723,7 +723,7 @@ class User_dashboard extends CI_Controller {
 						} else {
 							$podcastList['listofliked'][$key1]['podcast_cover_image'] = base_url().'uploads/no_image.png';
 						}
-						
+
 					}
 				}
 				$response = array('status'=> 'success', 'result'=> $podcastList);
@@ -1014,7 +1014,7 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
 					}
-					
+
 					$returnvn[$keyvn] = $vnvalue;
 				}
 			} else {
@@ -1086,7 +1086,7 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vnvalue['videos_file'] = base_url().'uploads/no_image.png';
 					}
-					
+
 					$returnvn[$keyvn] = $vnvalue;
 				}
 			} else {
@@ -1115,10 +1115,10 @@ class User_dashboard extends CI_Controller {
 			} else {
 				$bannersectionVideos[0]['videos_file'] = base_url().'uploads/no_image.png';
 			}
-			
+
 			$bannersectionVideos[0]['created_date'] = date('Y', strtotime($bannersectionVideos[0]['created_date']));
 			$data['bannerSection'] = $bannersectionVideos;
-			
+
 			$gettopweekVideos = $this->db->query("SELECT id, video_cover_image, videos_file, videos_name FROM all_videos")->result_array();
 			if(!empty($gettopweekVideos)) {
 				foreach ($gettopweekVideos as $keyvi => $vivalue) {
@@ -1152,7 +1152,7 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$vcvalue['videos_file'] = base_url().'uploads/no_image.png';
 					}
-					
+
 					$returnvc[$keyvc] = $vcvalue;
 				}
 			} else {
@@ -1469,7 +1469,7 @@ class User_dashboard extends CI_Controller {
 			} else {
 				$productList = $this->db->query("SELECT * FROM product_list WHERE status = 'Active' ORDER BY id DESC")->result_array();
 			}
-			
+
 			if(!empty($productList)) {
 				$proList = array();
 				foreach ($productList as $key => $value) {
@@ -1488,7 +1488,7 @@ class User_dashboard extends CI_Controller {
 							} else {
 								$val['pro_image'] = base_url().'uploads/no_image.png';
 							}
-							
+
 							$return[$key1] = $val;
 							$proimg = $return;
 							$proList[$key]['imageList'] = $proimg;
@@ -1913,11 +1913,11 @@ class User_dashboard extends CI_Controller {
 			$cart_id = $formdata['cart_id'];
 			$address_id = $formdata['address_id'];
 			$amountQuery = $this->db->query("SELECT SUM(final_price) AS final_price FROM add_to_cart WHERE user_id = '".$user_id."' AND id IN ($cart_id)")->row();
-			$data = array('user_id' => $user_id, 'cart_id' => $cart_id, 'address_id' => $address_id, 'final_price' => $amountQuery->final_price); 
+			$data = array('user_id' => $user_id, 'cart_id' => $cart_id, 'address_id' => $address_id, 'final_price' => $amountQuery->final_price);
 			$this->Crud_model->SaveData('place_order', $data);
 			$response = array('status'=>'success', 'result'=>'Order placed');
-		} catch (Exception $e) {
-			$response = array('status'=>'error', 'result'=>$th->getMessage());
+		} catch (\Exception $e) {
+			$response = array('status'=>'error', 'result'=>$e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2151,7 +2151,7 @@ class User_dashboard extends CI_Controller {
 					} else {
 						$postDetails[$key]["profilePic"] = base_url().'uploads/no_image.png';
 					}
-					
+
 					$postDetails[$key]["post_id"] = $value["post_id"];
 					if(!empty($value["social_img"])) {
 						$postDetails[$key]["social_img"] = base_url().'uploads/social_img/'.$value["social_img"];
@@ -2190,7 +2190,7 @@ class User_dashboard extends CI_Controller {
 						$getcomment[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
 					} else {
 						$getcomment[$key]['fullname'] = $getUser[0]['organizername'];
-					} 
+					}
 					if(!empty($getUser[0]['profilePic'])) {
 						$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
 					} else {
@@ -2305,7 +2305,7 @@ class User_dashboard extends CI_Controller {
 						$getcommentrply[$key]['fullname'] = @$getUser[0]['firstname']." ".@$getUser[0]['lastname'];
 					} else {
 						$getcommentrply[$key]['fullname'] = @$getUser[0]['organizername'];
-					} 
+					}
 					if(!empty(@$getUser[0]['profilePic'])) {
 						$getcommentrply[$key]["profilePic"] = base_url().'uploads/users/'.@$getUser[0]['profilePic'];
 					} else {
@@ -2324,7 +2324,7 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function deleteAccount() {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
@@ -2352,7 +2352,7 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function delete_account() {
 		try {
 			$userId = $this->input->get('userId');
@@ -2530,8 +2530,8 @@ class User_dashboard extends CI_Controller {
 			}
 			$data['donation_details'] = $return;
 			$response = array('status'=> 'success', 'result'=> $data);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2570,8 +2570,8 @@ class User_dashboard extends CI_Controller {
 			}
 			$data['viewallorganization'] = $returnorg;
 			$response = array('status'=> 'success', 'result'=> $data);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2626,8 +2626,8 @@ class User_dashboard extends CI_Controller {
 			}
 			$data['organization_detail'] = $returnorg;
 			$response = array('status'=> 'success', 'result'=> $data);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2645,8 +2645,8 @@ class User_dashboard extends CI_Controller {
 		    );
 		    $this->Crud_model->SaveData('joined_organization', $dataList);
 			$response = array('status'=> 'success', 'result'=> "Joined successfully");
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2658,8 +2658,8 @@ class User_dashboard extends CI_Controller {
 			$payment = $formdata['total_pay'];
 			$url = base_url().'checkout/'.$user_id.'/'.$payment;
 			header('Location:  '.$url);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2703,8 +2703,8 @@ class User_dashboard extends CI_Controller {
 				}
 			}
 			$response = array('status'=> 'success', 'result'=> $proList);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}
@@ -2768,8 +2768,8 @@ class User_dashboard extends CI_Controller {
 				$returndntn = "";
 			}
 			$response = array('status'=> 'success', 'result'=> $returndntn);
-		} catch (Exception $e) {
-			$response = array("status"=> "error", "result"=> $th->getMessage());
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
 		}
 		echo json_encode($response);
 	}

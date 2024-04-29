@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= base_url() ?>assets/css/style.css">
 <div class="page-wrapper">
 	<div class="content container-fluid">
 		<div class="row">
@@ -9,12 +10,16 @@
 						</div>
 					</div>
 				</div>
+				<div id="loader" style="display:none;">
+					<img src="<?= base_url() ?>uploads/loading.gif" alt="Loading...">
+					<p>Please wait...</p>
+				</div>
 				<div class="card">
 					<div class="card-body">
 	            		<?php if($button=='Update') { ?>
-	        			<form action="<?php echo admin_url('Manage_videos/update_action'); ?>" method="post" enctype="multipart/form-data" id="videoForm">
+	        			<form id="myForm" action="<?php echo admin_url('Manage_videos/update_action'); ?>" method="post" enctype="multipart/form-data" id="videoForm">
 	            		<?php } else { ?>
-	    				<form class="forms-sample" action="<?php echo admin_url('Manage_videos/create_action'); ?>" method="post" enctype="multipart/form-data">
+	    				<form id="myForm" class="forms-sample" action="<?php echo admin_url('Manage_videos/create_action'); ?>" method="post" enctype="multipart/form-data">
 	            		<?php } ?>
 	            			<!-- <div class="form-group">
 								<label>Category</label>
@@ -42,7 +47,7 @@
 									<option value="2" <?php if(@$videos_type == 2) { echo "selected";}?>>Video Link</option>
 								</select>
 							</div> -->
-							<?php if(@$button=='Update') { 
+							<?php if(@$button=='Update') {
 								if(!empty(@$videos_file)) { ?>
 							<div class="form-group">
 								<video width="320" height="240" controls>
@@ -55,7 +60,7 @@
 							</div>
 							<?php } } ?>
 
-							<?php if(@$button=='Update') { 
+							<?php if(@$button=='Update') {
 								if(!empty(@$video_cover_image)) { ?>
 							<div class="form-group">
 								<img src="<?php echo base_url()?>uploads/videos/cover_image/<?= @$video_cover_image?>" style="width: 320px;">
@@ -71,6 +76,13 @@
 								<label>Video File</label>
 								<input type="file" name="videos_file" id="videos_file" class="form-control">
 							</div>
+
+							<div class="form-group">
+									<label>Cover Image</label>
+									<input type="file" name="cover_image" id="cover_image" class="form-control">
+									<input type="hidden" name="old_cover_image" value="<?= @$video_cover_image ?>">
+							</div>
+
 							<!--<div class="form-group videoLink">-->
 							<!--	<label>Video Link</label>-->
 							<!--	<input type="text" name="videos_link" id="videos_link" class="form-control" value="<?= @$videos_link?>">-->
@@ -80,7 +92,7 @@
 							<input type="hidden" name="user_id" value="<?php echo @$_SESSION['afrebay_admin']['id']; ?>">
 							<input type="hidden" name="old_videos_file" value="<?php echo @$videos_file; ?>">
 							<div class="mt-4">
-								<button class="btn btn-primary" type="submit">Submit</button>
+								<button class="btn btn-primary submit_button" type="submit">Submit</button>
 								<a href="<?= admin_url('manage_videos')?>" class="btn btn-link">Cancel</a>
 							</div>
 						</form>
@@ -101,6 +113,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
 	CKEDITOR.replace('videos_description');
+</script>
+<script>
+document.getElementById("myForm").addEventListener("submit", function(event) {
+  // Show loader when form is submitted
+//   document.getElementById("loader").style.display = "block";
+$('#loader').show();
+});
 </script>
 <script >
 /*function add_row() {

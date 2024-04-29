@@ -20,6 +20,9 @@
 				<li <?php if ($seg2 =='manage_events') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_prayers')?>"><i class="fa fa-calendar"></i> <span>All Prayers Management</span></a>
 				</li>
+				<li <?php if ($seg2 =='our_prayers') {?>class="active"<?php }?>>
+					<a href="<?= admin_url('our_prayers')?>"><i class="fa fa-calendar"></i> <span>Our Prayers</span></a>
+				</li>
 				<li <?php if ($seg2 =='manage_podcast') {?>class="active"<?php }?>>
 					<a href="<?= admin_url('manage_podcast')?>"><i class="fa fa-podcast"></i> <span>All Podcasts Management</span></a>
 				</li>

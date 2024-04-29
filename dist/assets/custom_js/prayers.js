@@ -205,3 +205,70 @@ function eventDelete(obj,cid) {
         }
     });
 }
+
+
+
+
+function update_our_event() {
+    var admin_url = $("#admin_url").val();
+    var old_image=$("#old_image").val();
+    var prayer_heading = $("#edit_prayer_heading").val().trim();
+    var prayer_image = $('#edit_prayer_image')[0].files[0];
+    var id = $("#id").val();   
+
+
+    if(prayer_heading == "") {
+        $("#edit_prayer_name_err").fadeIn().html("Please enter Prayer Heading").css('color','red');
+        setTimeout(function(){$("#edit_prayer_name_err").html("&nbsp;");},3000);
+        $("#edit_prayer_heading").focus();
+        return false;
+    }
+
+    
+
+    var form_data= new FormData();
+    form_data.append('prayer_image',prayer_image);
+    form_data.append('prayer_heading',prayer_heading); 
+    form_data.append('old_image',old_image);
+    form_data.append('id',id);
+    $.ajax({
+        type:'post',
+        cache:false,
+        contentType: false,   
+        processData:false,
+        url:admin_url+'Our_prayers/update_action',
+        data:form_data,
+        success:function(returndata) {
+            if(returndata == 1 ) {
+                location.reload();
+            } else {
+                $("#edit_prayer_name_err").fadeIn().html("This title already exits").css('color','red');
+                setTimeout(function(){$("#edit_prayer_name_err").html("&nbsp;");},3000);
+                $("#edit_prayer_name").focus();
+                return false;
+            }
+        }
+    })
+}
+
+
+function getourValue(id) {      
+    var admin_url = $("#admin_url").val();
+    $.ajax({
+        type:'post',
+        cache:false,
+        url:admin_url+'Our_prayers/get_value',
+        data:{
+            id:id,
+        },
+        success:function(returndata) {
+            console.log(returndata);
+            var obj=$.parseJSON(returndata);
+            $("#edit_prayer_heading").val(obj.bg_heading);
+            $("#show_img").html(obj.bg_image);
+            $("#old_image").val(obj.old_image);
+            $("#id").val(obj.id);
+            
+        }
+    })
+}

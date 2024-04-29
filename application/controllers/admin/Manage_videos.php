@@ -122,6 +122,26 @@ class Manage_videos extends CI_Controller {
                     } else {
                         $link = "";
                     }
+
+
+                    if (!empty($_FILES['cover_image']['name'] != '')) {
+                        $src_image = $_FILES['cover_image']['tmp_name'];
+                        $filEncImg = time();
+                        $avatar_image = rand(0000, 9999) . "_" . $_FILES['cover_image']['name'];
+                        $avatarImage = str_replace(array('(', ')', ' '), '', $avatar_image);
+                        $dest_image = getcwd() . '/uploads/videos/cover_image/' . $avatarImage;
+                        if (move_uploaded_file($src_image, $dest_image)) {
+                            $_imgfile  = $avatarImage;
+                            @unlink('uploads/videos/cover_image/' . $_POST['old_cover_image']);
+                        }
+                    } else {
+                        $_imgfile  = '';
+                    }
+
+
+
+
+
                     $details_data = array(
                         'user_id'=> $_SESSION['afrebay_admin']['id'],
                         //'videos_cat_id' =>$_POST['videos_cat_id'],
@@ -130,6 +150,7 @@ class Manage_videos extends CI_Controller {
                         //'videos_type'=> $_POST['videos_type'],
                         //'videos_link'=> $_POST['videos_link'],
                         'videos_file'=> $file,
+                        'video_cover_image'=>$_imgfile,
                         'created_date'=> date('Y-m-d H:m:s')
                     );
                     $this->Crud_model->SaveData('all_videos',$details_data);
@@ -204,7 +225,7 @@ class Manage_videos extends CI_Controller {
     }
 
     public function update_action() {
-        if(isset($_FILES['videos_file']['name'])!='' ) {
+        if($_FILES['videos_file']['name']!='' ) {
 			$src = $_FILES['videos_file']['tmp_name'];
             $filEnc = time();
             $avatar = rand(0000, 9999) . "_" . $_FILES['videos_file']['name'];
@@ -215,8 +236,30 @@ class Manage_videos extends CI_Controller {
                 @unlink('uploads/videos/videos_file/' . $_POST['old_videos_file']);
             }
 		} else {
-			$image  = $_POST['old_image'];
+			$file  = $_POST['old_videos_file'];
 		}
+
+
+        if ($_FILES['cover_image']['name'] != '') {
+            $src_image = $_FILES['cover_image']['tmp_name'];
+            $filEncImg = time();
+            $avatar_image = rand(0000, 9999) . "_" . $_FILES['cover_image']['name'];
+            $avatarImage = str_replace(array('(', ')', ' '), '', $avatar_image);
+            $dest_image = getcwd() . '/uploads/videos/cover_image/' . $avatarImage;
+            if (move_uploaded_file($src_image, $dest_image)) {
+                $_imgfile  = $avatarImage;
+                @unlink('uploads/videos/cover_image/' . $_POST['old_image']);
+            }
+        } else {
+            $_imgfile  = $_POST['old_cover_image'];
+        }
+
+
+
+
+
+
+
 		$get_data=$this->Crud_model->get_single_record('all_videos',"videos_name = '".addslashes($_POST['videos_name'])."' and id != '".$_POST['id']."'");
 		if(empty($get_data)) {
 			$data = array(
@@ -224,6 +267,7 @@ class Manage_videos extends CI_Controller {
                 'videos_name'=> $_POST['videos_name'],
                 'videos_description'=> $_POST['videos_description'],
                 'videos_file'=> @$file,
+                'video_cover_image'=>@$_imgfile,
                 'updated_date'=> date('Y-m-d H:i:s')
             );
 			$this->Crud_model->SaveData('all_videos', $data, "id = '".$_POST['id']."'");
@@ -256,7 +300,7 @@ class Manage_videos extends CI_Controller {
         if(isset($_POST['cid'])) {
             $this->Crud_model->DeleteData('all_videos',"id='".$_POST['cid']."'");
             // $data = array('is_delete' => '2');
-            // $this->Crud_model->SaveData('all_videos',$data,"id='".$_POST['id']."'"); 
+            // $this->Crud_model->SaveData('all_videos',$data,"id='".$_POST['id']."'");
             $this->session->set_flashdata('message', 'Videos deleted successfully');
             echo 0; exit;
         }

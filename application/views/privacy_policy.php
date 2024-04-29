@@ -26,7 +26,6 @@
             <div class="modal-header">
                 <button class="modal-close modal-toggle">x</button>
             </div>
-          
             <div class="modal-body">
                 <h2 class="modal-heading"></h2>
                 <div class="modal-content"></div>
@@ -61,7 +60,6 @@
             </nav>
         </div>
     </header>
-
     <section class="container Data_Container">
         <div class="row">
             <div class="col-12">
@@ -71,30 +69,28 @@
         </div>
         </div>
     </section>
-
     <section class="banner">
         <div class="container">
             <div class="banner_inner">
                 <h1>Try our Prayer app for more things to do</h1>
-                <div class="d-flex icon_flex">
-                    <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""> Play Store</a>
-                    <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
+                <div class="d-flex icon_flex align-items-center">
+                    <a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer" class="mb-2"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""> Play Store</a>
+                    <a href="https://apps.apple.com/us/app/120-army-prayer/id6478201470" class="mb-2"><img src="<?= base_url() ?>assets/images/iphoneicon.png" alt=""> App Store</a>
                 </div>
             </div>
         </div>
     </section>
-
     <footer class="footer_main">
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <?php 
+                    <?php
                     $getFAQlist = $this->db->query("SELECT * FROM faq WHERE status = '1'")->result_array();
                     if(!empty($getFAQlist)) { ?>
                     <div class="f_content">
                         <h2>More About Prayer App</h2>
                         <?php foreach ($getFAQlist as $value) { ?>
-                        <a href="javascript:void(0)" onclick="showContent(<?= $value['id']?>)"><?= $value['question']?></a>    
+                        <a href="javascript:void(0)" onclick="showContent(<?= $value['id']?>)"><?= $value['question']?></a>
                         <?php } ?>
                     </div>
                     <?php } ?>
@@ -105,9 +101,18 @@
                             <li><a href="https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer"><img src="<?= base_url() ?>assets/images/playstoreicon.png" alt=""></a></li>
                         </ul>
                         <ul class="app_sec social_sec">
-                            <li><a href="<?= @$settings->fb_link; ?>" class="fb"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                            <li><a href="<?= @$settings->tw_link; ?>" class="tw"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                            <li><a href="<?= @$settings->insta_link; ?>" class="pin"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->fb_link; ?>" class="fb"><i class="fa fa-facebook"
+                                        aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->tw_link; ?>" class="tw"><i class="fa fa-twitter"
+                                        aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->insta_link; ?>" class="instagram"><i class="fa fa-instagram"
+                                        aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->lnkd_link; ?>" class="linkedin"><i class="fa fa-linkedin"
+                                            aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->baha_link; ?>" class="baha"><i class="fa fa-behance"
+                                            aria-hidden="true"></i></a></li>
+                            <li><a href="<?= @$settings->ptrs_link; ?>" class="pin"><i class="fa fa-pinterest"
+                                            aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -117,11 +122,15 @@
                             <img src="<?= base_url() ?>uploads/logo/<?= $settings->flogo?>">
                         </a>
                     </div>
-                    <div class="f_content mt-5 text-end F_Logo">
+                    <!-- <div class="f_content mt-5 text-end F_Logo">
                         <a href="javascript:void(0)">Copyright © <?= date('Y') ?> 120Army</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
+        </div>
+        <div class="f_content mt-5 text-end F_Logo" style="padding: 15px 0;margin: 0 !important; background: #741623;">
+            <div class="copyright" style="color: #fff;text-align: left;width: 48%;display: inline-block;float: left;margin-left: 60px;">Copyright © <?= date('Y') ?> 120Army</div>
+            <div class="developer" style="color: #fff;text-align: right;width: 38%;display: inline-block;margin-right: 60px;">Designed &amp; Developed By <a href="http://www.goigi.com/" class="igi-link" style="color: #08cbfe; display: inline-block;" target="_blank">GOIGI.COM</a></div>
         </div>
     </footer>
     <script src="<?= base_url() ?>assets/js/jquery-3.6.0.min.js"></script>
@@ -138,12 +147,10 @@
                     scrollTop: $('#download_appsec_outer').offset().top
                 }, 500);
             });
-
             $('.modal-close').click(function(){
                 $('.modal').removeClass('is-visible modal-active');
             })
         });
-
         function showContent(id) {
             $.ajax({
                 type:'post',
@@ -151,7 +158,7 @@
                 url: '<?= base_url() ?>api/Home/get_faq',
                 data:{id:id},
                 success:function(returndata) {
-                    var obj=$.parseJSON(returndata); 
+                    var obj=$.parseJSON(returndata);
                     console.log(obj);
                     $(".modal-heading").html(obj.question);
                     $(".modal-content").html(obj.answer);
@@ -160,5 +167,8 @@
             })
         }
     </script>
+    <style>
+        .footer_main {padding: 50px 0 0 !important;}
+    </style>
 </body>
 </html>

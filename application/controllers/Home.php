@@ -1,12 +1,15 @@
 <?php
-
 defined('BASEPATH') or exit('No direct script access allowed');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 class Home extends MY_Controller {
 	public function index() {
 		$currentDate = date('Y-m-d');
 		$data['banner'] = $this->db->query("SELECT * FROM banner WHERE status = 'Active' ORDER BY created_date DESC")->result_array();
 		//$data['sliderprayer'] = $this->db->query("SELECT * FROM all_prayers ORDER BY created_date DESC LIMIT 3")->result_array();
 		$data['prayerEvents'] = $this->db->query("SELECT * FROM all_prayers ORDER BY created_date DESC LIMIT 6")->result_array();
+		$data['ourprayerEvents'] = $this->db->query("SELECT * FROM our_prayers")->row();
 		$data['futureprayer'] = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime > $currentDate ORDER BY created_date DESC LIMIT 6")->result_array();
 		$this->load->view('home', $data);
 	}
@@ -18,12 +21,44 @@ class Home extends MY_Controller {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
 		$this->load->view('terms_and_condition', $data);
 	}
+	public function event_details($id) {
+		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
+		$data['prayerEvents'] = $this->db->query("SELECT * FROM all_prayers WHERE id ='$id'")->row();
+		$this->load->view('event_details',$data);
+	}
 	public function privacy_policy() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '3'")->row();
 		$this->load->view('privacy_policy', $data);
 	}
 	public function contact() {
 		$this->load->view('contact');
+	}
+	public function delete_account() {
+		$this->load->view('delete_page');
+	}
+	public function deleteFormSubmit() {
+        $email = $this->input->post("email");
+		$check = $this->db->query("SELECT userId FROM users WHERE email = '".$email."'")->result_array();
+	    $userId=@$check[0]['userId'];
+		if($userId != ''){
+				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_address WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM users_post WHERE user_id = '".$userId."'");
+				$this->db->query("DELETE FROM users WHERE userId = '".$userId."'");
+				echo $msg = "1";
+		}
+		else{
+			echo $msg = "2";
+		}
 	}
 	public function contactFormSubmit() {
 		$fname = $this->input->post("name");
@@ -32,16 +67,18 @@ class Home extends MY_Controller {
         $sub = $this->input->post("subject");
         $msg = $this->input->post("message");
         $contactFormData = array (
-            'name' => $fname, 
-            'email' => $email, 
-            'phone' => $phone, 
-            'subject' => $sub, 
-            'message' => $msg
+            'name' => $fname,
+            'email' => $email,
+            'phone' => $phone,
+            'subject' => $sub,
+            'message' => $msg,
+			'created_date'=>date('Y-m-d H:i:s')
         );
         $result = $this->db->insert('contact_us', $contactFormData);
         $insert_id = $this->db->insert_id();
+		// echo $insert_id;die;
         if(!empty($insert_id)) {
-			/*$subject = $sub;
+			$subject = $sub;
 			$getOptionsSql = "SELECT * FROM `setting`";
 			$setting = $this->db->query($getOptionsSql)->row();
 			//$imagePath = base_url().'uploads/logo/Logo-Makutano-inblock.png';
@@ -72,26 +109,49 @@ class Home extends MY_Controller {
 					</table>
 				</div>
 			</body>";
+			require 'vendor/autoload.php';
 			$mail = new PHPMailer(true);
 			try {
 				$mail->CharSet = 'UTF-8';
 				$mail->SetFrom($admEmail, '120xarmy');
 				$mail->AddAddress($admEmail, '120xarmy');
-				$mail->IsHTML(true);
+                $mail->IsHTML(true);
+                $mail->Subject = $subject;
 				$mail->AddEmbeddedImage('assets/images/logo.png', 'Logo');
-				$mail->Subject = $subject;
-				$mail->Body = $message;
-				$mail->IsSMTP();
-				//Send mail using GMAIL server
-				$mail->Host       = "smtp.gmail.com";
-				$mail->Port       = 587; //587 465
-				$mail->Username   = "no-reply@goigi.com";
-				$mail->Password   = "wj8jeml3eu0z";
-				$mail->send();
-				echo $msg = "Thank You for Contacting Us";
+                $mail->Body = $message;
+                //Send email via SMTP
+                $mail->IsSMTP();
+                $mail->SMTPAuth   = true;
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                // $mail->Host       = "smtp.gmail.com";
+                $mail->Host       = "smtp-relay.brevo.com";
+                $mail->Port       = 587; //587 465
+                $mail->Username   = "goutampaul@goigi.in";
+                // $mail->Username   = "no-reply@goigi.com";
+                $mail->Password   = "b7nNQ4Fk9XdAOcL3";
+                // $mail->Password   = "wj8jeml3eu0z";
+                $mail->send();
+				// $mail->CharSet = 'UTF-8';
+				// $mail->SetFrom($_POST['email']);
+				// $mail->AddAddress('no-reply@goigi.com', 'Authorized By Me');
+				// $mail->IsHTML(true);
+				// $mail->Subject = $subject;
+				// $mail->AddEmbeddedImage('assets/images/logo.png', 'Logo');
+				// $mail->Body = $message;
+				// //Send email via SMTP
+				// $mail->IsSMTP();
+				// $mail->SMTPAuth   = true;
+				// $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				// $mail->Host       = "smtp.gmail.com";
+				// $mail->Port       = 587; //587 465
+				// $mail->Username   = "no-reply@goigi.com";
+				// $mail->Password   = "wj8jeml3eu0z";
+				// $mail->send();
+				// echo $msg = "Thank You for Contacting Us";
+				// echo $msg = "1";
 			} catch (Exception $e) {
 				echo $msg = "Message could not be sent. Mailer Error: $mail->ErrorInfo";
-			}*/
+			}
 			echo $msg = "1";
         } else {
             echo $msg = "2";
@@ -101,7 +161,6 @@ class Home extends MY_Controller {
 		$givenotp = base64_decode(urldecode($id));
         $sql = "SELECT * FROM `users` WHERE userId = '".$givenotp."' AND status = '0' AND `email_verified` = '0'";
         $check = $this->db->query($sql)->num_rows();
-        
 		if ($check > 0) {
             //$usr = $this->db->query($sql)->row();
             $result = $this->db->query("UPDATE `users` SET `email_verified` = 1, `status` = 1 where `userId` = '".$givenotp."'");
@@ -123,7 +182,6 @@ class Home extends MY_Controller {
 		$iPhone = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
 		$iPad = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
 		$Android= stripos($_SERVER['HTTP_USER_AGENT'],"Android");
-
 		//check if user is using ipod, iphone or ipad...
 		if( $iPod || $iPhone || $iPad ){
 				//we send these people to Apple Store
@@ -136,8 +194,8 @@ class Home extends MY_Controller {
 	public function checkout($uid, $total) {
 		$data = array(
 			'user_id' => $uid,
-			'total' => $total 
-		); 
+			'total' => $total
+		);
 		$this->load->view('checkout', $data);
 	}
 	public function completed() {
