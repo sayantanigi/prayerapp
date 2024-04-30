@@ -97,7 +97,7 @@
                                     <source src="<?= base_url() ?>uploads/banner/<?= $slprayer['image'] ?>" type="video/mp4">
                                 </video>
                                 <div class="vcontrol">
-                                    <button class="video-control-<?= $j?>" style="position: absolute; left: 43%; bottom: 0; min-width: 0px; border: none; border-radius: 40px; height: 30px; top: 82%; right: 50%; transform: translate(50%, -50%); font-size: 15px; font-weight: bolder; padding: 0; pointer-events: all; z-index: 100; text-decoration: none; color: #ffffff91; text-align: center; width: 100px; background: none;">
+                                    <button class="video-control-<?= $j?>">
                                         <span class="video-control-play">
                                             <!-- <span class="video-control-symbol" aria-hidden="true">▶️</span> -->
                                             <span class="video-control-symbol" aria-hidden="true"><i class="fa fa-play" aria-hidden="true"></i></span>
@@ -375,12 +375,47 @@
         .footer_main {
             padding: 50px 0 0 !important;
         }
+        .vcontrol button{
+            position: absolute; left: 43%; bottom: 0; min-width: 0px; border: none; border-radius: 40px; height: 30px; top: 82%; right: 50%; transform: translate(50%, -50%);
+            font-size: 15px; font-weight: bolder; padding: 0; pointer-events: all; z-index: 100; text-decoration: none; color: #ffffff91; text-align: center; width: 100px; background: none;
+        }
         .vcontrol button:not(.playing) .video-control-pause, .vcontrol button.playing .video-control-play {
             display: none;
         }
         .video-control-symbol {
             font: 35px Apple Color Emoji;
             vertical-align: 0px;
+        }
+        @media screen and (min-width:375px) {
+            .vcontrol button {left: 25%;}
+        }
+        @media screen and (min-width:425px) {
+            .vcontrol button {left: 28%;}
+        }
+        @media screen and (min-width: 768px) {
+            .vcontrol button {
+                left: 38%;
+            }
+        }
+        @media screen and (min-width: 1024px) {
+            .vcontrol button {
+                left: 41%;
+            }
+        }
+        @media screen and (min-width: 1024px) {
+            .vcontrol button {
+                left: 41%;
+            }
+        }
+        @media screen and (min-width: 1440px) {
+            .vcontrol button {
+                left: 44%;
+            }
+        }
+        @media screen and (min-width: 2560px) {
+            .vcontrol button {
+                left: 46%;
+            }
         }
     </style>
 </body>
