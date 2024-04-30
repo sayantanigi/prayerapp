@@ -93,9 +93,21 @@
                             if (in_array($ext, $allowed)) { ?>
                                 <img src="<?= base_url() ?>uploads/banner/<?= $slprayer['image'] ?>" alt="" style="height: 750px">
                             <?php } else { ?>
-                                <video width="100%" class="elVideo" loop="loop" autoPlay playsInline muted id='video-slider-<?= $j ?>'>
+                                <video width="100%" class="elVideo" loop="loop" playsInline muted id='video-slider-<?= $j ?>'>
                                     <source src="<?= base_url() ?>uploads/banner/<?= $slprayer['image'] ?>" type="video/mp4">
                                 </video>
+                                <div class="vcontrol">
+                                    <button class="video-control-<?= $j?>" style="position: absolute; left: 43%; bottom: 0; min-width: 0px; border: none; border-radius: 40px; height: 30px; top: 82%; right: 50%; transform: translate(50%, -50%); font-size: 15px; font-weight: bolder; padding: 0; pointer-events: all; z-index: 100; text-decoration: none; color: #ffffff91; text-align: center; width: 100px; background: none;">
+                                        <span class="video-control-play">
+                                            <!-- <span class="video-control-symbol" aria-hidden="true">▶️</span> -->
+                                            <span class="video-control-symbol" aria-hidden="true"><i class="fa fa-play" aria-hidden="true"></i></span>
+                                        </span>
+                                        <span class="video-control-pause">
+                                            <!-- <span class="video-control-symbol" aria-hidden="true">⏸</span> -->
+                                            <span class="video-control-symbol" aria-hidden="true"><i class="fa fa-pause" aria-hidden="true"></i></span>
+                                        </span>
+                                    </button>
+                                </div>
                                 <div class="sliderText"><?= $slprayer['page_name'] ?></div>
                                 <div class="downloadLink">
                                     <a class="idownloadLink" href="https://apps.apple.com/us/app/120-army-prayer/id6478201470">
@@ -338,10 +350,37 @@
                 }
             })
         }
+        <?php
+        $j = 1;
+        foreach ($banner as $slprayer) { ?>
+        const videoElement<?= $j ?> = document.querySelector('#video-slider-<?= $j ?>');
+        const playPauseButton<?= $j ?> = document.querySelector('.video-control-<?= $j?>');
+
+        playPauseButton<?= $j ?>.addEventListener('click', () => {
+            playPauseButton<?= $j ?>.classList.toggle('playing');
+            if (playPauseButton<?= $j ?>.classList.contains('playing')) {
+                videoElement<?= $j ?>.play();
+            }
+            else {
+                videoElement<?= $j ?>.pause();
+            }
+        });
+
+        videoElement<?= $j ?>.addEventListener('ended', () => {
+            playPauseButton<?= $j ?>.classList.remove('playing');
+        });
+        <?php $j++; } ?>
     </script>
     <style>
         .footer_main {
             padding: 50px 0 0 !important;
+        }
+        .vcontrol button:not(.playing) .video-control-pause, .vcontrol button.playing .video-control-play {
+            display: none;
+        }
+        .video-control-symbol {
+            font: 35px Apple Color Emoji;
+            vertical-align: 0px;
         }
     </style>
 </body>
