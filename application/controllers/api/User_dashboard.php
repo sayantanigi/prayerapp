@@ -2773,4 +2773,205 @@ class User_dashboard extends CI_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function postPrayerWall() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$postdata = $formdata['postdata'];
+			$dataList = array(
+		    	'user_id' => $formdata['user_id'],
+			    'postdata' => $formdata['postdata'],
+			    'created_date' => date("Y-m-d H:i:s")
+		    );
+		    $this->Crud_model->SaveData('postonwall', $dataList);
+			$response = array('status'=> 'success', 'result'=> "Posted successfully");
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function ListAllPostonWall() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$postList = $this->db->query("SELECT * FROM postonwall WHERE user_id IS NOT NULL order by created_date desc")->result_array();
+			if(!empty($postList)) {
+				foreach ($postList as $key => $value) {
+					$post_list[$key]['id'] = $value['id'];
+					$post_list[$key]['user_id'] = $value['user_id'];
+					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->row();
+					if(!empty($getUser->organizername)) {
+						$post_list[$key]['fullname'] = $getUser->organizername;
+					} else {
+						$post_list[$key]['fullname'] = $getUser->firstname.' '.$getUser->lastname;
+					}
+					if(!empty($getUser->profilePic)) {
+						$post_list[$key]['profilePics'] = base_url().'uploads/user/'.$getUser->profilePic;
+					} else {
+						$post_list[$key]['profilePics'] = base_url().'uploads/no_image.png';
+					}
+					$getLike = $this->db->query("SELECT * FROM postwall_like WHERE user_id = '".$user_id."' AND  postwall_id = '".$value['id']."'")->row();
+					if(!empty($getLike)){
+						$post_list[$key]['isLiked'] = '1';
+					} else {
+						$post_list[$key]['isLiked'] = '0';
+					}
+					$getCountLike = $this->db->query("SELECT COUNT(id) AS likeCount FROM postwall_like WHERE postwall_id = '".$value['id']."'")->row();
+					$post_list[$key]['likeCount'] = $getCountLike->likeCount;
+					$post_list[$key]['postdata'] = $value['postdata'];
+					$post_list[$key]['created_date'] = $value['created_date'];
+				}
+				$response = array('status'=> 'success', 'result'=> $post_list);
+			} else {
+				$response = array('status'=> 'error', 'result'=> "No list found");
+			}
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function postwall_like() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$datalist = array(
+				'user_id' => $formdata['user_id'],
+				'postwall_id' => $formdata['postwall_id'],
+				'created_date' => date("Y-m-d H:i:s")
+			);
+			$this->Crud_model->SaveData('postwall_like', $datalist);
+			$response = array('status'=> 'success', 'result'=> "Liked");
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function set_alarm() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$alarm_time = $formdata['alarm_time'];
+			$dataset = array(
+				"user_id" => $user_id,
+				"alarm_time" => $alarm_time,
+				"isActive" => 1
+			);
+			$checkTime = $this->db->query("SELECT * FROM alarm_data WHERE user_id = '".$user_id."' AND alarm_time = '".$alarm_time."'")->row();
+			if(!empty($checkTime)) {
+				$response = array('status'=> 'success', 'result'=> "Alarm already exists");
+			} else {
+				$this->Crud_model->SaveData('alarm_data', $dataset);
+				$response = array('status'=> 'success', 'result'=> "Added alarm");
+			}
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function alarmList() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$user_id = $formdata['user_id'];
+			$alarmList = $this->db->query("SELECT * FROM alarm_data WHERE user_id = '".$user_id."' AND isActive IN (0,1)")->result_array();
+			if(!empty($alarmList)) {
+				foreach ($alarmList as $key => $value) {
+					$alarm[$key]['id'] = $value['id'];
+					$alarm[$key]['alarm_time'] = $value['alarm_time'];
+					// $getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->row();
+					// if(!empty($getUser->organizername)) {
+					// 	$alarm[$key]['fullname'] = $getUser->organizername;
+					// } else {
+					// 	$alarm[$key]['fullname'] = $getUser->firstname.' '.$getUser->lastname;
+					// }
+					// if(!empty($getUser->profilePic)) {
+					// 	$alarm[$key]['profilePics'] = base_url().'uploads/user/'.$getUser->profilePic;
+					// } else {
+					// 	$alarm[$key]['profilePics'] = base_url().'uploads/no_image.png';
+					// }
+				}
+				$response = array('status'=> 'success', 'result'=> $alarm);
+			} else {
+				$response = array('status'=> 'error', 'result'=> "No alarm found");
+			}
+		} catch (\Exception $e) {
+			$response = array("status"=> "error", "result"=> $e->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function editAlarm() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$alarm_id = $formdata['alarm_id'];
+			$alarData = $this->db->query("SELECT * FROM alarm_data WHERE id = '".$alarm_id."'")->result_array();
+			if(!empty($alarData)) {
+				$alarmList = array();
+				foreach ($alarData as $key => $value) {
+					$alarmList[$key]['id'] = $value['id'];
+					$alarmList[$key]['alarm_time'] = $value['alarm_time'];
+				}
+				$response = array('status'=> 'success', 'result'=> $alarmList);
+			} else {
+				$response = array('status'=> 'error', 'result'=> 'No data found');
+			}
+		} catch (\Throwable $th) {
+			$response = array('status'=>'error','message'=>$th->getMessage());
+        }
+        echo json_encode($response);
+	}
+
+	public function updateAlarm(){
+		$formdata = json_decode(file_get_contents("php://input"), true);
+		try{
+            $updateData = [
+                'alarm_time' => $formdata['alarm_time']
+            ];
+            $whereCondition = ['id'=> $formdata['alarm_id']];
+            $res = $this->db->update('alarm_data', $updateData ,$whereCondition );
+            if (!empty($res)) {
+            	$response = array('status'=>'success','message'=>'Alarm updated successfully');
+            } else {
+            	throw new Exception("Error in updating data");
+            }
+        } catch(Exception $e){
+        	$response = array('status'=>'error','message'=>$e->getMessage());
+        }
+        echo json_encode($response);
+	}
+
+	public function alarmActiveInactive() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$alarm_id = $formdata["alarm_id"];
+			$isActive = $formdata["isActive"];
+			$updateData = array(
+				"isActive"=> $isActive,
+			);
+			$whereCondition = ['id'=> $alarm_id];
+			if($isActive == '1') {
+    			$res = $this->db->update('alarm_data', $updateData ,$whereCondition );
+				if (!empty($res)) {
+					$response = array('status'=>'success','message'=>'Alarm On');
+				} else {
+					$response = array('status'=>'error','message'=>'An error occured, Please try again');
+				}
+    		} else if($isActive == '0') {
+    			$res = $this->db->update('alarm_data', $updateData ,$whereCondition );
+				if (!empty($res)) {
+					$response = array('status'=>'success','message'=>'Alarm Off');
+				} else {
+					$response = array('status'=>'error','message'=>'An error occured, Please try again');
+				}
+    		} else {
+				$response = array('status'=>'error','message'=>'An error occured, Please try again');
+			}
+		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
 }
