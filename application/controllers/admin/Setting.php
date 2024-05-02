@@ -83,7 +83,7 @@ class Setting extends MY_Controller {
         } else {
         	$favicon  = $_POST['old_favicon'];
         }
-        
+
         $data = array(
 			'website_name' => ucwords($this->input->post('website_name')),
           	'phone' => $this->input->post('phone'),
@@ -97,7 +97,8 @@ class Setting extends MY_Controller {
 			'tw_link' => $this->input->post('tw_link'),
 			'lnkd_link' => $this->input->post('lnkd_link'),
 			'ptrs_link' => $this->input->post('ptrs_link'),
-			'baha_link' => $this->input->post('baha_link'),
+			//'baha_link' => $this->input->post('baha_link'),
+            'youtube_link' => $this->input->post('youtube_link'),
             'insta_link' => $this->input->post('insta_link'),
           	'logo' => $logo,
 			'flogo' => $flogo,

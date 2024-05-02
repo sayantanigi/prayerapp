@@ -11,50 +11,64 @@ class Home extends MY_Controller {
 		$data['prayerEvents'] = $this->db->query("SELECT * FROM all_prayers ORDER BY created_date DESC LIMIT 6")->result_array();
 		$data['ourprayerEvents'] = $this->db->query("SELECT * FROM our_prayers")->row();
 		$data['futureprayer'] = $this->db->query("SELECT * FROM all_prayers WHERE prayer_datetime > $currentDate ORDER BY created_date DESC LIMIT 6")->result_array();
+		$this->load->view('include/header', $data);
 		$this->load->view('home', $data);
+		$this->load->view('include/footer', $data);
 	}
 	public function about_us() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '2'")->row();
+		$this->load->view('include/header', $data);
 		$this->load->view('about_us', $data);
+		$this->load->view('include/footer', $data);
 	}
 	public function terms_and_condition() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
+		$this->load->view('include/header', $data);
 		$this->load->view('terms_and_condition', $data);
+		$this->load->view('include/footer', $data);
 	}
 	public function event_details($id) {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
 		$data['prayerEvents'] = $this->db->query("SELECT * FROM all_prayers WHERE id ='$id'")->row();
+		$this->load->view('include/header', $data);
 		$this->load->view('event_details',$data);
+		$this->load->view('include/footer', $data);
 	}
 	public function privacy_policy() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '3'")->row();
+		$this->load->view('include/header', $data);
 		$this->load->view('privacy_policy', $data);
+		$this->load->view('include/footer', $data);
 	}
 	public function contact() {
+		$this->load->view('include/header');
 		$this->load->view('contact');
+		$this->load->view('include/footer');
 	}
 	public function delete_account() {
+		$this->load->view('include/header');
 		$this->load->view('delete_page');
+		$this->load->view('include/footer');
 	}
 	public function deleteFormSubmit() {
         $email = $this->input->post("email");
 		$check = $this->db->query("SELECT userId FROM users WHERE email = '".$email."'")->result_array();
 	    $userId=@$check[0]['userId'];
 		if($userId != ''){
-				$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_address WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM users_post WHERE user_id = '".$userId."'");
-				$this->db->query("DELETE FROM users WHERE userId = '".$userId."'");
-				echo $msg = "1";
+			$this->db->query("DELETE FROM add_to_cart WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM proceed_to_pay WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_add_card WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_address WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_joined_event WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_liked_event WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_post_comment WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_post_comment_reply WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM user_post_like WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM users_post WHERE user_id = '".$userId."'");
+			$this->db->query("DELETE FROM users WHERE userId = '".$userId."'");
+			echo $msg = "1";
 		}
 		else{
 			echo $msg = "2";
@@ -131,24 +145,6 @@ class Home extends MY_Controller {
                 $mail->Password   = "b7nNQ4Fk9XdAOcL3";
                 // $mail->Password   = "wj8jeml3eu0z";
                 $mail->send();
-				// $mail->CharSet = 'UTF-8';
-				// $mail->SetFrom($_POST['email']);
-				// $mail->AddAddress('no-reply@goigi.com', 'Authorized By Me');
-				// $mail->IsHTML(true);
-				// $mail->Subject = $subject;
-				// $mail->AddEmbeddedImage('assets/images/logo.png', 'Logo');
-				// $mail->Body = $message;
-				// //Send email via SMTP
-				// $mail->IsSMTP();
-				// $mail->SMTPAuth   = true;
-				// $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-				// $mail->Host       = "smtp.gmail.com";
-				// $mail->Port       = 587; //587 465
-				// $mail->Username   = "no-reply@goigi.com";
-				// $mail->Password   = "wj8jeml3eu0z";
-				// $mail->send();
-				// echo $msg = "Thank You for Contacting Us";
-				// echo $msg = "1";
 			} catch (Exception $e) {
 				echo $msg = "Message could not be sent. Mailer Error: $mail->ErrorInfo";
 			}
@@ -184,11 +180,11 @@ class Home extends MY_Controller {
 		$Android= stripos($_SERVER['HTTP_USER_AGENT'],"Android");
 		//check if user is using ipod, iphone or ipad...
 		if( $iPod || $iPhone || $iPad ){
-				//we send these people to Apple Store
-				header('Location: https://apps.apple.com/us/app/120-army-prayer/id6478201470'); // <-apple store link here
-		}else if($Android){
-				//we send these people to Android Store
-				header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here
+			//we send these people to Apple Store
+			header('Location: https://apps.apple.com/us/app/120-army-prayer/id6478201470'); // <-apple store link here
+		} else if($Android){
+			//we send these people to Android Store
+			header('Location: https://play.google.com/store/apps/details?id=com.onetwentyarmyprayer'); // <-android store link here
 		}
 	}
 	public function checkout($uid, $total) {
@@ -196,12 +192,18 @@ class Home extends MY_Controller {
 			'user_id' => $uid,
 			'total' => $total
 		);
+		$this->load->view('include/header', $data);
 		$this->load->view('checkout', $data);
+		$this->load->view('include/footer', $data);
 	}
 	public function completed() {
+		$this->load->view('include/header');
 		$this->load->view('completed');
+		$this->load->view('include/footer');
 	}
 	public function cancel() {
+		$this->load->view('include/header');
 		$this->load->view('cancel');
+		$this->load->view('include/footer');
 	}
 }

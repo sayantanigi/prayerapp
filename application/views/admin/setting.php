@@ -78,10 +78,16 @@
 															<input type="text" class="form-control" name="ptrs_link" placeholder="Pinterest Link" value="<?php if(!empty($row->ptrs_link)){echo $row->ptrs_link; }?>">
 														</div>
 													</div>
-													<div class="col-md-12">
+													<!-- <div class="col-md-12">
 														<div class="form-group">
 															<label>Bahance Link</label>
 															<input type="text" class="form-control" name="baha_link" placeholder="Bahance Link" value="<?php if(!empty($row->baha_link)){echo $row->baha_link; }?>">
+														</div>
+													</div> -->
+													<div class="col-md-12">
+														<div class="form-group">
+															<label>Youtube Link</label>
+															<input type="text" class="form-control" name="youtube_link" placeholder="Youtube Link" value="<?php if(!empty($row->youtube_link)){echo $row->youtube_link; }?>">
 														</div>
 													</div>
 													<div class="col-md-12">
