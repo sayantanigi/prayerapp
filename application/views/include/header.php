@@ -55,6 +55,12 @@
                             <a class="nav-link active" aria-current="page" href="<?= base_url() ?>about_us">About Us</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="<?= base_url() ?>portfolio">Portfolios </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="<?= base_url() ?>guidelines">Prayer Guidelines</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="<?= base_url() ?>terms_and_condition">Terms and Condition</a>
                         </li>
                         <li class="nav-item">

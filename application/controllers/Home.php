@@ -21,6 +21,20 @@ class Home extends MY_Controller {
 		$this->load->view('about_us', $data);
 		$this->load->view('include/footer', $data);
 	}
+	public function portfolio() {
+		$data['ourprayerEvents'] = $this->db->query("SELECT * FROM our_prayers")->row();
+		$data['portfolio']=$this->db->query("SELECT * FROM portfolio WHERE status = '1' AND is_delete = '1'")->result_array();
+		$data['title'] = 'Portfolio';
+		$this->load->view('include/header', $data);
+		$this->load->view('portfolio', $data);
+		$this->load->view('include/footer', $data);
+	}
+	public function guidelines() {
+		$data['guidelines']=$this->db->query("SELECT * FROM manage_cms WHERE id = '4'")->row();
+		$this->load->view('include/header', $data);
+		$this->load->view('guidelines', $data);
+		$this->load->view('include/footer', $data);
+	}
 	public function terms_and_condition() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
 		$this->load->view('include/header', $data);
