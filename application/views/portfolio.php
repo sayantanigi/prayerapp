@@ -1,5 +1,5 @@
 <style>
-.modal-active{display:inline-block;top:93%}
+.modal-active{display:inline-block;top:64%}
 .Donate_Btn {top: 105% !important;}
 .ytp-title-link{display: none !important;}
 </style>

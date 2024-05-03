@@ -1,6 +1,7 @@
 <style>
 .modal-active{display:inline-block;top:93%}
 .Donate_Btn {top: 105% !important;}
+.content{ overflow-y: scroll; height: 600px; padding: 20px;scrollbar-width: thin; scrollbar-color: #ffffff #741623;}
 .content img{width: 100% !important; height: 450px !important;}
 </style>
 <section class="container Data_Container">

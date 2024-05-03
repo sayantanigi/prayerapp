@@ -36,11 +36,11 @@
         </div>
     </div>
     <?php
-    $link = $_SERVER['PHP_SELF'];
+    $link = $_SERVER['REQUEST_URI'];
     $link_array = explode('/',$link);
     $page = end($link_array);
     ?>
-    <header class="main_header <?php if($page != 'index.php') { echo "sub_header"; }?>">
+    <header class="main_header <?php if($page != '') { echo "sub_header"; }?>">
         <div class="container h-100">
             <nav class="navbar navbar-expand-lg p-0 h-100">
                 <a class="navbar-brand" href="<?= base_url() ?>">

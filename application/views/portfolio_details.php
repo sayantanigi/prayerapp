@@ -1,3 +1,8 @@
+<style>
+.modal-active{display:inline-block;top:140%}
+.Donate_Btn {top: 105% !important;}
+.ytp-title-link{display: none !important;}
+</style>
 <section class="container Data_Container">
     <div class="row">
         <div class="col-12">
