@@ -48,6 +48,13 @@ class Home extends MY_Controller {
 		$this->load->view('event_details',$data);
 		$this->load->view('include/footer', $data);
 	}
+	public function portfolio_details($id) {
+		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '1'")->row();
+		$data['portfolioDetails'] = $this->db->query("SELECT * FROM portfolio WHERE id ='$id'")->row();
+		$this->load->view('include/header', $data);
+		$this->load->view('portfolio_details',$data);
+		$this->load->view('include/footer', $data);
+	}
 	public function privacy_policy() {
 		$data['content']=$this->db->query("SELECT * FROM manage_cms WHERE id = '3'")->row();
 		$this->load->view('include/header', $data);

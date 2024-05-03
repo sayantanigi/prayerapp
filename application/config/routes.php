@@ -56,6 +56,7 @@ $route['portfolio'] = 'Home/portfolio';
 $route['guidelines'] = 'Home/guidelines';
 $route['terms_and_condition'] = 'Home/terms_and_condition';
 $route['event_details/(:any)'] = 'Home/event_details/$1';
+$route['portfolio_details/(:any)'] = 'Home/portfolio_details/$1';
 $route['privacy_policy'] = 'Home/privacy_policy';
 $route['download'] = 'Home/download';
 $route['contact'] = 'Home/contact';

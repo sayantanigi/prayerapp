@@ -1,6 +1,7 @@
 <style>
 .modal-active{display:inline-block;top:93%}
 .Donate_Btn {top: 105% !important;}
+.ytp-title-link{display: none !important;}
 </style>
 <section class="container Data_Container">
     <div class="row">
@@ -17,24 +18,22 @@
                     <div class="row">
                         <?php
                         if ($portfolio) {
-                            $i = 1;
-                            foreach ($portfolio as $value) { ?>
-                                <div class="col-md-5 mt-5 mb-5">
-                                    <div class="prayer_images" style="height: 256px">
-                                        <?php if(!file_exists("uploads/portfolio/image/".$value['file_link'])) { ?>
-                                        <iframe src="<?= $value['file_link']?>" style="width: 100%; height: 256px; border-radius: 15px;position: relative; z-index: 1;"></iframe>
-                                        <?php } else {?>
-                                        <img src="<?php echo base_url()?>/uploads/portfolio/image/<?= $value['file_link']?>" style="height: 256px">
-                                        <?php } ?>
-                                        <div class="prayer_images_content">
-                                            <span><i class="fa fa-area-chart" aria-hidden="true"></i> Event</span>
-                                            <p><a href="<?= base_url() ?>portfolio_details/<?= $value['id'] ?>"><?= $value['title'] ?></a></p>
-                                        </div>
-                                    </div>
+                        $i = 1;
+                        foreach ($portfolio as $value) { ?>
+                        <div class="col-md-5 mt-5 mb-5">
+                            <div class="prayer_images" style="height: 256px">
+                                <?php if(!file_exists("uploads/portfolio/image/".$value['file_link'])) { ?>
+                                <iframe src="<?= $value['file_link']?>" style="width: 100%; height: 256px; border-radius: 15px;"></iframe>
+                                <?php } else {?>
+                                <img src="<?php echo base_url()?>/uploads/portfolio/image/<?= $value['file_link']?>" style="height: 256px">
+                                <?php } ?>
+                                <div class="prayer_images_content">
+                                    <span><i class="fa fa-area-chart" aria-hidden="true"></i> <?php if(@$value['file_type'] == '1') { echo "Video";} else { echo "Image"; }?></span>
+                                    <p style="bottom: 35px; position: absolute;"><a href="<?= base_url() ?>portfolio_details/<?= $value['id'] ?>"><?= $value['title'] ?></a></p>
                                 </div>
-                                <?php $i++;
-                            }
-                        } ?>
+                            </div>
+                        </div>
+                        <?php $i++; } } ?>
                     </div>
                 </div>
             </div>
@@ -54,3 +53,9 @@
         </div>
     </div>
 </section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(window).on('load', function() {
+    $('.ytp-title-link').remove();
+});
+</script>
