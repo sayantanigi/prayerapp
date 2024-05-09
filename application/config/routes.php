@@ -178,3 +178,4 @@ $route['api/alarmList'] = 'api/User_dashboard/alarmList';
 $route['api/editAlarm'] = 'api/User_dashboard/editAlarm';
 $route['api/updateAlarm'] = 'api/User_dashboard/updateAlarm';
 $route['api/alarmActiveInactive'] = 'api/User_dashboard/alarmActiveInactive';
+$route['api/deletealarm'] = 'api/User_dashboard/deletealarm';
