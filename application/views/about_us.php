@@ -1,6 +1,41 @@
 <style>
 .modal-active{display:inline-block;top:93%}
 .Donate_Btn {top: 105% !important;}
+@media (max-width: 2560px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 1440px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 1024px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 768px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 425px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 375px) {
+    .Donate_Btn{
+        top: auto !important;
+    }
+}
+@media (max-width: 320px) {
+    .Donate_Btn {
+        top: auto !important;
+    }
+}
 </style>
 <section class="container Data_Container">
     <div class="row">
