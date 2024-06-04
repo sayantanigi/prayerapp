@@ -83,7 +83,7 @@ class Setting extends MY_Controller {
         } else {
         	$favicon  = $_POST['old_favicon'];
         }
-
+        
         $data = array(
 			'website_name' => ucwords($this->input->post('website_name')),
           	'phone' => $this->input->post('phone'),

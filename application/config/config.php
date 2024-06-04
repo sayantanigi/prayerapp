@@ -54,9 +54,9 @@ $config['admin_url'] = 'https://igiapp.com/greatgigz/admin/';*/
 
 
 
-$config['base_url'] = 'http://localhost/prayerapp/';
+$config['base_url'] = 'https://120army.com/';
 
-$config['admin_url'] = 'http://localhost/prayerapp/admin/';
+$config['admin_url'] = 'https://120army.com/admin/';
 
 
 

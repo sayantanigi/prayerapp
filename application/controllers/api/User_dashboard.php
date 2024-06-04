@@ -1060,13 +1060,13 @@ class User_dashboard extends CI_Controller {
 					$videoDetails[$key]['videos_description'] = $value->videos_description;
 					$videoDetails[$key]['view_count'] = $value->view_count;
 				}
-				$return[$key] = $videoDetails;
+				$return = $videoDetails;
 			} else {
 				$return = 'No data found';
 			}
 			$data['recent_upload'] = $return;
 
-			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1'")->result_array();
+			$videoscollection = $this->db->query("SELECT all_videos.id, users.organizername, users.profilePic, all_videos.video_cover_image, all_videos.videos_name, all_videos.videos_file, all_videos.view_count FROM all_videos JOIN users ON all_videos.user_id = users.userId WHERE all_videos.status = '1' AND all_videos.is_delete = '1' AND all_videos.user_id = '".$user_id."'")->result_array();
 			if(!empty($videoscollection)) {
 				foreach ($videoscollection as $keyvn => $vnvalue) {
 					if(!empty($vnvalue['profilePic'])){
@@ -1090,7 +1090,7 @@ class User_dashboard extends CI_Controller {
 					$returnvn[$keyvn] = $vnvalue;
 				}
 			} else {
-				$returnvn = "";
+				$returnvn = "No data found";
 			}
 			$data['users_video_collection'] = $returnvn;
 
@@ -2186,16 +2186,22 @@ class User_dashboard extends CI_Controller {
 				foreach ($getComment as $key => $value) {
 					$getcomment[$key]['id'] = $value['id'];
 					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->result_array();
-					if($getUser[0]['userType'] == 1){
-						$getcomment[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
+					if(!empty($getUser)) {
+						if($getUser[0]['userType'] == 1){
+							$getcomment[$key]['fullname'] = $getUser[0]['firstname']." ".$getUser[0]['lastname'];
+						} else {
+							$getcomment[$key]['fullname'] = $getUser[0]['organizername'];
+						}
+						if(!empty($getUser[0]['profilePic'])) {
+							$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
+						} else {
+							$getcomment[$key]["profilePic"] = base_url().'uploads/no_image.png';
+						}
 					} else {
-						$getcomment[$key]['fullname'] = $getUser[0]['organizername'];
+						$getcomment[$key]['fullname'] = "Not a valid user";
+						$getcomment[$key]["profilePic"] = "No image found";
 					}
-					if(!empty($getUser[0]['profilePic'])) {
-						$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
-					} else {
-						$getcomment[$key]["profilePic"] = base_url().'uploads/no_image.png';
-					}
+						
 					//$getcomment[$key]["profilePic"] = base_url().'uploads/users/'.$getUser[0]['profilePic'];
 					$getcomment[$key]['post_id'] = $value['post_id'];
 					$getcomment[$key]['comment'] = $value['comment'];
@@ -2235,9 +2241,11 @@ class User_dashboard extends CI_Controller {
 				'created_date'=> date("Y-m-d h:i:sa")
 			);
 			if($formdata['isliked'] == '1') {
-    			$this->Crud_model->SaveData('user_comment_dislike', $data);
+    			$this->Crud_model->SaveData('user_comment_like', $data);
+    			$this->db->query("DELETE FROM user_comment_dislike WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
 				$response = array("status"=> "success", "result"=> "Liked");
     		} else {
+    			$this->Crud_model->SaveData('user_comment_dislike', $data);
     			$this->db->query("DELETE FROM user_comment_like WHERE user_id = '".$user_id."' AND comment_id = '".$comment_id."'");
 			$response = array("status"=> "success", "result"=> "Disliked");
     		}
@@ -2796,19 +2804,19 @@ class User_dashboard extends CI_Controller {
 		try {
 			$formdata = json_decode(file_get_contents('php://input'), true);
 			$user_id = $formdata['user_id'];
-			$postList = $this->db->query("SELECT * FROM postonwall WHERE user_id IS NOT NULL order by created_date desc")->result_array();
+			$postList = $this->db->query("SELECT * FROM postonwall WHERE user_id IS NOT NULL order by id desc")->result_array();
 			if(!empty($postList)) {
 				foreach ($postList as $key => $value) {
 					$post_list[$key]['id'] = $value['id'];
 					$post_list[$key]['user_id'] = $value['user_id'];
 					$getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->row();
-					if(!empty($getUser->organizername)) {
-						$post_list[$key]['fullname'] = $getUser->organizername;
+					if(!empty(@$getUser->organizername)) {
+						$post_list[$key]['fullname'] = @$getUser->organizername;
 					} else {
-						$post_list[$key]['fullname'] = $getUser->firstname.' '.$getUser->lastname;
+						$post_list[$key]['fullname'] = @$getUser->firstname.' '.@$getUser->lastname;
 					}
 					if(!empty($getUser->profilePic)) {
-						$post_list[$key]['profilePics'] = base_url().'uploads/user/'.$getUser->profilePic;
+						$post_list[$key]['profilePics'] = base_url().'uploads/users/'.$getUser->profilePic;
 					} else {
 						$post_list[$key]['profilePics'] = base_url().'uploads/no_image.png';
 					}
@@ -2824,8 +2832,6 @@ class User_dashboard extends CI_Controller {
 					$post_list[$key]['created_date'] = $value['created_date'];
 				}
 				$response = array('status'=> 'success', 'result'=> $post_list);
-			} else {
-				$response = array('status'=> 'error', 'result'=> "No list found");
 			}
 		} catch (\Throwable $th) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
@@ -2881,17 +2887,7 @@ class User_dashboard extends CI_Controller {
 				foreach ($alarmList as $key => $value) {
 					$alarm[$key]['id'] = $value['id'];
 					$alarm[$key]['alarm_time'] = $value['alarm_time'];
-					// $getUser = $this->db->query("SELECT * FROM users WHERE userId = '".$value['user_id']."'")->row();
-					// if(!empty($getUser->organizername)) {
-					// 	$alarm[$key]['fullname'] = $getUser->organizername;
-					// } else {
-					// 	$alarm[$key]['fullname'] = $getUser->firstname.' '.$getUser->lastname;
-					// }
-					// if(!empty($getUser->profilePic)) {
-					// 	$alarm[$key]['profilePics'] = base_url().'uploads/user/'.$getUser->profilePic;
-					// } else {
-					// 	$alarm[$key]['profilePics'] = base_url().'uploads/no_image.png';
-					// }
+					$alarm[$key]['isActive'] = $value['isActive'];
 				}
 				$response = array('status'=> 'success', 'result'=> $alarm);
 			} else {
@@ -2970,6 +2966,18 @@ class User_dashboard extends CI_Controller {
 				$response = array('status'=>'error','message'=>'An error occured, Please try again');
 			}
 		} catch (\Throwable $th) {
+			$response = array("status"=> "error", "result"=> $th->getMessage());
+		}
+		echo json_encode($response);
+	}
+
+	public function deletealarm() {
+		try {
+			$formdata = json_decode(file_get_contents('php://input'), true);
+			$alarm_id = $formdata['alarm_id'];
+			$this->db->query("DELETE FROM alarm_data WHERE id = '".$alarm_id."'");
+			$response = array('status' => 'success', 'message' => 'Alarm deleted');
+		} catch (Exception $e) {
 			$response = array("status"=> "error", "result"=> $th->getMessage());
 		}
 		echo json_encode($response);

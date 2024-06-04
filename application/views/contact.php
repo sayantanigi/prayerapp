@@ -1,7 +1,8 @@
 <style>
 .modal-active{display:inline-block;top:67%}
 .Donate_Btn {top: 105% !important;}
-</style><?php $settings = $this->db->query("SELECT * FROM setting")->row(); ?>
+</style>
+<?php $settings = $this->db->query("SELECT * FROM setting")->row(); ?>
 
 <section class="container Data_Container">
     <div class="row">

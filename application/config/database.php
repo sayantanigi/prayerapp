@@ -154,11 +154,11 @@ $db['default'] = array(
 
 	'hostname' => 'localhost',
 
-	'username' => 'root',
+	'username' => 'onetwen1_onetwentyarmy',
 
-	'password' => '',
+	'password' => 'gant_G8rxRBV',
 
-	'database' => 'prayerapp',
+	'database' => 'onetwen1_onetwentyarmy',
 
 	'dbdriver' => 'mysqli',
 

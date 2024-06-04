@@ -6,7 +6,7 @@
                     <h3 class="page-title"><?= $heading;?></h3>
                 </div>
                 <div class="col-auto text-right">
-                    <a class="btn btn-white filter-btn" href="javascript:void(0);" id="filter_search">
+                    <a class="btn btn-white filter-btn d-none" href="javascript:void(0);" id="filter_search">
                         <i class="fas fa-filter"></i>
                     </a>
                     <a href="<?= admin_url('manage_portfolio/create')?>" class="btn btn-primary add-button">
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div class="card filter-card" id="filter_inputs" style="display: block">
+        <div class="card filter-card d-none" id="filter_inputs">
             <div class="card-body pb-0">
                 <form id="categorySearch" action="#" method="post">
                     <div class="row filter-row">

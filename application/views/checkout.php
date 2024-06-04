@@ -14,6 +14,31 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/css/responsive.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style type="text/css">
+        #paypal-container-S9DZ7JWNC8WL6{text-align: center;}
+        #paypal-form-fields-container-S9DZ7JWNC8WL6 {display: inline-block; width: 100%; background: #eee; padding: 20px; margin-top: 60px; border: 1px solid #eee; border-radius: 15px;}
+        .paypal-buttons-context-iframe {left: 463px !important; width: 100% !important; display: block !important;}
+        @media (min-width:320px)  {
+            .paypal-buttons-context-iframe {left: 0px !important;}
+            #paypal-container-S9DZ7JWNC8WL6{padding: 20px;}
+        }
+        @media (min-width:768px)  {
+            .paypal-buttons-context-iframe {left: 125px !important;}
+            .paypal-buttons-context-iframe {width: 65% !important;}
+        }
+        @media (min-width:1024px)  {
+            .paypal-buttons-context-iframe {left: 248px !important;}
+            .paypal-buttons-context-iframe {width: 50% !important;}
+        }
+        @media (min-width:1440px)  {
+            .paypal-buttons-context-iframe {left: 458px !important;}
+            .paypal-buttons-context-iframe {width: 35% !important;}
+        }
+        @media (min-width:2560px)  {
+            .paypal-buttons-context-iframe {left: 40% !important;}
+            .paypal-buttons-context-iframe {width: 20% !important;}
+        }
+    </style>
 </head>
 <body>
     <script src="https://www.paypal.com/sdk/js?client-id=BAAuRnUHRl1nhJdpVO7zOV_Js7uyVas4i1lKppDunkVYoDDOGTNPPg7zENXJPrlog71GvFNRf6Z_2di8go&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
@@ -26,8 +51,11 @@
 </body>
 </html>
 <script>
-    window.setTimeout(function(){
-        $('#amount').prop('readonly', true);
-        $('#amount').val('<?= $total?>');
-    }, 1100);
+    $(document).ready(function() {
+        //$('.paypal-buttons-context-iframe').css({ "left": "463px !important", "width": "35% !important" });
+        setTimeout(function () {
+            $('#amount').prop('readonly', true);
+            $('#amount').val('<?= $total?>');
+        }, 1500);
+    })
 </script>
